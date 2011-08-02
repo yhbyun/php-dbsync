@@ -1,0 +1,25 @@
+<?php
+
+$config = array(
+    'db' => array(
+        'adapter' => 'mysql',
+        'params' => array(
+            'dns'      => '',
+            'username' => '',
+            'password' => '',
+            'options'  => array()
+        ),
+    ),
+    'path' => 'tables'
+);
+
+require_once 'Zend/Config/Yaml.php';
+require_once 'Zend/Config/Writer/Yaml.php';
+
+require_once 'DbSync/Table.php';
+require_once 'DbSync/Console.php';
+require_once 'DbSync/Controller.php';
+
+require_once 'DbSync/Table/Adapter.php';
+require_once 'DbSync/Table/Adapter/AdapterInterface.php';
+require_once 'DbSync/Table/Adapter/Mysql.php';
