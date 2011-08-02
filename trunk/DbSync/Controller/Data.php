@@ -1,7 +1,16 @@
 <?php
-
+/**
+ * DbSync_Controller_Data
+ *
+ * @version $Id$
+ */
 class DbSync_Controller_Data extends DbSync_Controller
 {
+    /**
+     * Push
+     *
+     * @param string $tableName
+     */
     public function pushAction($tableName = null)
     {
         $data = new DbSync_Table_Data($this->_adapter, $this->_path, $tableName);
@@ -29,6 +38,11 @@ class DbSync_Controller_Data extends DbSync_Controller
         echo PHP_EOL;
     }
 
+    /**
+     * Merge
+     *
+     * @param string $tableName
+     */
     public function mergeAction($tableName = null)
     {
         $data = new DbSync_Table_Data($this->_adapter, $this->_path, $tableName);
@@ -83,6 +97,11 @@ class DbSync_Controller_Data extends DbSync_Controller
         echo PHP_EOL;
     }
 
+    /**
+     * Init
+     *
+     * @param string $tableName
+     */
     public function initAction($tableName = null)
     {
         $data = new DbSync_Table_Data($this->_adapter, $this->_path, $tableName);
@@ -111,6 +130,11 @@ class DbSync_Controller_Data extends DbSync_Controller
         echo PHP_EOL;
     }
 
+    /**
+     * Pull
+     *
+     * @param string $tableName
+     */
     public function pullAction($tableName = null)
     {
         $data = new DbSync_Table_Data($this->_adapter, $this->_path, $tableName);
@@ -135,6 +159,11 @@ class DbSync_Controller_Data extends DbSync_Controller
         echo PHP_EOL;
     }
 
+    /**
+     * Diff
+     *
+     * @param string $tableName
+     */
     public function diffAction($tableName = null)
     {
         $data = new DbSync_Table_Data($this->_adapter, $this->_path, $tableName);
@@ -162,6 +191,10 @@ class DbSync_Controller_Data extends DbSync_Controller
         echo PHP_EOL;
     }
 
+    /**
+     * Help
+     *
+     */
     public function helpAction()
     {
         echo 'help';
