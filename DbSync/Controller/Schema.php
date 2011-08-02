@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * DbSync_Controller_Schema
+ *
+ * @version $Id$
+ */
 class DbSync_Controller_Schema extends DbSync_Controller
 {
     /**

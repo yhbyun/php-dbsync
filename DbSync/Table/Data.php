@@ -102,7 +102,7 @@ class DbSync_Table_Data extends DbSync_Table
         $syncronised = false;
 
         if (!$scheme = $this->getData()) {
-            echo "Data for table {$this->_tableName} not found", PHP_EOL;
+            throw new Exception("Data for table {$this->_tableName} not found");
         } else {
             $tmp = $scheme . '.tmp';
             $writer = new Zend_Config_Writer_Yaml();

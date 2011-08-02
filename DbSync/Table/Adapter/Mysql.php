@@ -128,25 +128,27 @@ class DbSync_Table_Adapter_Mysql
     /**
      * Generate Alter Table
      *
+     * @param array  $config
+     * @param string $tableName
      * @return string
      */
     public function generateAlter($config, $tableName)
     {
         $query = array();
         if (!$this->hasDbTable($tableName)) {
-            foreach ($config->columns as $columnName => $columnConfig) {
-                $query[] = $this->_getColumn($columnName, $columnConfig);
+            foreach ($config['columns'] as $columnName => $columnConfig) {
+                $query[] = $this->_getColumnSql($columnName, $columnConfig);
             }
             $query = "CREATE TABLE `{$tableName}` (" . PHP_EOL
-                     . join(',' . PHP_EOL, $query) . PHP_EOL
-                     . ") ENGINE={$config->engine} CHARSET={$config->charset}";
+                   . join(',' . PHP_EOL, $query) . PHP_EOL
+                   . ") ENGINE={$config['engine']} CHARSET={$config['charset']}";
 
         } else {
             $result = $this->_db->query("SHOW COLUMNS FROM `{$tableName}`");
             $columns = $result->fetchAll(PDO::FETCH_ASSOC);
 
-            $query[]= "ALTER TABLE `{$tableName}` ENGINE={$config->engine}, CHARSET={$config->charset}";
-            foreach ($config->columns as $columnName => $columnConfig) {
+            $query[]= "ALTER TABLE `{$tableName}` ENGINE={$config['engine']}, CHARSET={$config['charset']}";
+            foreach ($config['columns'] as $columnName => $columnConfig) {
                 foreach ($columns as $i => $columnDesc) {
                     $exists = false;
                     if ($columnDesc['Field'] == $columnName) {
@@ -160,7 +162,7 @@ class DbSync_Table_Adapter_Mysql
                     $action = "MODIFY";
                 }
 
-                $query[] = "{$action} COLUMN " . $this->_getColumn($columnName, $columnConfig);
+                $query[] = "{$action} COLUMN " . $this->_getColumnSql($columnName, $columnConfig);
             }
             foreach ($columns as $columnDesc) {
                 $query[] = "DROP COLUMN {$columnDesc['Field']}";
@@ -200,7 +202,7 @@ class DbSync_Table_Adapter_Mysql
      * @param Zend_Config $config
      * @return string
      */
-    protected function _getColumn($name, $config)
+    protected function _getColumnSql($name, $config)
     {
         $query = "`{$name}` {$config->type}";
         if (!$config->nullable) {

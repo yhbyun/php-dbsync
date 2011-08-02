@@ -26,9 +26,12 @@ class DbSync_Table_Schema extends DbSync_Table
      */
     public function generateAlter()
     {
-        $config = $this->getSchema(true);
+        if (!$schema = $this->getSchema()) {
+            throw new Exception("Scheme for table {$this->_tableName} not found");
+        }
+        $config = new Zend_Config_Yaml($schema);
 
-        return $this->_adapter->generateAlter($config, $this->_tableName);
+        return $this->_adapter->generateAlter($config->toArray(), $this->_tableName);
     }
 
     /**
@@ -44,25 +47,17 @@ class DbSync_Table_Schema extends DbSync_Table
     /**
      * Get schema
      *
-     * @param boolen $asConfig
      * @throws Exception
      * @return Zend_Config|null
      */
-    public function getSchema($asConfig = false)
+    public function getSchema()
     {
         if (!$this->getTableName()) {
             throw new Exception('Table name not set');
         }
         $path = $this->_path . '/' . $this->_tableName . '/schema.yml';
 
-        $schema = realpath($path);
-        if ($asConfig) {
-            if (!$schema) {
-                throw new Exception("Schema for '{$this->_tableName}' not found in '{$this->_path}'");
-            }
-            $schema = new Zend_Config_Yaml($schema);
-        }
-        return $schema;
+        return realpath($path);
     }
 
     /**
@@ -75,7 +70,7 @@ class DbSync_Table_Schema extends DbSync_Table
         $syncronised = false;
 
         if (!$scheme = $this->getSchema()) {
-            echo "scheme for table {$this->_tableName} not found", PHP_EOL;
+            throw new Exception("Scheme for table {$this->_tableName} not found");
         } else {
             $tmp = $scheme . '.tmp';
             $writer = new Zend_Config_Writer_Yaml();
