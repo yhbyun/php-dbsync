@@ -8,12 +8,12 @@ class DbSync_Controller_Schema extends DbSync_Controller
      * @param string $tableName
      * @param array $options
      */
-    public function push($tableName = null)
+    public function pushAction($tableName = null)
     {
         $schema = new DbSync_Table_Schema($this->_adapter, $this->_path, $tableName);
         if (!$tableName) {
             foreach ($schema->getSchemaTableList() as $tableName) {
-                $this->push($tableName);
+                $this->pushAction($tableName);
             }
             return;
         }
@@ -37,13 +37,13 @@ class DbSync_Controller_Schema extends DbSync_Controller
      *
      * @param string $tableName
      */
-    public function status($tableName = null)
+    public function statusAction($tableName = null)
     {
         $schema = new DbSync_Table_Schema($this->_adapter, $this->_path, $tableName);
 
         if (!$tableName) {
             foreach ($schema->getTableList() as $tableName) {
-                $this->status($tableName);
+                $this->statusAction($tableName);
             }
             return;
         }
@@ -69,12 +69,12 @@ class DbSync_Controller_Schema extends DbSync_Controller
      *
      * @param string $tableName
      */
-    public function init($tableName = null)
+    public function initAction($tableName = null)
     {
         $schema = new DbSync_Table_Schema($this->_adapter, $this->_path, $tableName);
         if (!$tableName) {
             foreach ($schema->getDbTableList() as $tableName) {
-                $this->init($tableName);
+                $this->initAction($tableName);
             }
             return;
         }
@@ -102,13 +102,13 @@ class DbSync_Controller_Schema extends DbSync_Controller
      *
      * @param string $tableName
      */
-    public function pull($tableName = null)
+    public function pullAction($tableName = null)
     {
         $schema = new DbSync_Table_Schema($this->_adapter, $this->_path, $tableName);
 
         if (!$tableName) {
             foreach ($schema->getDbTableList() as $tableName) {
-                $this->pull($tableName);
+                $this->pullAction($tableName);
             }
             return;
         }
@@ -131,13 +131,13 @@ class DbSync_Controller_Schema extends DbSync_Controller
      *
      * @param string $tableName
      */
-    public function diff($tableName = null)
+    public function diffAction($tableName = null)
     {
         $schema = new DbSync_Table_Schema($this->_adapter, $this->_path, $tableName);
 
         if (!$tableName) {
             foreach ($schema->getTableList() as $tableName) {
-                $this->diff($tableName);
+                $this->diffAction($tableName);
             }
             return;
         }
@@ -161,7 +161,7 @@ class DbSync_Controller_Schema extends DbSync_Controller
      *
      * @see DbSync_Controller::help()
      */
-    public function help()
+    public function helpAction()
     {
         echo 'help';
         echo PHP_EOL;

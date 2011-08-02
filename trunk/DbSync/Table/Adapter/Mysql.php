@@ -263,7 +263,7 @@ class DbSync_Table_Adapter_Mysql
 
         $values = '(' . join(', ', array_fill(0, count($columns), '?')) . ')';
 
-        $values = join(', ', array_fill(0, $config->count(), $values));
+        $values = join(', ', array_fill(0, count($data), $values));
         $sql = "INSERT INTO {$tableName} (" .join(', ', $columns) . ") VALUES {$values}";
 
         $this->_db->beginTransaction();
