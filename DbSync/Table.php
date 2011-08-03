@@ -142,7 +142,7 @@ class DbSync_Table
      */
     public function load($filename)
     {
-        $config = new Zend_Config_Yaml($data);
+        $config = new Zend_Config_Yaml($filename);
         return $config->toArray();
     }
 
