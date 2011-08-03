@@ -12,6 +12,8 @@ class DbSync_Table
 
     protected $_tableName;
 
+    protected $_filename;
+
     /**
      * Constructor
      *
@@ -82,6 +84,32 @@ class DbSync_Table
     }
 
     /**
+     * Get data tables list
+     *
+     * @return array
+     */
+    public function getFileTableList()
+    {
+        $list = array();
+
+        foreach (new GlobIterator("{$this->_path}/*/{$this->_filename}") as $file) {
+            $list[] = basename(dirname($file->getPathname()));
+        }
+
+        return $list;
+    }
+
+    /**
+     * Get tables list
+     *
+     * @return array
+     */
+    public function getTableList()
+    {
+        return $this->getDbTableList() + $this->getFileTableList();
+    }
+
+    /**
      * Is db table exists
      *
      * @return boolen
@@ -91,6 +119,79 @@ class DbSync_Table
         if (!$this->getTableName()) {
             throw new Exception('Table name not set');
         }
-        return $this->_adapter->hasDbTable($this->_tableName);
+        return $this->_adapter->hasTable($this->_tableName);
+    }
+
+    /**
+     * Write data to file
+     *
+     * @param string $filename
+     * @param array $data
+     */
+    public function write($filename, array $data)
+    {
+        $writer = new Zend_Config_Writer_Yaml();
+        $writer->write($filename, new Zend_Config($data));
+    }
+
+    /**
+     * Load data from file
+     *
+     * @param string $filename
+     * @return array
+     */
+    public function load($filename)
+    {
+        $config = new Zend_Config_Yaml($data);
+        return $config->toArray();
+    }
+
+    /**
+     * Get config filepath
+     *
+     * @throws Exception
+     * @return string
+     */
+    public function getFilePath()
+    {
+        if (!$this->getTableName()) {
+            throw new Exception('Table name not set');
+        }
+        $path = $this->_path . '/' . $this->_tableName . '/' . $this->_filename;
+
+        return realpath($path);
+    }
+
+    /**
+     * Has file
+     *
+     * @return boolen
+     */
+    public function hasFile()
+    {
+        return (bool) $this->getFilePath();
+    }
+
+    /**
+     * Get status
+     *
+     * @return boolen
+     */
+    public function getStatus()
+    {
+        $syncronised = false;
+
+        $file = $this->getFilePath();
+
+        $tmp = $file . '.tmp';
+
+        $this->save($tmp);
+
+        if (file_get_contents($file) === file_get_contents($tmp)) {
+            $syncronised = true;
+        }
+        unlink($tmp);
+
+        return $syncronised;
     }
 }

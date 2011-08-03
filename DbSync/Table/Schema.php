@@ -7,16 +7,22 @@
 class DbSync_Table_Schema extends DbSync_Table
 {
     /**
-     * Generate schema
-     *
-     * @return Zend_Config
+     * @var string
      */
-    public function generateSchema()
+    protected $_filename = 'schema.yml';
+
+    /**
+     * Save schema
+     *
+     * @param string $filename
+     */
+    public function save($filename)
     {
         if (!$this->getTableName()) {
             throw new Exception('Table name not set');
         }
-        return new Zend_Config($this->_adapter->generateSchema($this->_tableName));
+
+        $this->write($filename, $this->_adapter->parseSchema($this->_tableName));
     }
 
     /**
@@ -24,14 +30,14 @@ class DbSync_Table_Schema extends DbSync_Table
      *
      * @return string
      */
-    public function generateAlter()
+    public function createAlter()
     {
-        if (!$schema = $this->getSchema()) {
+        if (!$filename = $this->getFilePath()) {
             throw new Exception("Scheme for table {$this->_tableName} not found");
         }
-        $config = new Zend_Config_Yaml($schema);
+        $data = $this->load($filename);
 
-        return $this->_adapter->generateAlter($config->toArray(), $this->_tableName);
+        return $this->_adapter->createAlter($data, $this->_tableName);
     }
 
     /**
@@ -41,23 +47,7 @@ class DbSync_Table_Schema extends DbSync_Table
      */
     public function push()
     {
-        return $this->_adapter->execute($this->generateAlter());
-    }
-
-    /**
-     * Get schema
-     *
-     * @throws Exception
-     * @return Zend_Config|null
-     */
-    public function getSchema()
-    {
-        if (!$this->getTableName()) {
-            throw new Exception('Table name not set');
-        }
-        $path = $this->_path . '/' . $this->_tableName . '/schema.yml';
-
-        return realpath($path);
+        return $this->_adapter->execute($this->createAlter());
     }
 
     /**
@@ -67,21 +57,10 @@ class DbSync_Table_Schema extends DbSync_Table
      */
     public function getStatus()
     {
-        $syncronised = false;
-
-        if (!$scheme = $this->getSchema()) {
+        if (!$this->hasFile()) {
             throw new Exception("Scheme for table {$this->_tableName} not found");
-        } else {
-            $tmp = $scheme . '.tmp';
-            $writer = new Zend_Config_Writer_Yaml();
-            $writer->write($tmp, $this->generateSchema());
-
-            if (file_get_contents($scheme) === file_get_contents($tmp)) {
-                $syncronised = true;
-            }
-            unlink($tmp);
         }
-        return $syncronised;
+        return parent::getStatus();
     }
 
     /**
@@ -99,12 +78,10 @@ class DbSync_Table_Schema extends DbSync_Table
         if (!$this->isWriteable()) {
             throw new Exception("Schema dir is not writable");
         }
-        $path = $this->_path . '/' . $this->_tableName;
+        $path = $this->_path . '/' . $this->_tableName . '/' . $this->_filename;
 
-        $path .= '/schema.yml';
         if (!realpath($path) || $force) {
-            $writer = new Zend_Config_Writer_Yaml();
-            $writer->write($path, $this->generateSchema());
+            $this->save($path);
 
             return true;
         }
@@ -120,16 +97,15 @@ class DbSync_Table_Schema extends DbSync_Table
     {
         $output = array();
 
-        if (!$scheme = $this->getSchema()) {
+        if (!$filename = $this->getFilePath()) {
             $output[] = "scheme for table {$this->_tableName} not found";
         } else {
-            $tmp = $scheme . '.tmp';
+            $tmp = $filename . '.tmp';
 
-            $writer = new Zend_Config_Writer_Yaml();
-            $writer->write($tmp, $this->generateSchema());
+            $this->save($tmp);
 
-            if (file_get_contents($scheme) !== file_get_contents($tmp)) {
-                exec("diff {$scheme} {$tmp}", $output);
+            if (file_get_contents($filename) !== file_get_contents($tmp)) {
+                exec("diff {$filename} {$tmp}", $output);
             }
             unlink($tmp);
         }
@@ -144,41 +120,5 @@ class DbSync_Table_Schema extends DbSync_Table
     public function pull()
     {
         return $this->init(true);
-    }
-
-    /**
-     * Has file schema
-     *
-     * @return boolen
-     */
-    public function hasFileSchema()
-    {
-        return (bool) $this->getSchema();
-    }
-
-    /**
-     * Get tables list
-     *
-     * @return array
-     */
-    public function getTableList()
-    {
-        return $this->getDbTableList() + $this->getSchemaTableList();
-    }
-
-    /**
-     * Get schema tables list
-     *
-     * @return array
-     */
-    public function getSchemaTableList()
-    {
-        $list = array();
-
-        foreach (new GlobIterator("{$this->_path}/*/schema.yml") as $file) {
-            $list[] = basename(dirname($file->getPathname()));
-        }
-
-        return $list;
     }
 }

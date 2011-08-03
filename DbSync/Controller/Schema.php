@@ -16,15 +16,15 @@ class DbSync_Controller_Schema extends DbSync_Controller
     {
         $schema = new DbSync_Table_Schema($this->_adapter, $this->_path, $tableName);
         if (!$tableName) {
-            foreach ($schema->getSchemaTableList() as $tableName) {
+            foreach ($schema->getFileTableList() as $tableName) {
                 $this->pushAction($tableName);
             }
             return;
         }
 
-        if ($schema->hasFileSchema()) {
+        if ($schema->hasFile()) {
             if ($this->_console->hasOption('show')) {
-                echo $schema->generateAlter();
+                echo $schema->createAlter();
             } else {
                  $schema->push();
 
@@ -52,7 +52,7 @@ class DbSync_Controller_Schema extends DbSync_Controller
             return;
         }
 
-        if ($schema->hasDbTable() && $schema->hasFileSchema()) {
+        if ($schema->hasDbTable() && $schema->hasFile()) {
             if ($schema->getStatus()) {
                 echo "'{$tableName}' - OK";
             } else {
@@ -85,7 +85,7 @@ class DbSync_Controller_Schema extends DbSync_Controller
 
         $schema = new DbSync_Table_Schema($this->_adapter, $this->_path, $tableName);
         if ($schema->hasDbTable()) {
-            if ($schema->hasFileSchema()) {
+            if ($schema->hasFile()) {
                 echo "Table '{$tableName}' already has schema";
             } else {
                 if ($schema->isWriteable()) {
@@ -146,7 +146,7 @@ class DbSync_Controller_Schema extends DbSync_Controller
             return;
         }
 
-        if ($schema->hasDbTable() && $schema->hasFileSchema()) {
+        if ($schema->hasDbTable() && $schema->hasFile()) {
             if (!$schema->getStatus()) {
                 echo join(PHP_EOL, $schema->diff()), PHP_EOL;
             }
