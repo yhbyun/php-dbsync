@@ -28,11 +28,11 @@ class DbSync_Table_Adapter_Mysql
     }
 
     /**
-     * Generate schema
+     * Parse schema
      *
      * @return array
      */
-    public function generateSchema($tableName)
+    public function parseSchema($tableName)
     {
         $config = array(
             'name' => $tableName,
@@ -132,10 +132,10 @@ class DbSync_Table_Adapter_Mysql
      * @param string $tableName
      * @return string
      */
-    public function generateAlter($config, $tableName)
+    public function createAlter($config, $tableName)
     {
         $query = array();
-        if (!$this->hasDbTable($tableName)) {
+        if (!$this->hasTable($tableName)) {
             foreach ($config['columns'] as $columnName => $columnConfig) {
                 $query[] = $this->_getColumnSql($columnName, $columnConfig);
             }
@@ -197,7 +197,7 @@ class DbSync_Table_Adapter_Mysql
     }
 
     /**
-     * Alter db table
+     * Execute sql query
      *
      * @param string $sql
      * @return integer
@@ -223,7 +223,7 @@ class DbSync_Table_Adapter_Mysql
      *
      * @return boolen
      */
-    public function hasDbTable($tableName)
+    public function hasTable($tableName)
     {
         $result = $this->_db->query("SHOW TABLES LIKE '{$tableName}'");
         return (bool) $result->fetch(PDO::FETCH_NUM);
@@ -322,15 +322,15 @@ class DbSync_Table_Adapter_Mysql
     }
 
     /**
-     * Is db table dirty
+     * Is db table empty
      *
      * @param string $tableName
      * @return boolean
      */
-    public function isDirtyDbTable($tableName)
+    public function isEmpty($tableName)
     {
         $result = $this->_db->query("SELECT COUNT(*) FROM `{$tableName}`");
-        return (bool) $result->fetch(PDO::FETCH_COLUMN);
+        return false == $result->fetch(PDO::FETCH_COLUMN);
     }
 
     /**
@@ -361,7 +361,7 @@ class DbSync_Table_Adapter_Mysql
      * Get column sql
      *
      * @param string $name
-     * @param Zend_Config $config
+     * @param array $config
      * @return string
      */
     protected function _getColumnSql($name, $config)

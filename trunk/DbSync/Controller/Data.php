@@ -15,15 +15,15 @@ class DbSync_Controller_Data extends DbSync_Controller
     {
         $data = new DbSync_Table_Data($this->_adapter, $this->_path, $tableName);
         if (!$tableName) {
-            foreach ($data->getDataTableList() as $tableName) {
+            foreach ($data->getFileTableList() as $tableName) {
                 $this->pushAction($tableName);
             }
             return;
         }
 
-        if ($data->hasFileData()) {
+        if ($data->hasFile()) {
             $force = $this->_console->hasOption('force');
-            if (!$force && $data->isDirtyDb()) {
+            if (!$force && !$data->isEmptyTable()) {
                 echo $tableName . $this->colorize("is dirty use --force for cleanup or try merge instead of push");
             } else {
                 if ($data->push($force)) {
@@ -47,14 +47,14 @@ class DbSync_Controller_Data extends DbSync_Controller
     {
         $data = new DbSync_Table_Data($this->_adapter, $this->_path, $tableName);
         if (!$tableName) {
-            foreach ($data->getDataTableList() as $tableName) {
+            foreach ($data->getFileTableList() as $tableName) {
                 $this->mergeAction($tableName, $options);
             }
             return;
         }
-        if ($data->hasFileData()) {
-            if (!$data->isDirtyDb()) {
-                echo $tableName . $this->colorize(' - is not dirty use push instead', 'red');
+        if ($data->hasFile()) {
+            if ($data->isEmptyTable()) {
+                echo $tableName . $this->colorize(' - is empty use push instead', 'red');
             } else {
                 $data->merge();
                 echo $tableName . $this->colorize(" - Updated", 'green');
@@ -81,7 +81,7 @@ class DbSync_Controller_Data extends DbSync_Controller
             return;
         }
 
-        if ($data->hasDbTable() && $data->hasFileData()) {
+        if ($data->hasDbTable() && $data->hasFile()) {
             if ($data->getStatus()) {
                 echo $tableName . $this->colorize(" - OK", 'green');
             } else {
@@ -114,7 +114,7 @@ class DbSync_Controller_Data extends DbSync_Controller
         }
 
         if ($data->hasDbTable()) {
-            if ($data->hasFileData()) {
+            if ($data->hasFile()) {
                 echo $tableName . $this->colorize(' - Table already has data', 'red');
             } else {
                 if ($data->isWriteable()) {
@@ -175,7 +175,7 @@ class DbSync_Controller_Data extends DbSync_Controller
             return;
         }
 
-        if ($data->hasDbTable() && $data->hasFileData()) {
+        if ($data->hasDbTable() && $data->hasFile()) {
             if ($data->getStatus()) {
                 echo $tableName . $this->colorize(" - OK", 'green');
             } else {
