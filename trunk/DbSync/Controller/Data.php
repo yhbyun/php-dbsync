@@ -197,6 +197,32 @@ class DbSync_Controller_Data extends DbSync_Controller
      */
     public function helpAction()
     {
-        echo 'help';
+        echo "Usage {$this->_console->getProgname()} [action] [tableName] ", PHP_EOL;
+
+        echo PHP_EOL;
+
+        echo $this->colorize("if tableName not specified action applied to all tables/configs"), PHP_EOL;
+
+        echo PHP_EOL;
+
+        echo "Actions:", PHP_EOL;
+
+        echo $this->colorize("init", 'green');
+        echo "     Create database data config in specified path", PHP_EOL;
+
+        echo $this->colorize("status", 'green');
+        echo "   Check data status (Ok/Unsyncronized)", PHP_EOL;
+
+        echo $this->colorize("diff", 'green');
+        echo "     Show diff between database table data and data config file", PHP_EOL;
+
+        echo $this->colorize("pull", 'green');
+        echo "     Override current data config file by new created from database data", PHP_EOL;
+
+        echo $this->colorize("push", 'green');
+        echo "     Override database data by current data config file", PHP_EOL;
+
+        echo $this->colorize("help", 'green');
+        echo "     help message", PHP_EOL;
     }
 }

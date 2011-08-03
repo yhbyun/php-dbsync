@@ -167,7 +167,34 @@ class DbSync_Controller_Schema extends DbSync_Controller
      */
     public function helpAction()
     {
-        echo 'help';
+        echo "Usage {$this->_console->getProgname()} [action] [tableName] ", PHP_EOL;
+
+        echo PHP_EOL;
+
+        echo $this->colorize("if tableName not specified action applied to all tables/configs"), PHP_EOL;
+
+        echo PHP_EOL;
+
+        echo "Actions:", PHP_EOL;
+
+        echo $this->colorize("init", 'green');
+        echo "     Create database schema config in specified path", PHP_EOL;
+
+        echo $this->colorize("status", 'green');
+        echo "   Check schema status (Ok/Unsyncronized)", PHP_EOL;
+
+        echo $this->colorize("diff", 'green');
+        echo "     Show diff between database table schema and schema config file", PHP_EOL;
+
+        echo $this->colorize("pull", 'green');
+        echo "     Override current schema config file by new created from database", PHP_EOL;
+
+        echo $this->colorize("push", 'green');
+        echo "     Override database schema by current schema config file", PHP_EOL;
+
+        echo $this->colorize("help", 'green');
+        echo "     help message", PHP_EOL;
+
         echo PHP_EOL;
     }
 }

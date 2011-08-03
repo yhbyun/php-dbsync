@@ -13,6 +13,8 @@ $config = array(
     'path' => 'tables'
 );
 
+require_once 'check.php';
+
 require_once 'Zend/Config/Yaml.php';
 require_once 'Zend/Config/Writer/Yaml.php';
 
