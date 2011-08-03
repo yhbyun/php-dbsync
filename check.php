@@ -7,7 +7,3 @@ if (version_compare(PHP_VERSION, '5.0.0', '<')) {
 if (!extension_loaded('pdo_mysql')) {
     echo "PDO extension is required", PHP_EOL;exit;
 }
-
-if (!class_exists('Zend_Config')) {
-    echo "Zend_Config is required", PHP_EOL;exit;
-}

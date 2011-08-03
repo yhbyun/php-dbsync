@@ -139,6 +139,14 @@ class DbSync_Table_Adapter_Mysql
             foreach ($config['columns'] as $columnName => $columnConfig) {
                 $query[] = $this->_getColumnSql($columnName, $columnConfig);
             }
+            if ($config['primary']) {
+                $query[] = "PRIMARY KEY (`" . join('`, `', $config['primary'])  . "`)";
+            }
+            if (!empty($config['unique'])) {
+                foreach ($config['unique'] as $keyName => $columnName) {
+                    $query[] = "UNIQUE KEY `{$keyName}` (`{$columnName}`)";
+                }
+            }
             $query = "CREATE TABLE `{$tableName}` (" . PHP_EOL
                    . join(',' . PHP_EOL, $query) . PHP_EOL
                    . ") ENGINE={$config['engine']} CHARSET={$config['charset']}";
@@ -165,7 +173,22 @@ class DbSync_Table_Adapter_Mysql
                 $query[] = "{$action} COLUMN " . $this->_getColumnSql($columnName, $columnConfig);
             }
             foreach ($columns as $columnDesc) {
-                $query[] = "DROP COLUMN {$columnDesc['Field']}";
+                $query[] = "DROP COLUMN `{$columnDesc['Field']}`";
+            }
+
+            if ($this->_hasPrimaryKey($tableName)) {
+                $query[] = "DROP PRIMARY KEY";
+            }
+            foreach ($this->_getIndexes($tableName) as $row) {
+                $query[] = "DROP INDEX `{$row['Key_name']}`";
+            }
+            if (!empty($config['primary'])) {
+                $query[] = "ADD PRIMARY KEY (" . join(', ', $config['primary'])  . ")";
+            }
+            if (!empty($config['unique'])) {
+                foreach ($config['unique'] as $keyName => $columnName) {
+                    $query[] = "UNIQUE KEY `{$keyName}` (`{$columnName}`)";
+                }
             }
             $query = join(',' . PHP_EOL, $query);
         }
@@ -193,39 +216,6 @@ class DbSync_Table_Adapter_Mysql
     {
         $result = $this->_db->query("SHOW TABLES");
         return $result->fetchAll(PDO::FETCH_COLUMN);
-    }
-
-    /**
-     * Get column sql
-     *
-     * @param string $name
-     * @param Zend_Config $config
-     * @return string
-     */
-    protected function _getColumnSql($name, $config)
-    {
-        $query = "`{$name}` {$config->type}";
-        if (!$config->nullable) {
-            $query .= " NOT NULL";
-            if ($config->default) {
-                $query .= " DEFAULT {$config->default}";
-            }
-        } else {
-            $query .= " DEFAULT NULL";
-        }
-        if ($config->comment) {
-            $query .= " COMMENT {$config->comment}";
-        }
-
-        if ($config->unsigned) {
-            $query .= " UNSIGNED";
-        }
-
-        if ($config->autoincrement) {
-            $query .= " AUTO_INCREMENT";
-        }
-
-        return $query;
     }
 
     /**
@@ -339,7 +329,64 @@ class DbSync_Table_Adapter_Mysql
      */
     public function isDirtyDbTable($tableName)
     {
-        $result = $this->_db->query("SELECT COUNT(*) FROM {$tableName}");
+        $result = $this->_db->query("SELECT COUNT(*) FROM `{$tableName}`");
         return (bool) $result->fetch(PDO::FETCH_COLUMN);
+    }
+
+    /**
+     * Has table a primary key
+     *
+     * @param string $tableName
+     * @return boolen
+     */
+    protected function _hasPrimaryKey($tableName)
+    {
+        $result = $this->_db->query("SHOW INDEXES FROM `{$tableName}` WHERE Key_name = 'PRIMARY'");
+        return $result->rowCount() > 0;
+    }
+
+    /**
+     * Get table indexes
+     *
+     * @param string $tableName
+     * @return array
+     */
+    protected function _getIndexes($tableName)
+    {
+        $result = $this->_db->query("SHOW INDEXES FROM `{$tableName}` WHERE Key_name != 'PRIMARY'");
+        return $result->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Get column sql
+     *
+     * @param string $name
+     * @param Zend_Config $config
+     * @return string
+     */
+    protected function _getColumnSql($name, $config)
+    {
+        $query = "`{$name}` {$config['type']}";
+        if (empty($config['nullable'])) {
+            $query .= " NOT NULL";
+            if (!empty($config['default'])) {
+                $query .= " DEFAULT {$config['default']}";
+            }
+        } else {
+            $query .= " DEFAULT NULL";
+        }
+        if (!empty($config['comment'])) {
+            $query .= " COMMENT {$config['comment']}";
+        }
+
+        if (!empty($config['unsigned'])) {
+            $query .= " UNSIGNED";
+        }
+
+        if (!empty($config['autoincrement'])) {
+            $query .= " AUTO_INCREMENT";
+        }
+
+        return $query;
     }
 }
