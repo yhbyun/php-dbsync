@@ -7,158 +7,9 @@
 class DbSync_Controller_Schema extends DbSync_Controller
 {
     /**
-     * Push
-     *
-     * @param string $tableName
-     * @param array $options
-     */
-    public function pushAction($tableName = null)
-    {
-        $schema = new DbSync_Table_Schema($this->_adapter, $this->_path, $tableName);
-        if (!$tableName) {
-            foreach ($schema->getFileTableList() as $tableName) {
-                $this->pushAction($tableName);
-            }
-            return;
-        }
-
-        if ($schema->hasFile()) {
-            if ($this->_console->hasOption('show')) {
-                echo $schema->createAlter();
-            } else {
-                 $schema->push();
-
-                 echo "{$tableName} - updated";
-            }
-        } else {
-            echo "Schema for '{$tableName}' not found";
-        }
-        echo PHP_EOL;
-    }
-
-    /**
-     * Status
-     *
-     * @param string $tableName
-     */
-    public function statusAction($tableName = null)
-    {
-        $schema = new DbSync_Table_Schema($this->_adapter, $this->_path, $tableName);
-
-        if (!$tableName) {
-            foreach ($schema->getTableList() as $tableName) {
-                $this->statusAction($tableName);
-            }
-            return;
-        }
-
-        if ($schema->hasDbTable() && $schema->hasFile()) {
-            if ($schema->getStatus()) {
-                echo "'{$tableName}' - OK";
-            } else {
-                echo "'{$tableName}' - Unsyncronized";
-            }
-        } else {
-            if (!$schema->hasDbTable()) {
-                echo "Table '{$tableName}' not exists";
-            } else {
-                echo "Schema for '{$tableName}' not found";
-            }
-        }
-        echo PHP_EOL;
-    }
-
-    /**
-     * Init
-     *
-     * @param string $tableName
-     */
-    public function initAction($tableName = null)
-    {
-        $schema = new DbSync_Table_Schema($this->_adapter, $this->_path, $tableName);
-        if (!$tableName) {
-            foreach ($schema->getDbTableList() as $tableName) {
-                $this->initAction($tableName);
-            }
-            return;
-        }
-
-        $schema = new DbSync_Table_Schema($this->_adapter, $this->_path, $tableName);
-        if ($schema->hasDbTable()) {
-            if ($schema->hasFile()) {
-                echo "Table '{$tableName}' already has schema";
-            } else {
-                if ($schema->isWriteable()) {
-                    $schema->init();
-                    echo "'{$tableName}' - OK";
-                } else {
-                    echo "Schema path for '{$tableName}' is not writeable";
-                }
-            }
-        } else {
-            echo "Table '{$tableName}' not found";
-        }
-        echo PHP_EOL;
-    }
-
-    /**
-     * Pull
-     *
-     * @param string $tableName
-     */
-    public function pullAction($tableName = null)
-    {
-        $schema = new DbSync_Table_Schema($this->_adapter, $this->_path, $tableName);
-
-        if (!$tableName) {
-            foreach ($schema->getDbTableList() as $tableName) {
-                $this->pullAction($tableName);
-            }
-            return;
-        }
-
-        if ($schema->hasDbTable()) {
-            if ($schema->isWriteable()) {
-                $schema->pull();
-                echo "'{$tableName}' - OK";
-            } else {
-                echo "Schema path for '{$tableName}' is not writeable";
-            }
-        } else {
-            echo "Table '{$tableName}' not found";
-        }
-        echo PHP_EOL;
-    }
-
-    /**
-     * Diff
-     *
-     * @param string $tableName
-     */
-    public function diffAction($tableName = null)
-    {
-        $schema = new DbSync_Table_Schema($this->_adapter, $this->_path, $tableName);
-
-        if (!$tableName) {
-            foreach ($schema->getTableList() as $tableName) {
-                $this->diffAction($tableName);
-            }
-            return;
-        }
-
-        if ($schema->hasDbTable() && $schema->hasFile()) {
-            if (!$schema->getStatus()) {
-                echo join(PHP_EOL, $schema->diff()), PHP_EOL;
-            }
-        } else {
-            if (!$schema->hasDbTable()) {
-                echo "Table '{$tableName}' not exists";
-            } else {
-                echo "Schema for '{$tableName}' not found";
-            }
-            echo PHP_EOL;
-        }
-    }
+    * @var string
+    */
+    protected $_modelClass = 'DbSync_Table_Schema';
 
     /**
      * Help
@@ -167,7 +18,7 @@ class DbSync_Controller_Schema extends DbSync_Controller
      */
     public function helpAction()
     {
-        echo "Usage {$this->_console->getProgname()} [action] [tableName] ", PHP_EOL;
+        echo "Usage {$this->_console->getProgname()} [action] [ [tableName] ... ] ", PHP_EOL;
 
         echo PHP_EOL;
 
@@ -196,5 +47,119 @@ class DbSync_Controller_Schema extends DbSync_Controller
         echo "     help message", PHP_EOL;
 
         echo PHP_EOL;
+    }
+
+    /**
+     * Push
+     *
+     */
+    public function push()
+    {
+        $tableName = $this->_model->getTableName();
+
+        if ($this->_model->hasFile()) {
+            if ($this->_console->hasOption('show')) {
+                echo $this->_model->createAlter();
+            } else {
+                 $this->_model->push();
+
+                 echo $tableName . $this->colorize(" - Updated", 'green');
+            }
+        } else {
+            echo $tableName . $this->colorize(" - Schema not found", 'red');
+        }
+        echo PHP_EOL;
+    }
+
+    /**
+     * Status
+     *
+     */
+    public function status()
+    {
+        $tableName = $this->_model->getTableName();
+
+        if ($this->_model->hasDbTable() && $this->_model->hasFile()) {
+            if ($this->_model->getStatus()) {
+                echo $tableName . $this->colorize(" - Ok", 'green');
+            } else {
+                echo $tableName . $this->colorize(" - Unsyncronized", 'red');
+            }
+        } else {
+            if (!$this->_model->hasDbTable()) {
+                echo $tableName . $this->colorize(" - Table not found", 'red');
+            } else {
+                echo $tableName . $this->colorize(" - Schema not found", 'red');
+            }
+        }
+        echo PHP_EOL;
+    }
+
+    /**
+     * Init
+     *
+     */
+    public function init()
+    {
+        $tableName = $this->_model->getTableName();
+
+        if ($this->_model->hasDbTable()) {
+            if ($this->_model->hasFile()) {
+                echo $tableName . $this->colorize(" - Already has data", 'red');
+            } else {
+                if ($this->_model->isWriteable()) {
+                    $this->_model->init();
+                    echo $tableName . $this->colorize(" - Ok", 'green');
+                } else {
+                    echo $tableName . $this->colorize(" - Path is not writeable", 'red');
+                }
+            }
+        } else {
+            echo $tableName . $this->colorize(" - Table not found", 'red');
+        }
+        echo PHP_EOL;
+    }
+
+    /**
+     * Pull
+     *
+     */
+    public function pull($tableName = null)
+    {
+        $tableName = $this->_model->getTableName();
+
+        if ($this->_model->hasDbTable()) {
+            if ($this->_model->isWriteable()) {
+                $this->_model->pull();
+                echo $tableName . $this->colorize(" - Ok", 'green');
+            } else {
+                echo $tableName . $this->colorize(" - Path is not writeable", 'red');
+            }
+        } else {
+            echo $tableName . $this->colorize(" - Table not found", 'red');
+        }
+        echo PHP_EOL;
+    }
+
+    /**
+     * Diff
+     *
+     */
+    public function diff($tableName = null)
+    {
+        $tableName = $this->_model->getTableName();
+
+        if ($this->_model->hasDbTable() && $this->_model->hasFile()) {
+            if (!$this->_model->getStatus()) {
+                echo join(PHP_EOL, $this->_model->diff()), PHP_EOL;
+            }
+        } else {
+            if (!$this->_model->hasDbTable()) {
+                echo $tableName . $this->colorize(" - Table not found", 'red');
+            } else {
+                echo $tableName . $this->colorize(" - Schema not found", 'red');
+            }
+            echo PHP_EOL;
+        }
     }
 }
