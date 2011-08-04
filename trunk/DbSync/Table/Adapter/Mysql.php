@@ -20,7 +20,7 @@ class DbSync_Table_Adapter_Mysql
     public function __construct(array $config)
     {
         $this->_db = new PDO(
-            $config['dns'],
+            "mysql:host={$config['host']};dbname={$config['dbname']}",
             $config['username'],
             $config['password'],
             $config['options']
