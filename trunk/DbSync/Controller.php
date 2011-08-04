@@ -6,9 +6,9 @@
  */
 abstract class DbSync_Controller
 {
-    protected $_adapter;
+    protected $_modelClass;
 
-    protected $_path;
+    protected $_model;
 
     protected $_console;
 
@@ -19,18 +19,12 @@ abstract class DbSync_Controller
      */
     public function __construct(array $config)
     {
-        $this->_adapter = DbSync_Table_Adapter::factory(
+        $adapter = DbSync_Table_Adapter::factory(
             $config['db']['adapter'],
             $config['db']['params']
         );
 
-        $this->_path = $config['path'];
-    }
-
-    public function __call($method, $args)
-    {
-        $args[] = $method;
-        return call_user_func_array(array($this, 'colorize'), $args);
+        $this->_model = new $this->_modelClass($adapter, $config['path']);
     }
 
     /**
@@ -48,12 +42,12 @@ abstract class DbSync_Controller
         if (!method_exists($this, $action)) {
             $action = 'helpAction';
         }
+
         $actions = $console->getActions();
         unset($actions['0']);
 
-        return call_user_func_array(array($this, $action), $actions);
+        return $this->{$action}($actions);
     }
-
 
     /**
      * Descructor
@@ -68,6 +62,87 @@ abstract class DbSync_Controller
      * Help action
      */
     abstract function helpAction();
+
+
+    /**
+     * Push
+     *
+     * @param array $tables
+     */
+    public function pushAction($tables = null)
+    {
+        if (!$tables) {
+            $tables = $this->_model->getFileTableList();
+        }
+        foreach ($tables as $tableName) {
+            $this->_model->setTableName($tableName);
+            $this->push();
+        }
+    }
+
+    /**
+     * Status
+     *
+     * @param array $tables
+     */
+    public function statusAction($tables = null)
+    {
+        if (!$tables) {
+            $tables = $this->_model->getTableList();
+        }
+        foreach ($tables as $tableName) {
+            $this->_model->setTableName($tableName);
+            $this->status();
+        }
+    }
+
+    /**
+     * Init
+     *
+     * @param array $tables
+     */
+    public function initAction($tables = null)
+    {
+        if (!$tables) {
+            $tables = $this->_model->getDbTableList();
+        }
+        foreach ($tables as $tableName) {
+            $this->_model->setTableName($tableName);
+            $this->init();
+        }
+    }
+
+    /**
+     * Pull
+     *
+     * @param array $tables
+     */
+    public function pullAction($tables = null)
+    {
+        if (!$tables) {
+            $tables = $this->_model->getDbTableList();
+        }
+        foreach ($tables as $tableName) {
+            $this->_model->setTableName($tableName);
+            $this->pull();
+        }
+    }
+
+    /**
+     * Diff
+     *
+     * @param array $tables
+     */
+    public function diffAction($tables = null)
+    {
+        if (!$tables) {
+            $tables = $this->_model->getTableList();
+        }
+        foreach ($tables as $tableName) {
+            $this->_model->setTableName($tableName);
+            $this->diff();
+        }
+    }
 
     /**
      * Colorize

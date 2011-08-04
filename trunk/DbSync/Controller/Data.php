@@ -7,188 +7,24 @@
 class DbSync_Controller_Data extends DbSync_Controller
 {
     /**
-     * Push
-     *
-     * @param string $tableName
+     * @var string
      */
-    public function pushAction($tableName = null)
-    {
-        $data = new DbSync_Table_Data($this->_adapter, $this->_path, $tableName);
-        if (!$tableName) {
-            foreach ($data->getFileTableList() as $tableName) {
-                $this->pushAction($tableName);
-            }
-            return;
-        }
-
-        if ($data->hasFile()) {
-            $force = $this->_console->hasOption('force');
-            if (!$force && !$data->isEmptyTable()) {
-                echo $tableName . $this->colorize("is dirty use --force for cleanup or try merge instead of push");
-            } else {
-                if ($data->push($force)) {
-                    echo $tableName . $this->colorize(" - Updated", 'green');
-                } else {
-                    echo $tableName . $this->colorize(' - Error occured');
-                }
-            }
-        } else {
-            echo $tableName . $this->colorize(" - Data not found", 'red');
-        }
-        echo PHP_EOL;
-    }
+    protected $_modelClass = 'DbSync_Table_Data';
 
     /**
      * Merge
      *
-     * @param string $tableName
+     * @param array $tables
      */
-    public function mergeAction($tableName = null)
+    public function mergeAction($tables = null)
     {
-        $data = new DbSync_Table_Data($this->_adapter, $this->_path, $tableName);
-        if (!$tableName) {
-            foreach ($data->getFileTableList() as $tableName) {
-                $this->mergeAction($tableName, $options);
-            }
-            return;
+        if (!$tables) {
+            $tables = $this->_model->getFileTableList();
         }
-        if ($data->hasFile()) {
-            if ($data->isEmptyTable()) {
-                echo $tableName . $this->colorize(' - is empty use push instead', 'red');
-            } else {
-                $data->merge();
-                echo $tableName . $this->colorize(" - Updated", 'green');
-            }
-        } else {
-            echo $tableName . $this->colorize(" - Data not found", 'red');
+        foreach ($tables as $tableName) {
+            $this->_model->setTableName($tableName);
+            $this->merge();
         }
-        echo PHP_EOL;
-    }
-
-    /**
-     * Status
-     *
-     * @param string $tableName
-     */
-    public function statusAction($tableName = null)
-    {
-        $data = new DbSync_Table_Data($this->_adapter, $this->_path, $tableName);
-
-        if (!$tableName) {
-            foreach ($data->getTableList() as $tableName) {
-                $this->statusAction($tableName);
-            }
-            return;
-        }
-
-        if ($data->hasDbTable() && $data->hasFile()) {
-            if ($data->getStatus()) {
-                echo $tableName . $this->colorize(" - OK", 'green');
-            } else {
-                echo $tableName . $this->colorize(' - Unsyncronized');
-            }
-        } else {
-            if (!$data->hasDbTable()) {
-                echo $tableName . $this->colorize(" - Table not exists", 'red');
-            } else {
-                echo $tableName . $this->colorize(" - Data not found", 'red');
-            }
-        }
-        echo PHP_EOL;
-    }
-
-    /**
-     * Init
-     *
-     * @param string $tableName
-     */
-    public function initAction($tableName = null)
-    {
-        $data = new DbSync_Table_Data($this->_adapter, $this->_path, $tableName);
-
-        if (!$tableName) {
-            foreach ($data->getDbTableList() as $tableName) {
-                $this->initAction($tableName);
-            }
-            return;
-        }
-
-        if ($data->hasDbTable()) {
-            if ($data->hasFile()) {
-                echo $tableName . $this->colorize(' - Table already has data', 'red');
-            } else {
-                if ($data->isWriteable()) {
-                    $data->init();
-                    echo $tableName . $this->colorize(" - OK", 'green');
-                } else {
-                    echo $tableName . $this->colorize(" - Path is not writeable", 'green');
-                }
-            }
-        } else {
-            echo $tableName . $this->colorize(" - Table not exists", 'red');
-        }
-        echo PHP_EOL;
-    }
-
-    /**
-     * Pull
-     *
-     * @param string $tableName
-     */
-    public function pullAction($tableName = null)
-    {
-        $data = new DbSync_Table_Data($this->_adapter, $this->_path, $tableName);
-
-        if (!$tableName) {
-            foreach ($data->getDbTableList() as $tableName) {
-                $this->pullAction($tableName);
-            }
-            return;
-        }
-
-        if ($data->hasDbTable()) {
-            if ($data->isWriteable()) {
-                $data->pull();
-                echo $tableName . $this->colorize(" - OK", 'green');
-            } else {
-                echo $tableName . $this->colorize(" - Path is not writeable", 'green');
-            }
-        } else {
-            echo $tableName . $this->colorize(" - Table not exists", 'red');
-        }
-        echo PHP_EOL;
-    }
-
-    /**
-     * Diff
-     *
-     * @param string $tableName
-     */
-    public function diffAction($tableName = null)
-    {
-        $data = new DbSync_Table_Data($this->_adapter, $this->_path, $tableName);
-
-        if (!$tableName) {
-            foreach ($data->getTableList() as $tableName) {
-                $this->diffAction($tableName);
-            }
-            return;
-        }
-
-        if ($data->hasDbTable() && $data->hasFile()) {
-            if ($data->getStatus()) {
-                echo $tableName . $this->colorize(" - OK", 'green');
-            } else {
-                echo join(PHP_EOL, $data->diff());
-            }
-        } else {
-            if (!$data->hasDbTable()) {
-                echo $tableName . $this->colorize(" - Table not exists", 'red');
-            } else {
-                echo $tableName . $this->colorize(" - Data not found", 'red');
-            }
-        }
-        echo PHP_EOL;
     }
 
     /**
@@ -197,7 +33,7 @@ class DbSync_Controller_Data extends DbSync_Controller
      */
     public function helpAction()
     {
-        echo "Usage {$this->_console->getProgname()} [action] [tableName] ", PHP_EOL;
+        echo "Usage {$this->_console->getProgname()} [action] [ [tableName] ... ] ", PHP_EOL;
 
         echo PHP_EOL;
 
@@ -224,5 +60,146 @@ class DbSync_Controller_Data extends DbSync_Controller
 
         echo $this->colorize("help", 'green');
         echo "     help message", PHP_EOL;
+    }
+
+
+    /**
+     * Push
+     *
+     */
+    public function push()
+    {
+        $tableName = $this->_model->getTableName();
+
+        if ($this->_model->hasFile()) {
+            $force = $this->_console->hasOption('force');
+            if (!$force && !$this->_model->isEmptyTable()) {
+                echo $tableName . $this->colorize(" - is dirty use --force for cleanup or try merge instead of push");
+            } else {
+                if ($this->_model->push($force)) {
+                    echo $tableName . $this->colorize(" - Updated", 'green');
+                } else {
+                    echo $tableName . $this->colorize(' - Error occured');
+                }
+            }
+        } else {
+            echo $tableName . $this->colorize(" - Data not found", 'red');
+        }
+        echo PHP_EOL;
+    }
+
+    /**
+     * Merge
+     *
+     */
+    public function merge()
+    {
+        $tableName = $this->_model->getTableName();
+
+        if ($this->_model->hasFile()) {
+            if ($this->_model->isEmptyTable()) {
+                echo $tableName . $this->colorize(' - is empty use push instead', 'red');
+            } else {
+                $this->_model->merge();
+                echo $tableName . $this->colorize(" - Updated", 'green');
+            }
+        } else {
+            echo $tableName . $this->colorize(" - Data not found", 'red');
+        }
+        echo PHP_EOL;
+    }
+
+    /**
+     * Status
+     *
+     */
+    public function status()
+    {
+        $tableName = $this->_model->getTableName();
+
+        if ($this->_model->hasDbTable() && $this->_model->hasFile()) {
+            if ($this->_model->getStatus()) {
+                echo $tableName . $this->colorize(" - OK", 'green');
+            } else {
+                echo $tableName . $this->colorize(' - Unsyncronized');
+            }
+        } else {
+            if (!$this->_model->hasDbTable()) {
+                echo $tableName . $this->colorize(" - Table not exists", 'red');
+            } else {
+                echo $tableName . $this->colorize(" - Data not found", 'red');
+            }
+        }
+        echo PHP_EOL;
+    }
+
+    /**
+     * Init
+     *
+     */
+    public function init()
+    {
+        $tableName = $this->_model->getTableName();
+
+        if ($this->_model->hasDbTable()) {
+            if ($this->_model->hasFile()) {
+                echo $tableName . $this->colorize(' - Table already has data', 'red');
+            } else {
+                if ($this->_model->isWriteable()) {
+                    $this->_model->init();
+                    echo $tableName . $this->colorize(" - OK", 'green');
+                } else {
+                    echo $tableName . $this->colorize(" - Path is not writeable", 'green');
+                }
+            }
+        } else {
+            echo $tableName . $this->colorize(" - Table not exists", 'red');
+        }
+        echo PHP_EOL;
+    }
+
+    /**
+     * Pull
+     *
+     */
+    public function pull()
+    {
+        $tableName = $this->_model->getTableName();
+
+        if ($this->_model->hasDbTable()) {
+            if ($this->_model->isWriteable()) {
+                $this->_model->pull();
+                echo $tableName . $this->colorize(" - OK", 'green');
+            } else {
+                echo $tableName . $this->colorize(" - Path is not writeable", 'green');
+            }
+        } else {
+            echo $tableName . $this->colorize(" - Table not exists", 'red');
+        }
+        echo PHP_EOL;
+    }
+
+    /**
+     * Diff
+     *
+     */
+    public function diff()
+    {
+        $tableName = $this->_model->getTableName();
+
+        if ($this->_model->hasDbTable() && $this->_model->hasFile()) {
+            if ($this->_model->getStatus()) {
+                echo $tableName . $this->colorize(" - OK", 'green');
+            } else {
+                echo join(PHP_EOL, $this->_model->diff());
+            }
+        } else {
+            if (!$this->_model->hasDbTable()) {
+                echo $tableName . $this->colorize(" - Table not exists", 'red');
+            } else {
+                echo $tableName . $this->colorize(" - Data not found", 'red');
+            }
+        }
+        echo PHP_EOL;
     }
 }
