@@ -33,7 +33,7 @@ class DbSync_Controller_Data extends DbSync_Controller
      */
     public function helpAction()
     {
-        echo "Usage {$this->_console->getProgname()} [action] [ [tableName] ... ] ", PHP_EOL;
+        echo "Usage {$this->_console->getProgname()} [action] [ [tableName] ... ] [--option]", PHP_EOL;
 
         echo PHP_EOL;
 
@@ -57,6 +57,7 @@ class DbSync_Controller_Data extends DbSync_Controller
 
         echo $this->colorize("push", 'green');
         echo "     Override database data by current data config file", PHP_EOL;
+        echo "         Use {$this->colorize('--force')} to truncate table first", PHP_EOL;
 
         echo $this->colorize("help", 'green');
         echo "     help message", PHP_EOL;

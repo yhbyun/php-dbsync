@@ -24,7 +24,12 @@ abstract class DbSync_Controller
             $config['db']['params']
         );
 
-        $this->_model = new $this->_modelClass($adapter, $config['path']);
+        $this->_model = new $this->_modelClass(
+            $adapter,
+            $config['path'],
+            null,
+            $config['diffprog']
+        );
     }
 
     /**
