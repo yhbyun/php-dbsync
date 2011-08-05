@@ -19,7 +19,7 @@ abstract class DbSync_Controller
      */
     public function __construct(array $config)
     {
-        $adapter = DbSync_Table_Adapter::factory(
+        $adapter = DbSync_Table_DbAdapter::factory(
             $config['db']['adapter'],
             $config['db']['params']
         );

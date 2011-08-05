@@ -23,6 +23,6 @@ require_once 'DbSync/Table.php';
 require_once 'DbSync/Console.php';
 require_once 'DbSync/Controller.php';
 
-require_once 'DbSync/Table/Adapter.php';
-require_once 'DbSync/Table/Adapter/AdapterInterface.php';
-require_once 'DbSync/Table/Adapter/Mysql.php';
+require_once 'DbSync/Table/DbAdapter.php';
+require_once 'DbSync/Table/DbAdapter/AdapterInterface.php';
+require_once 'DbSync/Table/DbAdapter/Mysql.php';

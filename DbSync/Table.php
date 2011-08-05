@@ -17,11 +17,11 @@ class DbSync_Table
     /**
      * Constructor
      *
-     * @param DbSync_Table_Adapter_AdapterInterface $db
+     * @param DbSync_Table_DbAdapter_AdapterInterface $db
      * @param string $path
      * @param string $tableName
      */
-    public function __construct(DbSync_Table_Adapter_AdapterInterface $adapter,
+    public function __construct(DbSync_Table_DbAdapter_AdapterInterface $adapter,
         $path, $tableName = null)
     {
         $this->_adapter = $adapter;
