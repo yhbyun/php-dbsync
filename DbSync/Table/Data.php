@@ -12,6 +12,28 @@ class DbSync_Table_Data extends DbSync_Table
     protected $_filename = 'data.yml';
 
     /**
+     * @var string
+     */
+    protected $_diff = 'diff';
+
+    /**
+     * Constructor
+     *
+     * @param DbSync_Table_DbAdapter_AdapterInterface $db
+     * @param string $path
+     * @param string $tableName
+     */
+    public function __construct(DbSync_Table_DbAdapter_AdapterInterface $adapter,
+        $path, $tableName = null, $diffProg = null)
+    {
+        parent::__construct($adapter, $path, $tableName);
+
+        if ($diffProg) {
+            $this->_diff = $diffProg;
+        }
+    }
+
+    /**
      * Fetch all data from table
      *
      * @param string $filename
@@ -37,15 +59,11 @@ class DbSync_Table_Data extends DbSync_Table
         if (!$filename = $this->getFilePath()) {
             throw new Exception("Data for table {$this->_tableName} not found");
         }
-        $data = $this->load($filename);
-
-        if (!current($data)) {
-            throw new Exception("Data for '{$this->_tableName}' is empty");
-        }
 
         if (!$this->hasDbTable()) {
             throw new Exception("Table '{$this->_tableName}' not found");
         }
+
         if (!$this->isEmptyTable()) {
             if (!$force) {
                 throw new Exception("Table '{$this->_tableName}' is not empty");
@@ -53,6 +71,11 @@ class DbSync_Table_Data extends DbSync_Table
             $this->_adapter->truncate($this->_tableName);
         }
 
+        $data = $this->load($filename);
+
+        if (!current($data)) {
+            return false;
+        }
         return $this->_adapter->insert($data, $this->_tableName);
     }
 
@@ -133,7 +156,7 @@ class DbSync_Table_Data extends DbSync_Table
             $this->save($tmp);
 
             if (file_get_contents($filename) !== file_get_contents($tmp)) {
-                exec("diff {$filename} {$tmp}", $output);
+                exec("{$this->_diff} {$filename} {$tmp}", $output);
             }
             unlink($tmp);
         }

@@ -322,6 +322,17 @@ class DbSync_Table_DbAdapter_Mysql
     }
 
     /**
+     * Drop table
+     *
+     * @param string $tableName
+     * @return number
+     */
+    public function delete($tableName)
+    {
+        return $this->_db->exec("DROP TABLE IF EXISTS {$tableName}");
+    }
+
+    /**
      * Is db table empty
      *
      * @param string $tableName

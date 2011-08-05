@@ -127,11 +127,14 @@ class DbSync_Table
      *
      * @param string $filename
      * @param array $data
+     * @return int The function returns the number of bytes that were written to the file, or
+     * false on failure.
      */
     public function write($filename, array $data)
     {
-        $writer = new Zend_Config_Writer_Yaml();
-        $writer->write($filename, new Zend_Config($data));
+
+        $yaml = sfYaml::dump($data);
+        return file_put_contents($filename, $yaml);
     }
 
     /**
@@ -142,8 +145,7 @@ class DbSync_Table
      */
     public function load($filename)
     {
-        $config = new Zend_Config_Yaml($filename);
-        return $config->toArray();
+        return sfYaml::load($filename);
     }
 
     /**

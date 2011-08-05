@@ -12,13 +12,29 @@ class DbSync_Controller_Schema extends DbSync_Controller
     protected $_modelClass = 'DbSync_Table_Schema';
 
     /**
+     * Delete
+     *
+     * @param array $tables
+     */
+    public function deleteAction($tables = null)
+    {
+        if (!$tables) {
+            $tables = $this->_model->getTableList();
+        }
+        foreach ($tables as $tableName) {
+            $this->_model->setTableName($tableName);
+            $this->delete();
+        }
+    }
+
+    /**
      * Help
      *
      * @see DbSync_Controller::help()
      */
     public function helpAction()
     {
-        echo "Usage {$this->_console->getProgname()} [action] [ [tableName] ... ] ", PHP_EOL;
+        echo "Usage {$this->_console->getProgname()} [action] [ [tableName] ... ] [--option]", PHP_EOL;
 
         echo PHP_EOL;
 
@@ -38,7 +54,8 @@ class DbSync_Controller_Schema extends DbSync_Controller
         echo "     Show diff between database table schema and schema config file", PHP_EOL;
 
         echo $this->colorize("pull", 'green');
-        echo "     Override current schema config file by new created from database", PHP_EOL;
+        echo "     Override current schema config file by new created from database.", PHP_EOL;
+        echo "         Use {$this->colorize('--show')} to only display alter code", PHP_EOL;
 
         echo $this->colorize("push", 'green');
         echo "     Override database schema by current schema config file", PHP_EOL;
@@ -48,6 +65,30 @@ class DbSync_Controller_Schema extends DbSync_Controller
 
         echo PHP_EOL;
     }
+
+    /**
+     * Delete
+     *
+     */
+    public function delete()
+    {
+        $tableName = $this->_model->getTableName();
+
+        if ($this->_model->hasFile() && !$this->_console->hasOption('table')) {
+            if ($this->_model->isWriteable()) {
+                $this->_model->deleteFile();
+                echo $tableName . $this->colorize(" - File deleted", 'green');
+            } else {
+                echo $tableName . $this->colorize(" - Path is not writeable", 'red');
+            }
+        }
+        if ($this->_model->hasDbTable() && !$this->_console->hasOption('file')) {
+            $this->_model->deleteDbTable();
+            echo $tableName . $this->colorize(" - Database table deleted", 'green');
+        }
+        echo PHP_EOL;
+    }
+
 
     /**
      * Push
