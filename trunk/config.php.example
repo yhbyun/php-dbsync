@@ -17,8 +17,7 @@ $config = array(
 
 require_once 'check.php';
 
-require_once 'Zend/Config/Yaml.php';
-require_once 'Zend/Config/Writer/Yaml.php';
+require_once 'SymfonyComponents/YAML/sfYaml.php';
 
 require_once 'DbSync/Table.php';
 require_once 'DbSync/Console.php';
