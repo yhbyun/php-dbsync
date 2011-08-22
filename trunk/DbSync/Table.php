@@ -181,19 +181,8 @@ class DbSync_Table
      */
     public function getStatus()
     {
-        $syncronised = false;
+        $diff = $this->diff();
 
-        $file = $this->getFilePath();
-
-        $tmp = $file . '.tmp';
-
-        $this->save($tmp);
-
-        if (file_get_contents($file) === file_get_contents($tmp)) {
-            $syncronised = true;
-        }
-        unlink($tmp);
-
-        return $syncronised;
+        return empty($diff);
     }
 }
