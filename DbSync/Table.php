@@ -106,7 +106,7 @@ class DbSync_Table
      */
     public function getTableList()
     {
-        return $this->getDbTableList() + $this->getFileTableList();
+        return array_merge($this->getDbTableList(), $this->getFileTableList());
     }
 
     /**
