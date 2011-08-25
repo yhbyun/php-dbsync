@@ -72,13 +72,11 @@ class DbSync_Table_Schema extends DbSync_Table
      */
     public function init($force = false)
     {
-        if (!$this->getTableName()) {
-            throw new Exception('Table name not set');
-        }
+        $path = $this->getFilePath(false);
+
         if (!$this->isWriteable()) {
             throw new Exception("Schema dir is not writable");
         }
-        $path = $this->_path . '/' . $this->_tableName . '/' . $this->_filename;
 
         if (!realpath($path) || $force) {
             $this->save($path);
@@ -144,17 +142,16 @@ class DbSync_Table_Schema extends DbSync_Table
      */
     public function deleteFile()
     {
-        if (!$this->getTableName()) {
-            throw new Exception('Table name not set');
-        }
-        if (!$this->hasFile()) {
-            throw new Exception("Data for table {$this->_tableName} not found");
-        }
-        if (!$this->isWriteable()) {
-            throw new Exception("Data dir is not writable");
-        }
-        $filename = $this->getFilePath();
+        if ($filename = $this->getFilePath()) {
 
-        return @unlink($filename);
+            if (!$this->hasFile()) {
+                throw new Exception("Data for table {$this->_tableName} not found");
+            }
+            if (!$this->isWriteable()) {
+                throw new Exception("Data dir is not writable");
+            }
+
+            return @unlink($filename);
+        }
     }
 }

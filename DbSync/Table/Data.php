@@ -125,13 +125,10 @@ class DbSync_Table_Data extends DbSync_Table
      */
     public function init($force = false)
     {
-        if (!$this->getTableName()) {
-            throw new Exception('Table name not set');
-        }
         if (!$this->isWriteable()) {
             throw new Exception("Data dir is not writable");
         }
-        $path = $this->_path . '/' . $this->_tableName . '/' . $this->_filename;
+        $path = $this->getFilePath(false);
 
         if (!realpath($path) || $force) {
             $this->save($path);

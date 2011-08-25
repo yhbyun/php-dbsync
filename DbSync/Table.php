@@ -62,10 +62,8 @@ class DbSync_Table
      */
     public function isWriteable()
     {
-        if (!$this->getTableName()) {
-            throw new Exception('Table name not set');
-        }
-        $path = $this->_path . '/' . $this->_tableName;
+        $path = dirname($this->getFilePath(false));
+
         if (!realpath($path)) {
             @mkdir($path, 0777, true);
         }
@@ -152,17 +150,21 @@ class DbSync_Table
     /**
      * Get config filepath
      *
+     * @param boolen $real
      * @throws Exception
      * @return string
      */
-    public function getFilePath()
+    public function getFilePath($real = true)
     {
         if (!$this->getTableName()) {
             throw new Exception('Table name not set');
         }
         $path = $this->_path . '/' . $this->_tableName . '/' . $this->_filename;
 
-        return realpath($path);
+        if ($real) {
+            return realpath($path);
+        }
+        return $path;
     }
 
     /**
