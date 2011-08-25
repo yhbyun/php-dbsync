@@ -62,10 +62,12 @@ class DbSync_Table
      */
     public function isWriteable()
     {
-        $path = dirname($this->getFilePath(false));
+        if (!$path = $this->getFilePath()) {
+            $path = dirname($this->getFilePath(false));
 
-        if (!realpath($path)) {
-            @mkdir($path, 0777, true);
+            if (!realpath($path)) {
+                @mkdir($path, 0777, true);
+            }
         }
 
         return is_writable($path);
