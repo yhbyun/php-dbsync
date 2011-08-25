@@ -142,16 +142,14 @@ class DbSync_Table_Schema extends DbSync_Table
      */
     public function deleteFile()
     {
-        if ($filename = $this->getFilePath()) {
-
-            if (!$this->hasFile()) {
-                throw new Exception("Data for table {$this->_tableName} not found");
-            }
-            if (!$this->isWriteable()) {
-                throw new Exception("Data dir is not writable");
-            }
-
-            return @unlink($filename);
+        if (!$filename = $this->getFilePath()) {
+            throw new Exception("Data for table {$this->_tableName} not found");
         }
+
+        if (!$this->isWriteable()) {
+            throw new Exception("Data file is not writable");
+        }
+
+        return @unlink($filename);
     }
 }
