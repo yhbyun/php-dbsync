@@ -1,10 +1,10 @@
 <?php
 /**
- * DbSync_Table_Data
+ * DbSync_Table_DataTable
  *
  * @version $Id$
  */
-class DbSync_Table_Data extends DbSync_Table
+class DbSync_Table_DataTable extends DbSync_Table_AbstractTable
 {
     /**
      * @var string

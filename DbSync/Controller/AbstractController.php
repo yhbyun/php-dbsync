@@ -1,10 +1,10 @@
 <?php
 /**
- * DbSync_Controller
+ * DbSync_Controller_AbstractController
  *
  * @version $Id$
  */
-abstract class DbSync_Controller
+abstract class DbSync_Controller_AbstractController
 {
     protected $_modelClass;
 

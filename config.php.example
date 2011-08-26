@@ -19,9 +19,9 @@ require_once 'check.php';
 
 require_once 'SymfonyComponents/YAML/sfYaml.php';
 
-require_once 'DbSync/Table.php';
+require_once 'DbSync/Table/AbstractTable.php';
 require_once 'DbSync/Console.php';
-require_once 'DbSync/Controller.php';
+require_once 'DbSync/Controller/AbstractController.php';
 
 require_once 'DbSync/Table/DbAdapter.php';
 require_once 'DbSync/Table/DbAdapter/AdapterInterface.php';

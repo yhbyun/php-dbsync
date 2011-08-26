@@ -1,15 +1,15 @@
 <?php
 /**
- * DbSync_Controller_Data
+ * DbSync_Controller_DataController
  *
  * @version $Id$
  */
-class DbSync_Controller_Data extends DbSync_Controller
+class DbSync_Controller_DataController extends DbSync_Controller_AbstractController
 {
     /**
      * @var string
      */
-    protected $_modelClass = 'DbSync_Table_Data';
+    protected $_modelClass = 'DbSync_Table_DataTable';
 
     /**
      * Merge
