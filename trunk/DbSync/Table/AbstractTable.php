@@ -4,7 +4,7 @@
  *
  * @version $Id$
  */
-class DbSync_Table
+abstract class DbSync_Table_AbstractTable
 {
     protected $_adapter;
 

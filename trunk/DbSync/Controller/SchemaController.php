@@ -1,15 +1,15 @@
 <?php
 /**
- * DbSync_Controller_Schema
+ * DbSync_Controller_SchemaController
  *
  * @version $Id$
  */
-class DbSync_Controller_Schema extends DbSync_Controller
+class DbSync_Controller_SchemaController extends DbSync_Controller_AbstractController
 {
     /**
     * @var string
     */
-    protected $_modelClass = 'DbSync_Table_Schema';
+    protected $_modelClass = 'DbSync_Table_SchemaTable';
 
     /**
      * Delete
