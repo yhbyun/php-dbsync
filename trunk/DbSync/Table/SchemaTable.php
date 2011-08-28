@@ -46,11 +46,11 @@ class DbSync_Table_SchemaTable extends DbSync_Table_AbstractTable
     /**
      * Alter db table
      *
-     * @return integer
+     * @return boolen
      */
     public function push()
     {
-        return $this->_adapter->execute($this->createAlter());
+        return false !== $this->_adapter->execute($this->createAlter());
     }
 
     /**

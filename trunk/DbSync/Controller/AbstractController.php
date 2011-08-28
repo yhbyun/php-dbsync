@@ -83,6 +83,33 @@ abstract class DbSync_Controller_AbstractController
             $this->_model->setTableName($tableName);
             $this->push();
         }
+
+        if (!$tables) {
+            echo $this->colorize("No configs found", 'red');
+        }
+
+        $updated = true;
+        $stop = false;
+
+         while ($tables && !$stop) {
+            $stop = !$updated;
+
+            $updated = false;
+
+            foreach ($tables as $i => $tableName) {
+                $this->_model->setTableName($tableName);
+
+                try {
+                    $this->push();
+                    unset($tables[$i]);
+                    $updated = true;
+                } catch (Exception $e) {
+                    if ($stop) {
+                        echo $tableName . $this->colorize(" - " . $e->getMessage(), 'red');
+                    }
+                }
+            }
+        }
     }
 
     /**
