@@ -102,7 +102,9 @@ class DbSync_Controller_SchemaController extends DbSync_Controller_AbstractContr
             if ($this->_console->hasOption('show')) {
                 echo $this->_model->createAlter();
             } else {
-                 $this->_model->push();
+                 if (!$this->_model->push()) {
+                     throw new Exception('Table not updated');
+                 }
 
                  echo $tableName . $this->colorize(" - Updated", 'green');
             }

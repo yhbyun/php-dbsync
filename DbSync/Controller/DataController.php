@@ -21,9 +21,32 @@ class DbSync_Controller_DataController extends DbSync_Controller_AbstractControl
         if (!$tables) {
             $tables = $this->_model->getFileTableList();
         }
-        foreach ($tables as $tableName) {
-            $this->_model->setTableName($tableName);
-            $this->merge();
+
+        if (!$tables) {
+            echo $this->colorize("No configs found", 'red');
+        }
+
+        $updated = true;
+        $stop = false;
+
+         while ($tables && !$stop) {
+            $stop = !$updated;
+
+            $updated = false;
+
+            foreach ($tables as $i => $tableName) {
+                $this->_model->setTableName($tableName);
+
+                try {
+                    $this->merge();
+                    unset($tables[$i]);
+                    $updated = true;
+                } catch (Exception $e) {
+                    if ($stop) {
+                        echo $tableName . $this->colorize(" - " . $e->getMessage(), 'red');
+                    }
+                }
+            }
         }
     }
 
@@ -77,11 +100,11 @@ class DbSync_Controller_DataController extends DbSync_Controller_AbstractControl
             if (!$force && !$this->_model->isEmptyTable()) {
                 echo $tableName . $this->colorize(" - is dirty use --force for cleanup or try merge instead of push");
             } else {
-                if ($this->_model->push($force)) {
-                    echo $tableName . $this->colorize(" - Updated", 'green');
-                } else {
-                    echo $tableName . $this->colorize(' - Error occured');
+                if (!$this->_model->push($force)) {
+                     throw new Exception('Table not updated');
                 }
+
+                echo $tableName . $this->colorize(" - Updated", 'green');
             }
         } else {
             echo $tableName . $this->colorize(" - Data not found", 'red');
