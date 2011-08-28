@@ -19,7 +19,10 @@ class DbSync_Table_SchemaTable extends DbSync_Table_AbstractTable
     public function save($filename)
     {
         if (!$this->getTableName()) {
-            throw new Exception('Table name not set');
+            throw new $this->_exceptionClass('Table name not set');
+        }
+        if (!$this->isWriteable()) {
+            throw new $this->_exceptionClass("Schema dir is not writable");
         }
 
         $this->write($filename, $this->_adapter->parseSchema($this->_tableName));
@@ -33,7 +36,7 @@ class DbSync_Table_SchemaTable extends DbSync_Table_AbstractTable
     public function createAlter()
     {
         if (!$filename = $this->getFilePath()) {
-            throw new Exception("Scheme for table {$this->_tableName} not found");
+            throw new $this->_exceptionClass("Scheme for table {$this->_tableName} not found");
         }
         $data = $this->load($filename);
 
@@ -51,76 +54,6 @@ class DbSync_Table_SchemaTable extends DbSync_Table_AbstractTable
     }
 
     /**
-     * Get status
-     *
-     * @return boolen
-     */
-    public function getStatus()
-    {
-        if (!$this->hasFile()) {
-            throw new Exception("Scheme for table {$this->_tableName} not found");
-        }
-        return parent::getStatus();
-    }
-
-    /**
-     * Init
-     *
-     * @param boolen $force
-     * @throws Exception
-     * @return boolean
-     */
-    public function init($force = false)
-    {
-        $path = $this->getFilePath(false);
-
-        if (!$this->isWriteable()) {
-            throw new Exception("Schema dir is not writable");
-        }
-
-        if (!realpath($path) || $force) {
-            $this->save($path);
-
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Get diff
-     *
-     * @return array
-     */
-    public function diff()
-    {
-        $output = array();
-
-        if (!$filename = $this->getFilePath()) {
-            $output[] = "scheme for table {$this->_tableName} not found";
-        } else {
-            $tmp = $filename . '.tmp';
-
-            $this->save($tmp);
-
-            if (file_get_contents($filename) !== file_get_contents($tmp)) {
-                exec("diff {$filename} {$tmp}", $output);
-            }
-            unlink($tmp);
-        }
-        return $output;
-    }
-
-    /**
-     * Pull schema from db table to file
-     *
-     * @return boolen
-     */
-    public function pull()
-    {
-        return $this->init(true);
-    }
-
-    /**
      * Delete Table
      *
      * @throws Exception
@@ -129,7 +62,7 @@ class DbSync_Table_SchemaTable extends DbSync_Table_AbstractTable
     public function deleteDbTable()
     {
         if (!$this->getTableName()) {
-            throw new Exception('Table name not set');
+            throw new $this->_exceptionClass('Table name not set');
         }
         return $this->_adapter->delete($this->_tableName);
     }
@@ -143,11 +76,11 @@ class DbSync_Table_SchemaTable extends DbSync_Table_AbstractTable
     public function deleteFile()
     {
         if (!$filename = $this->getFilePath()) {
-            throw new Exception("Data for table {$this->_tableName} not found");
+            throw new $this->_exceptionClass("Data for table {$this->_tableName} not found");
         }
 
         if (!$this->isWriteable()) {
-            throw new Exception("Data file is not writable");
+            throw new $this->_exceptionClass("Data file is not writable");
         }
 
         return @unlink($filename);
