@@ -14,6 +14,8 @@ abstract class DbSync_Table_AbstractTable
 
     protected $_filename;
 
+    protected $_exceptionClass = 'Exception';
+
     /**
      * Constructor
      *
@@ -118,7 +120,7 @@ abstract class DbSync_Table_AbstractTable
     public function hasDbTable()
     {
         if (!$this->getTableName()) {
-            throw new Exception('Table name not set');
+            throw new $this->_exceptionClass('Table name not set');
         }
         return $this->_adapter->hasTable($this->_tableName);
     }
@@ -133,8 +135,7 @@ abstract class DbSync_Table_AbstractTable
      */
     public function write($filename, array $data)
     {
-
-        $yaml = sfYaml::dump($data);
+        $yaml = sfYaml::dump($data, 100);
         return file_put_contents($filename, $yaml);
     }
 
@@ -159,7 +160,7 @@ abstract class DbSync_Table_AbstractTable
     public function getFilePath($real = true)
     {
         if (!$this->getTableName()) {
-            throw new Exception('Table name not set');
+            throw new $this->_exceptionClass('Table name not set');
         }
         $path = $this->_path . '/' . $this->_tableName . '/' . $this->_filename;
 
@@ -186,8 +187,68 @@ abstract class DbSync_Table_AbstractTable
      */
     public function getStatus()
     {
+        if (!$this->hasFile()) {
+            throw new $this->_exceptionClass("Config for table '{$this->_tableName}' not found");
+        }
+
         $diff = $this->diff();
 
         return empty($diff);
+    }
+
+    /**
+     * Pull schema or data from db table to config file
+     *
+     */
+    public function pull()
+    {
+        $this->init(true);
+    }
+
+    /**
+     * Get diff
+     *
+     * @return array
+     */
+    public function diff()
+    {
+        $output = array();
+
+        if (!$filename = $this->getFilePath()) {
+            $output[] = "Config for table '{$this->_tableName}' not found";
+        } else {
+            $tmp = $filename . '.tmp';
+
+            $this->save($tmp);
+
+            if (file_get_contents($filename) !== file_get_contents($tmp)) {
+                exec("diff {$filename} {$tmp}", $output);
+            }
+            unlink($tmp);
+        }
+        return $output;
+    }
+
+    /**
+     * Init
+     *
+     * @param boolen $force
+     * @throws Exception
+     * @return boolean
+     */
+    public function init($force = false)
+    {
+        $path = $this->getFilePath(false);
+
+        if (!$this->isWriteable()) {
+            throw new $this->_exceptionClass("Filepath is not writable");
+        }
+
+        if (!realpath($path) || $force) {
+            $this->save($path);
+
+            return true;
+        }
+        return false;
     }
 }

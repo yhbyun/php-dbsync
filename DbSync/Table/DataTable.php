@@ -41,7 +41,10 @@ class DbSync_Table_DataTable extends DbSync_Table_AbstractTable
     public function save($filename)
     {
         if (!$this->getTableName()) {
-            throw new Exception('Table name not set');
+            throw new $this->_exceptionClass('Table name not set');
+        }
+        if (!$this->isWriteable()) {
+            throw new $this->_exceptionClass("Data dir is not writable");
         }
 
         $this->write($filename, $this->_adapter->fetchData($this->_tableName));
@@ -57,16 +60,16 @@ class DbSync_Table_DataTable extends DbSync_Table_AbstractTable
     public function push($force = false)
     {
         if (!$filename = $this->getFilePath()) {
-            throw new Exception("Data for table {$this->_tableName} not found");
+            throw new $this->_exceptionClass("Data for table {$this->_tableName} not found");
         }
 
         if (!$this->hasDbTable()) {
-            throw new Exception("Table '{$this->_tableName}' not found");
+            throw new $this->_exceptionClass("Table '{$this->_tableName}' not found");
         }
 
         if (!$this->isEmptyTable()) {
             if (!$force) {
-                throw new Exception("Table '{$this->_tableName}' is not empty");
+                throw new $this->_exceptionClass("Table '{$this->_tableName}' is not empty");
             }
             $this->_adapter->truncate($this->_tableName);
         }
@@ -88,85 +91,19 @@ class DbSync_Table_DataTable extends DbSync_Table_AbstractTable
     public function merge()
     {
         if (!$filename = $this->getFilePath()) {
-            throw new Exception("Data for table {$this->_tableName} not found");
+            throw new $this->_exceptionClass("Data for table {$this->_tableName} not found");
         }
         $data = $this->load($filename);
 
         if (!current($data)) {
-            throw new Exception("Data for '{$this->_tableName}' is empty");
+            throw new $this->_exceptionClass("Data for '{$this->_tableName}' is empty");
         }
 
         if (!$this->hasDbTable()) {
-            throw new Exception("Table '{$this->_tableName}' not found");
+            throw new $this->_exceptionClass("Table '{$this->_tableName}' not found");
         }
 
         return $this->_adapter->merge($data, $this->_tableName);
-    }
-
-    /**
-     * Get status
-     *
-     * @return boolen
-     */
-    public function getStatus()
-    {
-        if (!$this->hasFile()) {
-            throw new Exception("Data for table {$this->_tableName} not found");
-        }
-        return parent::getStatus();
-    }
-
-    /**
-     * Init
-     *
-     * @param boolen $force
-     * @return boolen
-     * @throws Exception
-     */
-    public function init($force = false)
-    {
-        if (!$this->isWriteable()) {
-            throw new Exception("Data dir is not writable");
-        }
-        $path = $this->getFilePath(false);
-
-        if (!realpath($path) || $force) {
-            $this->save($path);
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Get diff
-     *
-     * @return array
-     */
-    public function diff()
-    {
-        $output = array();
-
-        if (!$filename = $this->getFilePath()) {
-            $output[] = "Data for table {$this->_tableName} not found";
-        } else {
-            $tmp = $filename . '.tmp';
-            $this->save($tmp);
-
-            if (file_get_contents($filename) !== file_get_contents($tmp)) {
-                exec("{$this->_diff} {$filename} {$tmp}", $output);
-            }
-            unlink($tmp);
-        }
-        return $output;
-    }
-
-    /**
-     * Pull all data from db table
-     *
-     */
-    public function pull()
-    {
-        $this->init(true);
     }
 
     /**
@@ -177,7 +114,7 @@ class DbSync_Table_DataTable extends DbSync_Table_AbstractTable
     public function isEmptyTable()
     {
         if (!$this->getTableName()) {
-            throw new Exception('Table name not set');
+            throw new $this->_exceptionClass('Table name not set');
         }
         return $this->_adapter->isEmpty($this->_tableName);
     }
