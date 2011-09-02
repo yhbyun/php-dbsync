@@ -156,6 +156,8 @@ class DbSync_Table_DbAdapter_Mysql
             $columns = $result->fetchAll(PDO::FETCH_ASSOC);
 
             $query[]= "ALTER TABLE `{$tableName}` ENGINE={$config['engine']}, CHARSET={$config['charset']}";
+
+            $after = null;
             foreach ($config['columns'] as $columnName => $columnConfig) {
                 foreach ($columns as $i => $columnDesc) {
                     $exists = false;
@@ -170,7 +172,8 @@ class DbSync_Table_DbAdapter_Mysql
                     $action = "MODIFY";
                 }
 
-                $query[] = "{$action} COLUMN " . $this->_getColumnSql($columnName, $columnConfig);
+                $query[] = "{$action} COLUMN " . $this->_getColumnSql($columnName, $columnConfig, $after);
+                $after = $columnDesc['Field'];
             }
             foreach ($columns as $columnDesc) {
                 $query[] = "DROP COLUMN `{$columnDesc['Field']}`";
@@ -187,7 +190,7 @@ class DbSync_Table_DbAdapter_Mysql
             }
             if (!empty($config['unique'])) {
                 foreach ($config['unique'] as $keyName => $columnName) {
-                    $query[] = "UNIQUE KEY `{$keyName}` (`{$columnName}`)";
+                    $query[] = "ADD UNIQUE KEY `{$keyName}` (`{$columnName}`)";
                 }
             }
             $query = join(',' . PHP_EOL, $query);
@@ -373,9 +376,10 @@ class DbSync_Table_DbAdapter_Mysql
      *
      * @param string $name
      * @param array $config
+     * @param string $after
      * @return string
      */
-    protected function _getColumnSql($name, $config)
+    protected function _getColumnSql($name, $config, $after = null)
     {
         $query = "`{$name}` {$config['type']}";
         if (empty($config['nullable'])) {
@@ -396,6 +400,10 @@ class DbSync_Table_DbAdapter_Mysql
 
         if (!empty($config['autoincrement'])) {
             $query .= " AUTO_INCREMENT";
+        }
+
+        if ($after) {
+            $query .= " AFTER " . $after;
         }
 
         return $query;
