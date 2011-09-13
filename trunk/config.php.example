@@ -2,7 +2,7 @@
 
 $config = array(
     'db' => array(
-        'adapter' => 'mysql',
+        'adapter' => 'DbSync_Table_DbAdapter_Mysql',
         'params' => array(
             'host'     => '',
             'dbname'   => '',
