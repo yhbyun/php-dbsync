@@ -19,13 +19,12 @@ abstract class DbSync_Controller_AbstractController
      */
     public function __construct(array $config)
     {
-        $adapter = DbSync_Table_DbAdapter::factory(
-            $config['db']['adapter'],
-            $config['db']['params']
-        );
+        if (empty($config['db']['adapter'])) {
+            throw new Exception('Db adapter not set');
+        }
 
         $this->_model = new $this->_modelClass(
-            $adapter,
+            new $config['db']['adapter']($config['db']['params']),
             $config['path'],
             null,
             $config['diffprog']
