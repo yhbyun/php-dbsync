@@ -48,11 +48,12 @@ abstract class DbSync_Table_AbstractTable
     /**
      * Set table name
      *
+     * @param string $tableName
      * @return DbSync_Table
      */
     public function setTableName($tableName)
     {
-        $this->_tableName = $tableName;
+        $this->_tableName = (string) $tableName;
 
         return $this;
     }

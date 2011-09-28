@@ -23,6 +23,5 @@ require_once 'DbSync/Table/AbstractTable.php';
 require_once 'DbSync/Console.php';
 require_once 'DbSync/Controller/AbstractController.php';
 
-require_once 'DbSync/Table/DbAdapter.php';
 require_once 'DbSync/Table/DbAdapter/AdapterInterface.php';
 require_once 'DbSync/Table/DbAdapter/Mysql.php';

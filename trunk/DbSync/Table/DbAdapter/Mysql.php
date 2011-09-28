@@ -200,6 +200,39 @@ class DbSync_Table_DbAdapter_Mysql
     }
 
     /**
+     * Fetch db triggers
+     *
+     * @return array
+     */
+    public function fetchTriggers($tableName)
+    {
+        $config = array();
+
+        $result = $this->_db->query("SHOW TRIGGERS WHERE `Table`='{$tableName}'");
+
+        $rows = $result->fetchAll(PDO::FETCH_OBJ);
+
+        foreach ($rows as $row) {
+            /*
+            $config[] = array(
+                'definer' => $row->Definer,
+                'name' => $row->Trigger,
+                'event' => $row->Event,
+                'timing' => $row->Timing,
+                'statement' => $row->Statement
+            );*/
+            $result = $this->_db->query("SHOW CREATE TRIGGER {$row->Trigger}");
+            $rows = $result->fetch(PDO::FETCH_NUM);
+
+            $config[] = $rows['2'];
+
+        }
+
+        return $config;
+    }
+
+
+    /**
      * Execute sql query
      *
      * @param string $sql
