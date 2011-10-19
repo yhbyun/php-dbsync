@@ -202,33 +202,19 @@ class DbSync_Table_DbAdapter_Mysql
     /**
      * Fetch db triggers
      *
-     * @return array
+     * @return string
      */
-    public function fetchTriggers($tableName)
+    public function fetchTrigger($triggerName)
     {
-        $config = array();
+        $result = $this->_db->query("SHOW CREATE TRIGGER {$triggerName}");
 
-        $result = $this->_db->query("SHOW TRIGGERS WHERE `Table`='{$tableName}'");
-
-        $rows = $result->fetchAll(PDO::FETCH_OBJ);
-
-        foreach ($rows as $row) {
-            /*
-            $config[] = array(
-                'definer' => $row->Definer,
-                'name' => $row->Trigger,
-                'event' => $row->Event,
-                'timing' => $row->Timing,
-                'statement' => $row->Statement
-            );*/
-            $result = $this->_db->query("SHOW CREATE TRIGGER {$row->Trigger}");
-            $rows = $result->fetch(PDO::FETCH_NUM);
-
-            $config[] = $rows['2'];
-
+        if ($result) {
+            $row = $result->fetch(PDO::FETCH_NUM);
+            if (isset($row['2'])) {
+                return $row['2'];
+            }
         }
-
-        return $config;
+        return '';
     }
 
 
@@ -241,6 +227,32 @@ class DbSync_Table_DbAdapter_Mysql
     public function execute($sql)
     {
         return $this->_db->exec($sql);
+    }
+
+    /**
+     * Get triggers list
+     *
+     * @return array
+     */
+    public function getTriggerList()
+    {
+        $triggers = array();
+
+        $result = $this->_db->query("SHOW TRIGGERS");
+        return $result->fetchAll(PDO::FETCH_COLUMN);
+    }
+
+    /**
+     * Get trigger info
+     *
+     * @return string
+     */
+    public function getTriggerInfo($triggerName)
+    {
+        $triggers = array();
+
+        $result = $this->_db->query("SHOW TRIGGERS WHERE `Trigger` = '{$triggerName}';");
+        return $result->fetch(PDO::FETCH_OBJ);
     }
 
     /**
@@ -262,6 +274,17 @@ class DbSync_Table_DbAdapter_Mysql
     public function hasTable($tableName)
     {
         $result = $this->_db->query("SHOW TABLES LIKE '{$tableName}'");
+        return (bool) $result->fetch(PDO::FETCH_NUM);
+    }
+
+    /**
+     * Is db trigger exists
+     *
+     * @return boolen
+     */
+    public function hasTrigger($triggerName)
+    {
+        $result = $this->_db->query("SHOW TRIGGERS WHERE `Trigger` = '{$triggerName}';");
         return (bool) $result->fetch(PDO::FETCH_NUM);
     }
 
@@ -363,9 +386,20 @@ class DbSync_Table_DbAdapter_Mysql
      * @param string $tableName
      * @return number
      */
-    public function delete($tableName)
+    public function dropTable($tableName)
     {
         return $this->_db->exec("DROP TABLE IF EXISTS {$tableName}");
+    }
+
+    /**
+     * Drop trigger
+     *
+     * @param string $triggerName
+     * @return number
+     */
+    public function dropTrigger($triggerName)
+    {
+        return $this->_db->exec("DROP TRIGGER IF EXISTS {$triggerName}");
     }
 
     /**

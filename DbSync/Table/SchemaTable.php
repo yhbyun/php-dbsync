@@ -59,12 +59,12 @@ class DbSync_Table_SchemaTable extends DbSync_Table_AbstractTable
      * @throws Exception
      * @return boolen
      */
-    public function deleteDbTable()
+    public function dropDbTable()
     {
         if (!$this->getTableName()) {
             throw new $this->_exceptionClass('Table name not set');
         }
-        return $this->_adapter->delete($this->_tableName);
+        return $this->_adapter->dropTable($this->_tableName);
     }
 
     /**

@@ -55,10 +55,10 @@ class DbSync_Controller_SchemaController extends DbSync_Controller_AbstractContr
 
         echo $this->colorize("pull", 'green');
         echo "     Override current schema config file by new created from database.", PHP_EOL;
-        echo "         Use {$this->colorize('--show')} to only display alter code", PHP_EOL;
 
         echo $this->colorize("push", 'green');
         echo "     Override database schema by current schema config file", PHP_EOL;
+        echo "         Use {$this->colorize('--show')} to only display alter code", PHP_EOL;
 
         echo $this->colorize("help", 'green');
         echo "     help message", PHP_EOL;
@@ -83,7 +83,7 @@ class DbSync_Controller_SchemaController extends DbSync_Controller_AbstractContr
             }
         }
         if ($this->_model->hasDbTable() && !$this->_console->hasOption('file')) {
-            $this->_model->deleteDbTable();
+            $this->_model->dropDbTable();
             echo $tableName . $this->colorize(" - Database table deleted", 'green');
         }
         echo PHP_EOL;
@@ -103,10 +103,10 @@ class DbSync_Controller_SchemaController extends DbSync_Controller_AbstractContr
                 echo $this->_model->createAlter();
             } else {
                  if (!$this->_model->push()) {
-                     throw new Exception('Table not updated');
+                     echo $tableName . $this->colorize(" - Not updated", 'red');
+                 } else {
+                     echo $tableName . $this->colorize(" - Updated", 'green');
                  }
-
-                 echo $tableName . $this->colorize(" - Updated", 'green');
             }
         } else {
             echo $tableName . $this->colorize(" - Schema not found", 'red');
@@ -167,7 +167,7 @@ class DbSync_Controller_SchemaController extends DbSync_Controller_AbstractContr
      * Pull
      *
      */
-    public function pull($tableName = null)
+    public function pull()
     {
         $tableName = $this->_model->getTableName();
 
@@ -188,7 +188,7 @@ class DbSync_Controller_SchemaController extends DbSync_Controller_AbstractContr
      * Diff
      *
      */
-    public function diff($tableName = null)
+    public function diff()
     {
         $tableName = $this->_model->getTableName();
 

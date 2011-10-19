@@ -216,7 +216,7 @@ abstract class DbSync_Table_AbstractTable
         $output = array();
 
         if (!$filename = $this->getFilePath()) {
-            $output[] = "Config for table '{$this->_tableName}' not found";
+            $output[] = "Config for '{$this->_tableName}' not found";
         } else {
             $tmp = $filename . '.tmp';
 
