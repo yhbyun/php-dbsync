@@ -101,10 +101,10 @@ class DbSync_Controller_DataController extends DbSync_Controller_AbstractControl
                 echo $tableName . $this->colorize(" - is dirty use --force for cleanup or try merge instead of push");
             } else {
                 if (!$this->_model->push($force)) {
-                     throw new Exception('Table not updated');
+                    echo $tableName . $this->colorize(" - Not updated", 'red');
+                } else {
+                    echo $tableName . $this->colorize(" - Updated", 'green');
                 }
-
-                echo $tableName . $this->colorize(" - Updated", 'green');
             }
         } else {
             echo $tableName . $this->colorize(" - Data not found", 'red');
