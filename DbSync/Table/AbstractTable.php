@@ -14,6 +14,8 @@ abstract class DbSync_Table_AbstractTable
 
     protected $_filename;
 
+    protected $_diff = 'diff';
+
     protected $_exceptionClass = 'Exception';
 
     /**
@@ -22,9 +24,10 @@ abstract class DbSync_Table_AbstractTable
      * @param DbSync_Table_DbAdapter_AdapterInterface $db
      * @param string $path
      * @param string $tableName
+     * @param string $diffProg
      */
     public function __construct(DbSync_Table_DbAdapter_AdapterInterface $adapter,
-        $path, $tableName = null)
+        $path, $tableName = null, $diffProg = null)
     {
         $this->_adapter = $adapter;
 
@@ -33,6 +36,21 @@ abstract class DbSync_Table_AbstractTable
         if ($tableName) {
             $this->setTableName($tableName);
         }
+        if ($diffProg) {
+            $this->setDiffProg($diffProg);
+        }
+    }
+
+    /**
+     * Set diff programm
+     *
+     * @param string $diffProg
+     * @return DbSync_Table_AbstractTable
+     */
+    public function setDiffProg($diffProg)
+    {
+        $this->_diff = (string) $diffProg;
+        return $this;
     }
 
     /**
@@ -49,7 +67,7 @@ abstract class DbSync_Table_AbstractTable
      * Set table name
      *
      * @param string $tableName
-     * @return DbSync_Table
+     * @return DbSync_Table_AbstractTable
      */
     public function setTableName($tableName)
     {
@@ -223,7 +241,7 @@ abstract class DbSync_Table_AbstractTable
             $this->save($tmp);
 
             if (file_get_contents($filename) !== file_get_contents($tmp)) {
-                exec("diff {$filename} {$tmp}", $output);
+                exec("{$this->_diff} {$filename} {$tmp}", $output);
             }
             unlink($tmp);
         }

@@ -12,28 +12,6 @@ class DbSync_Table_DataTable extends DbSync_Table_AbstractTable
     protected $_filename = 'data.yml';
 
     /**
-     * @var string
-     */
-    protected $_diff = 'diff';
-
-    /**
-     * Constructor
-     *
-     * @param DbSync_Table_DbAdapter_AdapterInterface $db
-     * @param string $path
-     * @param string $tableName
-     */
-    public function __construct(DbSync_Table_DbAdapter_AdapterInterface $adapter,
-        $path, $tableName = null, $diffProg = null)
-    {
-        parent::__construct($adapter, $path, $tableName);
-
-        if ($diffProg) {
-            $this->_diff = $diffProg;
-        }
-    }
-
-    /**
      * Fetch all data from table
      *
      * @param string $filename
