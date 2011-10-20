@@ -204,19 +204,48 @@ class DbSync_Table_DbAdapter_Mysql
      *
      * @return string
      */
-    public function fetchTrigger($triggerName)
+    public function parseTrigger($triggerName)
     {
-        $result = $this->_db->query("SHOW CREATE TRIGGER {$triggerName}");
+        $row = $this->getTriggerInfo($triggerName);
 
-        if ($result) {
-            $row = $result->fetch(PDO::FETCH_NUM);
-            if (isset($row['2'])) {
-                return $row['2'];
-            }
+        $config = array();
+        if ($row) {
+            $config['name'] = $row->Trigger;
+            $config['table'] = $row->Table;
+            $config['event'] = $row->Event;
+            $config['timing'] = $row->Timing;
+            $config['definer'] = $row->Definer;
+            $config['statement'] = $row->Statement;
         }
-        return '';
+        return $config;
     }
 
+    /**
+     * Generate trigger sql
+     *
+     * @param array $config
+     * @return string
+     */
+    public function generateTrigger($config)
+    {
+        $sql = array('DELIMITER $$');
+
+        if ($config) {
+            $sql[] = "DROP TRIGGER IF EXISTS `{$config['name']}`$$";
+            $sql[] = "CREATE DEFINER = '{$config['definer']}";
+            $sql[] = "TRIGGER `trg_createList` AFTER INSERT ON `list`FOR EACH ROW ";
+            $config['name'] = $row->Trigger;
+            $config['table'] = $row->Table;
+            $config['event'] = $row->Event;
+            $config['timing'] = $row->Timing;
+            $config['definer'] = $row->Definer;
+            $config['statement'] = $row->Statement;
+        }
+        $sql[] = '$$';
+        $sql[] = 'DELIMITER ;';
+
+        return join(PHP_EOL, $sql);
+    }
 
     /**
      * Execute sql query

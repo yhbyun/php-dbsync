@@ -1,15 +1,14 @@
 <?php
 
 $config = array(
-    'db' => array(
-        'adapter' => 'DbSync_Table_DbAdapter_Mysql',
-        'params' => array(
-            'host'     => '',
-            'dbname'   => '',
-            'username' => '',
-            'password' => '',
-            'options'  => array()
-        ),
+    'dbAdapter' => 'DbSync_Table_DbAdapter_Mysql',
+    'fileAdapter' => 'DbSync_Table_FileAdapter_SfYaml',
+    'dbParams' => array(
+        'host'     => '',
+        'dbname'   => '',
+        'username' => '',
+        'password' => '',
+        'options'  => array()
     ),
     'path' => 'tables',
     'diffprog' => 'diff'

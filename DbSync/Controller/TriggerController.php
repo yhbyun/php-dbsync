@@ -27,6 +27,7 @@ class DbSync_Controller_TriggerController extends DbSync_Controller_AbstractCont
             $triggers = $this->_model->getFileTriggerList();
         }
         foreach ($triggers as $triggerName) {
+            $this->_model->setTableName(null);
             $this->_model->setTriggerName($triggerName);
             $this->push();
         }
@@ -43,6 +44,7 @@ class DbSync_Controller_TriggerController extends DbSync_Controller_AbstractCont
             $triggers = $this->_model->getTriggerList();
         }
         foreach ($triggers as $triggerName) {
+            $this->_model->setTableName(null);
             $this->_model->setTriggerName($triggerName);
             $this->status();
         }
@@ -56,9 +58,10 @@ class DbSync_Controller_TriggerController extends DbSync_Controller_AbstractCont
     public function initAction($triggers = null)
     {
         if (!$triggers) {
-            $triggers = $this->_model->getDbTriggersList();
+            $triggers = $this->_model->getDbTriggerList();
         }
         foreach ($triggers as $triggerName) {
+            $this->_model->setTableName(null);
             $this->_model->setTriggerName($triggerName);
             $this->init();
         }
@@ -75,6 +78,7 @@ class DbSync_Controller_TriggerController extends DbSync_Controller_AbstractCont
             $triggers = $this->_model->getDbTriggerList();
         }
         foreach ($triggers as $triggerName) {
+            $this->_model->setTableName(null);
             $this->_model->setTriggerName($triggerName);
             $this->pull();
         }
@@ -91,6 +95,7 @@ class DbSync_Controller_TriggerController extends DbSync_Controller_AbstractCont
             $triggers = $this->_model->getTriggerList();
         }
         foreach ($triggers as $triggerName) {
+            $this->_model->setTableName(null);
             $this->_model->setTriggerName($triggerName);
             $this->diff();
         }
@@ -107,6 +112,7 @@ class DbSync_Controller_TriggerController extends DbSync_Controller_AbstractCont
             $triggers = $this->_model->getTableList();
         }
         foreach ($triggers as $triggerName) {
+            $this->_model->setTableName(null);
             $this->_model->setTriggerName($triggerName);
             $this->delete();
         }
