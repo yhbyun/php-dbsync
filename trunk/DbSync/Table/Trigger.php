@@ -79,7 +79,11 @@ class DbSync_Table_Trigger extends DbSync_Table_AbstractTable
      */
     public function getFilePath($real = true)
     {
-        $path = $this->_fileAdapter->getFilePath($this->getTableName(), $this->getTriggerName(), true);
+        $path = $this->_fileAdapter->getFilePath(
+            $this->getTableName(),
+            $this->getTriggerName(),
+            true
+        );
 
         if ($real) {
             return realpath($path);
@@ -114,7 +118,7 @@ class DbSync_Table_Trigger extends DbSync_Table_AbstractTable
 
         $config = $this->_fileAdapter->load($filename);
 
-        return $this->_dbAdapter->generateTrigger($config);
+        return $this->_dbAdapter->createTriggerSql($config);
     }
 
     /**

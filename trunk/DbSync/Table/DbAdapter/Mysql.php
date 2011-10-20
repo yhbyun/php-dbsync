@@ -226,20 +226,17 @@ class DbSync_Table_DbAdapter_Mysql
      * @param array $config
      * @return string
      */
-    public function generateTrigger($config)
+    public function createTriggerSql($config)
     {
         $sql = array('DELIMITER $$');
 
         if ($config) {
             $sql[] = "DROP TRIGGER IF EXISTS `{$config['name']}`$$";
-            $sql[] = "CREATE DEFINER = '{$config['definer']}";
-            $sql[] = "TRIGGER `trg_createList` AFTER INSERT ON `list`FOR EACH ROW ";
-            $config['name'] = $row->Trigger;
-            $config['table'] = $row->Table;
-            $config['event'] = $row->Event;
-            $config['timing'] = $row->Timing;
-            $config['definer'] = $row->Definer;
-            $config['statement'] = $row->Statement;
+            $sql[] = "CREATE DEFINER = '{$config['definer']}'";
+            $sql[] = "TRIGGER `{$config['name']}` {$config['timing']} {$config['event']}";
+            $sql[] = "ON `{$config['table']}`";
+            $sql[] = "FOR EACH ROW";
+            $sql[] = $config['statement'];
         }
         $sql[] = '$$';
         $sql[] = 'DELIMITER ;';

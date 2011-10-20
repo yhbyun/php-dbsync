@@ -169,7 +169,10 @@ abstract class DbSync_Table_AbstractTable
      */
     public function getFilePath($real = true)
     {
-        $path = $this->_fileAdapter->getFilePath($this->getTableName(), $this->_filename, true);
+        $path = $this->_fileAdapter->getFilePath(
+            $this->getTableName(),
+            $this->_filename
+        );
 
         if ($real) {
             return realpath($path);
