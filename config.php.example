@@ -17,6 +17,8 @@ $config = array(
 require_once 'check.php';
 
 require_once 'SymfonyComponents/YAML/sfYaml.php';
+require_once 'DbSync/Table/FileAdapter/AdapterInterface.php';
+require_once 'DbSync/Table/FileAdapter/SfYaml.php';
 
 require_once 'DbSync/Table/AbstractTable.php';
 require_once 'DbSync/Console.php';
