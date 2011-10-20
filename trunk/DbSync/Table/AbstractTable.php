@@ -6,32 +6,54 @@
  */
 abstract class DbSync_Table_AbstractTable
 {
-    protected $_adapter;
+    /**
+     * @var DbSync_Table_DbAdapter_AdapterInterface
+     */
+    protected $_dbAdapter;
 
-    protected $_path;
+    /**
+     * @var DbSync_Table_FileAdapter_AdapterInterface
+     */
+    protected $_fileAdapter;
 
+    /**
+     * @var string
+     */
     protected $_tableName;
 
+    /**
+     * @var string
+     */
     protected $_filename;
 
+    /**
+     * @var string
+     */
     protected $_diff = 'diff';
 
+    /**
+     * @var string
+     */
     protected $_exceptionClass = 'Exception';
 
     /**
      * Constructor
      *
      * @param DbSync_Table_DbAdapter_AdapterInterface $db
-     * @param string $path
+     * @param DbSync_Table_FileAdapter_AdapterInterface $file
      * @param string $tableName
      * @param string $diffProg
      */
-    public function __construct(DbSync_Table_DbAdapter_AdapterInterface $adapter,
-        $path, $tableName = null, $diffProg = null)
+    public function __construct(
+        DbSync_Table_DbAdapter_AdapterInterface $db,
+        DbSync_Table_FileAdapter_AdapterInterface $file,
+        $tableName = null,
+        $diffProg = null)
     {
-        $this->_adapter = $adapter;
+        $this->_dbAdapter = $db;
 
-        $this->_path = $path;
+
+        $this->_fileAdapter = $file;
 
         if ($tableName) {
             $this->setTableName($tableName);
@@ -60,6 +82,9 @@ abstract class DbSync_Table_AbstractTable
      */
     public function getTableName()
     {
+        if (!$this->_tableName) {
+            throw new $this->_exceptionClass('Table name not set');
+        }
         return $this->_tableName;
     }
 
@@ -101,7 +126,7 @@ abstract class DbSync_Table_AbstractTable
      */
     public function getDbTableList()
     {
-        return $this->_adapter->getTableList();
+        return $this->_dbAdapter->getTableList();
     }
 
     /**
@@ -111,13 +136,7 @@ abstract class DbSync_Table_AbstractTable
      */
     public function getFileTableList()
     {
-        $list = array();
-
-        foreach (new GlobIterator("{$this->_path}/*/{$this->_filename}") as $file) {
-            $list[] = basename(dirname($file->getPathname()));
-        }
-
-        return $list;
+        return $this->_fileAdapter->getTableList($this->_filename);
     }
 
     /**
@@ -138,35 +157,7 @@ abstract class DbSync_Table_AbstractTable
      */
     public function hasDbTable()
     {
-        if (!$this->getTableName()) {
-            throw new $this->_exceptionClass('Table name not set');
-        }
-        return $this->_adapter->hasTable($this->_tableName);
-    }
-
-    /**
-     * Write data to file
-     *
-     * @param string $filename
-     * @param array $data
-     * @return int The function returns the number of bytes that were written to the file, or
-     * false on failure.
-     */
-    public function write($filename, array $data)
-    {
-        $yaml = sfYaml::dump($data, 100);
-        return file_put_contents($filename, $yaml);
-    }
-
-    /**
-     * Load data from file
-     *
-     * @param string $filename
-     * @return array
-     */
-    public function load($filename)
-    {
-        return sfYaml::load($filename);
+        return $this->_dbAdapter->hasTable($this->getTableName());
     }
 
     /**
@@ -178,10 +169,7 @@ abstract class DbSync_Table_AbstractTable
      */
     public function getFilePath($real = true)
     {
-        if (!$this->getTableName()) {
-            throw new $this->_exceptionClass('Table name not set');
-        }
-        $path = $this->_path . '/' . $this->_tableName . '/' . $this->_filename;
+        $path = $this->_fileAdapter->getFilePath($this->getTableName(), $this->_filename, true);
 
         if ($real) {
             return realpath($path);
@@ -207,7 +195,7 @@ abstract class DbSync_Table_AbstractTable
     public function getStatus()
     {
         if (!$this->hasFile()) {
-            throw new $this->_exceptionClass("Config for table '{$this->_tableName}' not found");
+            throw new $this->_exceptionClass("Config for '{$this->getTableName()}' not found");
         }
 
         $diff = $this->diff();
@@ -234,7 +222,7 @@ abstract class DbSync_Table_AbstractTable
         $output = array();
 
         if (!$filename = $this->getFilePath()) {
-            $output[] = "Config for '{$this->_tableName}' not found";
+            $output[] = "Config for '{$this->getTableName()}' not found";
         } else {
             $tmp = $filename . '.tmp';
 

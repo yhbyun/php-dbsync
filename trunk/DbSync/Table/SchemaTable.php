@@ -9,7 +9,7 @@ class DbSync_Table_SchemaTable extends DbSync_Table_AbstractTable
     /**
      * @var string
      */
-    protected $_filename = 'schema.yml';
+    protected $_filename = 'schema';
 
     /**
      * Save schema
@@ -18,14 +18,11 @@ class DbSync_Table_SchemaTable extends DbSync_Table_AbstractTable
      */
     public function save($filename)
     {
-        if (!$this->getTableName()) {
-            throw new $this->_exceptionClass('Table name not set');
-        }
         if (!$this->isWriteable()) {
             throw new $this->_exceptionClass("Schema dir is not writable");
         }
 
-        $this->write($filename, $this->_adapter->parseSchema($this->_tableName));
+        $this->_fileAdapter->write($filename, $this->_dbAdapter->parseSchema($this->getTableName()));
     }
 
     /**
@@ -36,11 +33,11 @@ class DbSync_Table_SchemaTable extends DbSync_Table_AbstractTable
     public function createAlter()
     {
         if (!$filename = $this->getFilePath()) {
-            throw new $this->_exceptionClass("Scheme for table {$this->_tableName} not found");
+            throw new $this->_exceptionClass("Scheme for table {$this->getTableName()} not found");
         }
-        $data = $this->load($filename);
+        $data = $this->_fileAdapter->load($filename);
 
-        return $this->_adapter->createAlter($data, $this->_tableName);
+        return $this->_dbAdapter->createAlter($data, $this->getTableName());
     }
 
     /**
@@ -50,7 +47,7 @@ class DbSync_Table_SchemaTable extends DbSync_Table_AbstractTable
      */
     public function push()
     {
-        return false !== $this->_adapter->execute($this->createAlter());
+        return false !== $this->_dbAdapter->execute($this->createAlter());
     }
 
     /**
@@ -61,10 +58,7 @@ class DbSync_Table_SchemaTable extends DbSync_Table_AbstractTable
      */
     public function dropDbTable()
     {
-        if (!$this->getTableName()) {
-            throw new $this->_exceptionClass('Table name not set');
-        }
-        return $this->_adapter->dropTable($this->_tableName);
+        return $this->_dbAdapter->dropTable($this->getTableName());
     }
 
     /**
@@ -76,7 +70,7 @@ class DbSync_Table_SchemaTable extends DbSync_Table_AbstractTable
     public function deleteFile()
     {
         if (!$filename = $this->getFilePath()) {
-            throw new $this->_exceptionClass("Data for table {$this->_tableName} not found");
+            throw new $this->_exceptionClass("Data for table {$this->getTableName()} not found");
         }
 
         if (!$this->isWriteable()) {

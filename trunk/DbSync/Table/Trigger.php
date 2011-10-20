@@ -6,15 +6,7 @@
  */
 class DbSync_Table_Trigger extends DbSync_Table_AbstractTable
 {
-    protected $_adapter;
-
-    protected $_path;
-
-    protected $_tableName;
-
     protected $_triggerName;
-
-    protected $_exceptionClass = 'Exception';
 
     /**
      * Constructor
@@ -25,14 +17,12 @@ class DbSync_Table_Trigger extends DbSync_Table_AbstractTable
      * @param string $triggerName
      */
     public function __construct(DbSync_Table_DbAdapter_AdapterInterface $adapter,
-    $path, $tableName = null, $triggerName = null)
+        $path, $tableName = null, $triggerName = null)
     {
-        $this->_adapter = $adapter;
+        parent::__construct($adapter, $path, $tableName);
 
-        $this->_path = $path;
-
-        if ($tableName) {
-            $this->setTableName($tableName);
+        if ($triggerName) {
+            $this->setTriggerName($triggerName);
         }
     }
 
@@ -43,6 +33,9 @@ class DbSync_Table_Trigger extends DbSync_Table_AbstractTable
      */
     public function getTriggerName()
     {
+        if (!$this->_triggerName) {
+            throw new $this->_exceptionClass('Trigger name not set');
+        }
         return $this->_triggerName;
     }
 
@@ -67,17 +60,14 @@ class DbSync_Table_Trigger extends DbSync_Table_AbstractTable
     public function getTableName()
     {
         if (!$this->_tableName) {
-            $trigger = $this->_adapter->getTriggerInfo($this->getTriggerName());
+            $trigger = $this->_dbAdapter->getTriggerInfo($this->getTriggerName());
             if (isset($trigger->Table)) {
                 $this->_tableName = $trigger->Table;
             } else {
-                foreach (new GlobIterator("{$this->_path}/*/triggers/{$this->_triggerName}.sql") as $file) {
-                    $this->_tableName = basename(dirname(dirname($file->getPathname())));
-                    break;
-                }
+                $this->_tableName = $this->_fileAdapter->getTableNameByTriggerName($this->getTriggerName());
             }
         }
-        return $this->_tableName;
+        return parent::getTableName();
     }
 
     /**
@@ -89,41 +79,12 @@ class DbSync_Table_Trigger extends DbSync_Table_AbstractTable
      */
     public function getFilePath($real = true)
     {
-        if (!$this->getTableName()) {
-            throw new $this->_exceptionClass('Table name not set');
-        }
-        $path = $this->_path . '/' . $this->_tableName . '/triggers/'
-              . $this->_triggerName . '.sql';
+        $path = $this->_fileAdapter->getFilePath($this->getTableName(), $this->getTriggerName(), true);
 
         if ($real) {
             return realpath($path);
         }
         return $path;
-    }
-
-    /**
-     * Write data to file
-     *
-     * @param string $filename
-     * @param array $data
-     * @return int The function returns the number of bytes that were written to the file, or
-     * false on failure.
-     */
-    public function write($filename, $data)
-    {
-        return file_put_contents($filename, $data);
-    }
-
-    /**
-     * Load data from file
-     *
-     * @param string $filename
-     * @return array
-     */
-    public function load($filename)
-    {
-        $file = file_get_contents($filename);
-        return $file;
     }
 
     /**
@@ -133,14 +94,11 @@ class DbSync_Table_Trigger extends DbSync_Table_AbstractTable
      */
     public function save($filename)
     {
-        if (!$this->getTableName()) {
-            throw new $this->_exceptionClass('Table name not set');
-        }
         if (!$this->isWriteable()) {
             throw new $this->_exceptionClass("Triggers dir is not writable");
         }
 
-        $this->write($filename, $this->_adapter->fetchTrigger($this->getTriggerName()));
+        $this->_fileAdapter->write($filename, $this->_dbAdapter->parseTrigger($this->getTriggerName()));
     }
 
     /**
@@ -151,9 +109,12 @@ class DbSync_Table_Trigger extends DbSync_Table_AbstractTable
     public function createSql()
     {
         if (!$filename = $this->getFilePath()) {
-            throw new $this->_exceptionClass("Scheme for table {$this->_tableName} not found");
+            throw new $this->_exceptionClass("Config for {$this->getTriggerName()} not found");
         }
-        return $this->load($filename);
+
+        $config = $this->_fileAdapter->load($filename);
+
+        return $this->_dbAdapter->generateTrigger($config);
     }
 
     /**
@@ -163,7 +124,7 @@ class DbSync_Table_Trigger extends DbSync_Table_AbstractTable
      */
     public function push()
     {
-        return false !== $this->_adapter->execute($this->createSql());
+        return false !== $this->_dbAdapter->execute($this->createSql());
     }
 
     /**
@@ -174,10 +135,7 @@ class DbSync_Table_Trigger extends DbSync_Table_AbstractTable
      */
     public function dropTrigger()
     {
-        if (!$this->getTriggerName()) {
-            throw new $this->_exceptionClass('Trigger name not set');
-        }
-        return $this->_adapter->dropTrigger($this->_triggerName);
+        return $this->_dbAdapter->dropTrigger($this->getTriggerName());
     }
 
     /**
@@ -189,11 +147,11 @@ class DbSync_Table_Trigger extends DbSync_Table_AbstractTable
     public function deleteFile()
     {
         if (!$filename = $this->getFilePath()) {
-            throw new $this->_exceptionClass("Data for table {$this->_tableName} not found");
+            throw new $this->_exceptionClass("Config for {$this->getTriggerName()} not found");
         }
 
         if (!$this->isWriteable()) {
-            throw new $this->_exceptionClass("Data file is not writable");
+            throw new $this->_exceptionClass("Config file is not writable");
         }
 
         return @unlink($filename);
@@ -207,7 +165,7 @@ class DbSync_Table_Trigger extends DbSync_Table_AbstractTable
      */
     public function getDbTriggerList()
     {
-        return $this->_adapter->getTriggerList();
+        return $this->_dbAdapter->getTriggerList();
     }
 
     /**
@@ -217,12 +175,7 @@ class DbSync_Table_Trigger extends DbSync_Table_AbstractTable
      */
     public function getFileTriggerList()
     {
-        $list = array();
-
-        foreach (new GlobIterator("{$this->_path}/*/triggers/*") as $file) {
-            $list[] = pathinfo($file->getFilename(), PATHINFO_FILENAME);
-        }
-        return $list;
+        return $this->_fileAdapter->getTriggerList();
     }
 
     /**
@@ -243,9 +196,6 @@ class DbSync_Table_Trigger extends DbSync_Table_AbstractTable
      */
     public function hasDbTrigger()
     {
-        if (!$this->getTriggerName()) {
-            throw new $this->_exceptionClass('Trigger name not set');
-        }
-        return $this->_adapter->hasTable($this->_tableName);
+        return $this->_dbAdapter->hasTrigger($this->getTriggerName());
     }
 }

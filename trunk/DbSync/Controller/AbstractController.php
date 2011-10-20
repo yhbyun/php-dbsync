@@ -19,13 +19,16 @@ abstract class DbSync_Controller_AbstractController
      */
     public function __construct(array $config)
     {
-        if (empty($config['db']['adapter'])) {
+        if (empty($config['dbAdapter'])) {
             throw new Exception('Db adapter not set');
         }
 
+        $db = new $config['dbAdapter']($config['dbParams']);
+        $file = new $config['fileAdapter']($config['path']);
+
         $this->_model = new $this->_modelClass(
-            new $config['db']['adapter']($config['db']['params']),
-            $config['path'],
+            $db,
+            $file,
             null,
             $config['diffprog']
         );
