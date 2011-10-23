@@ -19,13 +19,13 @@
  */
 
 /**
- * DbSync_Table_DataTable
+ * DbSync_Table_Data
  *
  * @category DbSync
  * @package  DbSync_Table
  * @version  $Id$
  */
-class DbSync_Table_DataTable extends DbSync_Table_AbstractTable
+class DbSync_Table_Data extends DbSync_Table_AbstractTable
 {
     /**
      * @var string

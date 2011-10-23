@@ -30,7 +30,7 @@ class DbSync_Controller_SchemaController extends DbSync_Controller_AbstractContr
     /**
     * @var string
     */
-    protected $_modelClass = 'DbSync_Table_SchemaTable';
+    protected $_modelClass = 'DbSync_Table_Schema';
 
     /**
      * Delete

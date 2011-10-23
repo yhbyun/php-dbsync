@@ -19,7 +19,7 @@
 
 require_once 'config.php';
 
-require_once 'DbSync/Table/DataTable.php';
+require_once 'DbSync/Table/Data.php';
 require_once 'DbSync/Controller/DataController.php';
 
 $console = new DbSync_Console();

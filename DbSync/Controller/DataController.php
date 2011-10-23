@@ -30,7 +30,7 @@ class DbSync_Controller_DataController extends DbSync_Controller_AbstractControl
     /**
      * @var string
      */
-    protected $_modelClass = 'DbSync_Table_DataTable';
+    protected $_modelClass = 'DbSync_Table_Data';
 
     /**
      * Merge
