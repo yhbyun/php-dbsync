@@ -76,16 +76,83 @@ abstract class DbSync_Controller_AbstractController
     {
         $this->_console = $console;
 
-        $action = $this->_console->getAction() . 'Action';
+        $items = $console->getActions();
+        $action = array_shift($items) . 'Action';
 
-        if (!method_exists($this, $action)) {
-            $action = 'helpAction';
+        if (!method_exists($this, $action) || 'helpAction' == $action) {
+            return $this->helpAction();
         }
 
-        $actions = $console->getActions();
-        unset($actions['0']);
+        if (!$items) {
+            $items = $this->getItemsList($action);
+        }
 
-        return $this->{$action}($actions);
+        if (!$items) {
+            echo $this->colorize("Nothing to sync", 'red');
+            return;
+        }
+
+        $updated = true;
+        $stop = false;
+
+        while ($items && !$stop) {
+            $stop = !$updated;
+
+            $updated = false;
+
+            foreach ($items as $i => $name) {
+                try {
+                    $this->_run($action, $name);
+
+                    unset($items[$i]);
+                    $updated = true;
+                } catch (Exception $e) {
+                    if ($stop) {
+                        echo $name . $this->colorize(" - " . $e->getMessage(), 'red');
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Get items list
+     *
+     * @param string $action
+     * @return array
+     */
+    public function getItemsList($action)
+    {
+        switch ($action) {
+            case 'pushAction':
+            case 'mergeAction':
+                $items = $this->_model->getListConfig();
+                break;
+            case 'initAction':
+            case 'pullAction':
+                $items = $this->_model->getListDb();
+                break;
+            case 'diffAction':
+            case 'deleteAction':
+            case 'statusAction':
+                $items = $this->_model->getList();
+                break;
+            default:
+                $items = array();
+        }
+        return $items;
+    }
+
+    /**
+     * Run action
+     *
+     * @param string $action
+     * @param string $name
+     */
+    protected function _run($action, $name)
+    {
+        $this->_model->setTableName($name);
+        $this->{$action}();
     }
 
     /**
@@ -99,115 +166,158 @@ abstract class DbSync_Controller_AbstractController
 
     /**
      * Help action
+     *
+     * @return Help message
      */
-    abstract function helpAction();
+    public function helpAction()
+    {
+        echo "Usage {$this->_console->getProgname()} [action] [ [tableName] ... ] [--option]", PHP_EOL;
 
+        echo PHP_EOL;
+
+        echo $this->colorize("if tableName not specified action applied to all tables/configs"), PHP_EOL;
+
+        echo PHP_EOL;
+
+        $this->showUsage();
+    }
 
     /**
-     * Push
+     * Output actions usage message
      *
-     * @param array $tables
      */
-    public function pushAction($tables = null)
+    public function showUsage()
     {
-        if (!$tables) {
-            $tables = $this->_model->getFileTableList();
-        }
-        foreach ($tables as $tableName) {
-            $this->_model->setTableName($tableName);
-            $this->push();
-        }
+        echo "Actions:", PHP_EOL;
 
-        if (!$tables) {
-            echo $this->colorize("No configs found", 'red');
-        }
+        $methods = get_class_methods($this);
+        sort($methods);
+        foreach ($methods as $methodName) {
+            if ('Action' == substr($methodName, -6)) {
+                $method = new ReflectionMethod($this, $methodName);
 
-        $updated = true;
-        $stop = false;
+                preg_match_all(
+                    "%\@return\s(.*)(\r\n|\r|\n)%um",
+                    $method->getDocComment(),
+                    $matches
+                );
 
-         while ($tables && !$stop) {
-            $stop = !$updated;
+                echo $this->colorize(substr($methodName, 0, -6), 'green');
 
-            $updated = false;
-
-            foreach ($tables as $i => $tableName) {
-                $this->_model->setTableName($tableName);
-
-                try {
-                    $this->push();
-                    unset($tables[$i]);
-                    $updated = true;
-                } catch (Exception $e) {
-                    if ($stop) {
-                        echo $tableName . $this->colorize(" - " . $e->getMessage(), 'red');
+                if ($matches['1']) {
+                    foreach ($matches['1'] as $match) {
+                        $match = preg_replace(
+                            '/\{(.+)\|(\w+)\}/i',
+                            $this->colorize('$1', '$2'),
+                            $match
+                        );
+                        echo "\t" . $match . PHP_EOL;
                     }
+                } else {
+                    echo "\t" . $this->colorize('No description', 'red') . PHP_EOL;
                 }
             }
         }
+
+        echo PHP_EOL;
     }
 
     /**
      * Status
      *
-     * @param array $tables
+     * @return Check sync status (Ok/Unsyncronized)
      */
-    public function statusAction($tables = null)
+    public function statusAction()
     {
-        if (!$tables) {
-            $tables = $this->_model->getTableList();
+        $tableName = $this->_model->getTableName();
+
+        if ($this->_model->hasDbTable() && $this->_model->hasFile()) {
+            if ($this->_model->getStatus()) {
+                echo $tableName . $this->colorize(" - Ok", 'green');
+            } else {
+                echo $tableName . $this->colorize(" - Unsyncronized", 'red');
+            }
+        } else {
+            if (!$this->_model->hasDbTable()) {
+                echo $tableName . $this->colorize(" - Table not found", 'red');
+            } else {
+                echo $tableName . $this->colorize(" - Config not found", 'red');
+            }
         }
-        foreach ($tables as $tableName) {
-            $this->_model->setTableName($tableName);
-            $this->status();
-        }
+        echo PHP_EOL;
     }
 
     /**
      * Init
      *
-     * @param array $tables
+     * @return Create config file(s)
      */
-    public function initAction($tables = null)
+    public function initAction()
     {
-        if (!$tables) {
-            $tables = $this->_model->getDbTableList();
+        $tableName = $this->_model->getTableName();
+
+        if ($this->_model->hasDbTable()) {
+            if ($this->_model->hasFile()) {
+                echo $tableName . $this->colorize(" - Already has config", 'red');
+            } else {
+                if ($this->_model->isWriteable()) {
+                    $this->_model->init();
+                    echo $tableName . $this->colorize(" - Ok", 'green');
+                } else {
+                    echo $tableName . $this->colorize(" - Path is not writeable", 'red');
+                }
+            }
+        } else {
+            echo $tableName . $this->colorize(" - Table not found", 'red');
         }
-        foreach ($tables as $tableName) {
-            $this->_model->setTableName($tableName);
-            $this->init();
-        }
+        echo PHP_EOL;
     }
 
     /**
      * Pull
      *
-     * @param array $tables
+     * @return Override current table config(s) file by new created from database
      */
-    public function pullAction($tables = null)
+    public function pullAction()
     {
-        if (!$tables) {
-            $tables = $this->_model->getDbTableList();
+        $tableName = $this->_model->getTableName();
+
+        if ($this->_model->hasDbTable()) {
+            if ($this->_model->isWriteable()) {
+                $this->_model->pull();
+                echo $tableName . $this->colorize(" - Ok", 'green');
+            } else {
+                echo $tableName . $this->colorize(" - Path is not writeable", 'red');
+            }
+        } else {
+            echo $tableName . $this->colorize(" - Table not found", 'red');
         }
-        foreach ($tables as $tableName) {
-            $this->_model->setTableName($tableName);
-            $this->pull();
-        }
+        echo PHP_EOL;
     }
 
     /**
      * Diff
      *
-     * @param array $tables
+     * @return Show diff between database table schema and schema config file
      */
-    public function diffAction($tables = null)
+    public function diffAction()
     {
-        if (!$tables) {
-            $tables = $this->_model->getTableList();
+        $tableName = $this->_model->getTableName();
+
+        if ($this->_model->hasDbTable() && $this->_model->hasFile()) {
+            if ($this->_model->getStatus()) {
+                echo $tableName . $this->colorize(" - OK", 'green');
+            } else {
+                echo join(PHP_EOL, $this->_model->diff());
+            }
+        } else {
+            if (!$this->_model->hasDbTable()) {
+                echo $tableName . $this->colorize(" - Table not found", 'red');
+            } else {
+                echo $tableName . $this->colorize(" - Schema not found", 'red');
+            }
         }
-        foreach ($tables as $tableName) {
-            $this->_model->setTableName($tableName);
-            $this->diff();
-        }
+        echo PHP_EOL;
     }
 
     /**

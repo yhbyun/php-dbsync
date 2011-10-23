@@ -72,7 +72,13 @@ class DbSync_Console
                 if (count($this->_options)) {
                     end($this->_options);
 
-                    $this->_options[ key($this->_options) ] = $arg;
+                    $optionName = key($this->_options);
+                    if (!empty($this->_options[ $optionName ])) {
+                        $this->_options[ $optionName ] = (array) $this->_options[ $optionName ];
+                        $this->_options[ $optionName ][] = $arg;
+                    } else {
+                        $this->_options[ $optionName ] = $arg;
+                    }
                 }
             }
         }

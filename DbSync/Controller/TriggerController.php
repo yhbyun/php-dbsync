@@ -38,104 +38,56 @@ class DbSync_Controller_TriggerController extends DbSync_Controller_AbstractCont
     protected $_model;
 
     /**
-     * Push
+     * Run action
      *
-     * @param array $triggers
+     * @param string $action
+     * @param string $name
      */
-    public function pushAction($triggers = null)
+    protected function _run($action, $name)
     {
-        if (!$triggers) {
-            $triggers = $this->_model->getFileTriggerList();
-        }
-        foreach ($triggers as $triggerName) {
-            $this->_model->setTriggerName($triggerName);
-            $this->push();
-        }
+        $this->_model->setTriggerName($name);
+        $this->{$action}();
     }
 
-    /**
-     * Status
+   /**
+     * Get items list
      *
-     * @param array $triggers
+     * @param string $action
+     * @return array
      */
-    public function statusAction($triggers = null)
+    public function getItemsList($action)
     {
-        if (!$triggers) {
-            $triggers = $this->_model->getTriggerList();
+        $tables = $this->_console->getOption('table');
+        if (!$tables) {
+            $tables = array();
         }
-        foreach ($triggers as $triggerName) {
-            $this->_model->setTriggerName($triggerName);
-            $this->status();
-        }
-    }
 
-    /**
-     * Init
-     *
-     * @param array $triggers
-     */
-    public function initAction($triggers = null)
-    {
-        if (!$triggers) {
-            $triggers = $this->_model->getDbTriggerList();
-        }
-        foreach ($triggers as $triggerName) {
-            $this->_model->setTriggerName($triggerName);
-            $this->init();
-        }
-    }
+        $tables = (array) $tables;
 
-    /**
-     * Pull
-     *
-     * @param array $triggers
-     */
-    public function pullAction($triggers = null)
-    {
-        if (!$triggers) {
-            $triggers = $this->_model->getDbTriggerList();
+        switch ($action) {
+            case 'pushAction':
+            case 'mergeAction':
+                $items = $this->_model->getListConfig($tables);
+                break;
+            case 'initAction':
+            case 'pullAction':
+                $items = $this->_model->getListDb($tables);
+                break;
+            case 'diffAction':
+            case 'deleteAction':
+            case 'statusAction':
+                $items = $this->_model->getList($tables);
+                break;
+            default:
+                $items = array();
         }
-        foreach ($triggers as $triggerName) {
-            $this->_model->setTriggerName($triggerName);
-            $this->pull();
-        }
-    }
-
-    /**
-     * Diff
-     *
-     * @param array $triggers
-     */
-    public function diffAction($triggers = null)
-    {
-        if (!$triggers) {
-            $triggers = $this->_model->getTriggerList();
-        }
-        foreach ($triggers as $triggerName) {
-            $this->_model->setTriggerName($triggerName);
-            $this->diff();
-        }
-    }
-
-    /**
-     * Delete
-     *
-     * @param array $triggers
-     */
-    public function deleteAction($triggers = null)
-    {
-        if (!$triggers) {
-            $triggers = $this->_model->getTableList();
-        }
-        foreach ($triggers as $triggerName) {
-            $this->_model->setTriggerName($triggerName);
-            $this->delete();
-        }
+        return $items;
     }
 
     /**
      * Help
      *
+     * @return help message
      * @see DbSync_Controller::help()
      */
     public function helpAction()
@@ -148,37 +100,18 @@ class DbSync_Controller_TriggerController extends DbSync_Controller_AbstractCont
 
         echo PHP_EOL;
 
-        echo "Actions:", PHP_EOL;
-
-        echo $this->colorize("init", 'green');
-        echo "     Create database trigger config in specified path", PHP_EOL;
-
-        echo $this->colorize("status", 'green');
-        echo "   Check triggers status (Ok/Unsyncronized)", PHP_EOL;
-
-        echo $this->colorize("diff", 'green');
-        echo "     Show diff between database trigger and config file", PHP_EOL;
-
-        echo $this->colorize("pull", 'green');
-        echo "     Override current trigger config file by new created from database.", PHP_EOL;
-
-        echo $this->colorize("push", 'green');
-        echo "     Override database trigger by current config file", PHP_EOL;
-        echo "         Use {$this->colorize('--show')} to only display sql code", PHP_EOL;
-
-        echo $this->colorize("help", 'green');
-        echo "     help message", PHP_EOL;
-
-        echo PHP_EOL;
+        $this->showUsage();
     }
 
     /**
      * Delete
      *
+     * @return Delete trigger and config
+     * @return Use {--db|yellow} to delete only from database
+     * @return Use {--file|yellow} to delete only config file
      */
-    public function delete()
+    public function deleteAction()
     {
-        $tableName = $this->_model->getTableName();
         $triggerName = $this->_model->getTriggerName();
 
         if ($this->_model->hasFile() && !$this->_console->hasOption('db')) {
@@ -203,10 +136,11 @@ class DbSync_Controller_TriggerController extends DbSync_Controller_AbstractCont
     /**
      * Push
      *
+     * @return Override database trigger by current config file
+     * @return Use {--show|yellow} to only display sql code
      */
-    public function push()
+    public function pushAction()
     {
-        $tableName = $this->_model->getTableName();
         $triggerName = $this->_model->getTriggerName();
 
         if ($this->_model->hasFile()) {
@@ -224,10 +158,11 @@ class DbSync_Controller_TriggerController extends DbSync_Controller_AbstractCont
     /**
      * Status
      *
+     * @return Check triggers status (Ok/Unsyncronized)
+     * @return Use {--table [[tableName] ... ]|yellow} to display triggers for certain tables
      */
-    public function status()
+    public function statusAction()
     {
-        $tableName = $this->_model->getTableName();
         $triggerName = $this->_model->getTriggerName();
 
         if ($this->_model->hasDbTrigger() && $this->_model->hasFile()) {
@@ -249,10 +184,10 @@ class DbSync_Controller_TriggerController extends DbSync_Controller_AbstractCont
     /**
      * Init
      *
+     * @return Create database trigger config in specified path
      */
-    public function init()
+    public function initAction()
     {
-        $tableName = $this->_model->getTableName();
         $triggerName = $this->_model->getTriggerName();
 
         if ($this->_model->hasDbTrigger()) {
@@ -275,10 +210,10 @@ class DbSync_Controller_TriggerController extends DbSync_Controller_AbstractCont
     /**
      * Pull
      *
+     * @return Override current trigger config file by new created from database.
      */
-    public function pull()
+    public function pullAction()
     {
-        $tableName = $this->_model->getTableName();
         $triggerName = $this->_model->getTriggerName();
 
         if ($this->_model->hasDbTrigger()) {
@@ -297,10 +232,10 @@ class DbSync_Controller_TriggerController extends DbSync_Controller_AbstractCont
     /**
      * Diff
      *
+     * @return Show diff between database trigger and config file
      */
-    public function diff()
+    public function diffAction()
     {
-        $tableName = $this->_model->getTableName();
         $triggerName = $this->_model->getTriggerName();
 
         if ($this->_model->hasDbTrigger() && $this->_model->hasFile()) {
