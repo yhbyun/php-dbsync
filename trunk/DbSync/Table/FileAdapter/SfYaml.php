@@ -25,7 +25,7 @@
  * @category   DbSync
  * @package    DbSync_Table
  * @subpackage FileAdapter
- * @version    $Id: Trigger.php 31 2011-10-20 23:10:06Z maks.slesarenko@gmail.com $
+ * @version    $Id$
  */
 class DbSync_Table_FileAdapter_SfYaml
     implements DbSync_Table_FileAdapter_AdapterInterface
@@ -127,14 +127,20 @@ class DbSync_Table_FileAdapter_SfYaml
     /**
      * Get triggers list
      *
+     * @param array $tables
      * @return array
      */
-    public function getTriggerList()
+    public function getTriggerList($tables = array())
     {
         $list = array();
 
-        foreach (new GlobIterator("{$this->_path}/*/triggers/*." . self::FILE_EXTENSION) as $file) {
-            $list[] = pathinfo($file->getFilename(), PATHINFO_FILENAME);
+        if (!$tables) {
+            $tables = array('*');
+        }
+        foreach ((array) $tables as $tableName) {
+            foreach (new GlobIterator("{$this->_path}/{$tableName}/triggers/*." . self::FILE_EXTENSION) as $file) {
+                $list[] = pathinfo($file->getFilename(), PATHINFO_FILENAME);
+            }
         }
         return $list;
     }

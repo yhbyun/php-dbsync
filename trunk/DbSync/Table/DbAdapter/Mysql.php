@@ -281,20 +281,31 @@ class DbSync_Table_DbAdapter_Mysql
     /**
      * Get triggers list
      *
+     * @param array $tables
      * @return array
      */
-    public function getTriggerList()
+    public function getTriggerList($tables = array())
     {
         $triggers = array();
 
-        $result = $this->_db->query("SHOW TRIGGERS");
+        $where = '';
+        if ($tables) {
+            $cond = array();
+            foreach ($tables as $tableName) {
+                 $cond[] = "`Table` = '{$tableName}'";
+            }
+            $where = 'WHERE ' . join(' OR ', $cond);
+        }
+
+        $result = $this->_db->query("SHOW TRIGGERS {$where}");
         return $result->fetchAll(PDO::FETCH_COLUMN);
     }
 
     /**
      * Get trigger info
      *
-     * @return string
+     * @param string $triggerName
+     * @return object
      */
     public function getTriggerInfo($triggerName)
     {

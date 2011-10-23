@@ -25,7 +25,7 @@
  * @category   DbSync
  * @package    DbSync_Table
  * @subpackage FileAdapter
- * @version    $Id: Trigger.php 31 2011-10-20 23:10:06Z maks.slesarenko@gmail.com $
+ * @version    $Id$
  */
 interface DbSync_Table_FileAdapter_AdapterInterface
 {

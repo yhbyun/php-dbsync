@@ -141,33 +141,33 @@ abstract class DbSync_Table_AbstractTable
     }
 
     /**
-     * Get tables list
+     * Get db tables list
      *
      * @return array
      */
-    public function getDbTableList()
+    public function getListDb()
     {
         return $this->_dbAdapter->getTableList();
     }
 
     /**
-     * Get data tables list
+     * Get config tables list
      *
      * @return array
      */
-    public function getFileTableList()
+    public function getListConfig()
     {
         return $this->_fileAdapter->getTableList($this->_filename);
     }
 
     /**
-     * Get tables list
+     * Get list
      *
      * @return array
      */
-    public function getTableList()
+    public function getList()
     {
-        $tables = array_merge($this->getDbTableList(), $this->getFileTableList());
+        $tables = array_merge($this->getListDb(), $this->getListConfig());
         return array_unique($tables);
     }
 

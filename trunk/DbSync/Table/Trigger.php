@@ -189,35 +189,39 @@ class DbSync_Table_Trigger extends DbSync_Table_AbstractTable
 
 
     /**
-     * Get tables list
+     * Get triggers list
      *
+     * @param array $tables
      * @return array
      */
-    public function getDbTriggerList()
+    public function getListDb($tables)
     {
-        return $this->_dbAdapter->getTriggerList();
+        return $this->_dbAdapter->getTriggerList($tables);
     }
 
     /**
      * Get data tables list
      *
+     * @param array $tables
      * @return array
      */
-    public function getFileTriggerList()
+    public function getListConfig($tables)
     {
-        return $this->_fileAdapter->getTriggerList();
+        return $this->_fileAdapter->getTriggerList($tables);
     }
 
     /**
-     * Get tables list
+     * Get db tables list
      *
+     * @param array $tables
      * @return array
      */
-    public function getTriggerList()
+    public function getList($tables)
     {
-        $triggers = array_merge($this->getDbTriggerList(), $this->getFileTriggerList());
-        return array_unique($triggers);
+        $tables = array_merge($this->getListDb($tables), $this->getListConfig($tables));
+        return array_unique($tables);
     }
+
 
     /**
      * Is db table exists
