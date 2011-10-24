@@ -310,8 +310,6 @@ class DbSync_Table_DbAdapter_Mysql
      */
     public function getTriggerList($tables = array())
     {
-        $triggers = array();
-
         $where = '';
         if ($tables) {
             $cond = array();
@@ -333,8 +331,6 @@ class DbSync_Table_DbAdapter_Mysql
      */
     public function getTriggerInfo($triggerName)
     {
-        $triggers = array();
-
         $result = $this->_db->query("SHOW TRIGGERS WHERE `Trigger` = '{$triggerName}';");
         return $result->fetch(PDO::FETCH_OBJ);
     }
