@@ -87,7 +87,7 @@ class DbSync_Controller_TriggerController extends DbSync_Controller_AbstractCont
     /**
      * Help
      *
-     * @return help message
+     * @return Help message
      * @see DbSync_Controller::help()
      */
     public function helpAction()
@@ -121,7 +121,6 @@ class DbSync_Controller_TriggerController extends DbSync_Controller_AbstractCont
             } else {
                 echo $triggerName . $this->colorize(" - Path is not writeable", 'red');
             }
-
             echo PHP_EOL;
         }
         if ($this->_model->hasDbTrigger() && !$this->_console->hasOption('file')) {
@@ -152,14 +151,13 @@ class DbSync_Controller_TriggerController extends DbSync_Controller_AbstractCont
         } else {
             echo $triggerName . $this->colorize(" - Config not found", 'red');
         }
-        echo PHP_EOL;
     }
 
     /**
      * Status
      *
      * @return Check triggers status (Ok/Unsyncronized)
-     * @return Use {--table [[tableName] ... ]|yellow} to display triggers for certain tables
+     * @return Use {--table [[tableName] ... ]|yellow} to display triggers for certain table(s)
      */
     public function statusAction()
     {
@@ -178,7 +176,6 @@ class DbSync_Controller_TriggerController extends DbSync_Controller_AbstractCont
                 echo $triggerName . $this->colorize(" - Config not found", 'red');
             }
         }
-        echo PHP_EOL;
     }
 
     /**
@@ -204,7 +201,6 @@ class DbSync_Controller_TriggerController extends DbSync_Controller_AbstractCont
         } else {
             echo $triggerName . $this->colorize(" - Trigger not found", 'red');
         }
-        echo PHP_EOL;
     }
 
     /**
@@ -226,7 +222,6 @@ class DbSync_Controller_TriggerController extends DbSync_Controller_AbstractCont
         } else {
             echo $triggerName . $this->colorize(" - Trigger not found", 'red');
         }
-        echo PHP_EOL;
     }
 
     /**
@@ -248,7 +243,6 @@ class DbSync_Controller_TriggerController extends DbSync_Controller_AbstractCont
             } else {
                 echo $triggerName . $this->colorize(" - Config not found", 'red');
             }
-            echo PHP_EOL;
         }
     }
 }

@@ -47,7 +47,9 @@ class DbSync_Controller_DataController extends DbSync_Controller_AbstractControl
             if (!$force && !$this->_model->isEmptyTable()) {
                 echo $tableName . $this->colorize(" - is dirty use --force for cleanup or try merge instead of push");
             } else {
-                if (!$this->_model->push($force)) {
+                $type = ($force) ? DbSync_Table_Data::PUSH_TYPE_FORCE : null;
+
+                if (!$this->_model->push($type)) {
                     echo $tableName . $this->colorize(" - Not updated", 'red');
                 } else {
                     echo $tableName . $this->colorize(" - Updated", 'green');
@@ -56,7 +58,6 @@ class DbSync_Controller_DataController extends DbSync_Controller_AbstractControl
         } else {
             echo $tableName . $this->colorize(" - Data not found", 'red');
         }
-        echo PHP_EOL;
     }
 
     /**
@@ -72,12 +73,11 @@ class DbSync_Controller_DataController extends DbSync_Controller_AbstractControl
             if ($this->_model->isEmptyTable()) {
                 echo $tableName . $this->colorize(' - is empty use push instead', 'red');
             } else {
-                $this->_model->merge();
+                $this->_model->push(DbSync_Table_Data::PUSH_TYPE_MERGE);
                 echo $tableName . $this->colorize(" - Updated", 'green');
             }
         } else {
             echo $tableName . $this->colorize(" - Data not found", 'red');
         }
-        echo PHP_EOL;
     }
 }

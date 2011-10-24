@@ -55,7 +55,6 @@ class DbSync_Controller_SchemaController extends DbSync_Controller_AbstractContr
             $this->_model->dropDbTable();
             echo $tableName . $this->colorize(" - Database table deleted", 'green');
         }
-        echo PHP_EOL;
     }
 
     /**
@@ -81,6 +80,5 @@ class DbSync_Controller_SchemaController extends DbSync_Controller_AbstractContr
         } else {
             echo $tableName . $this->colorize(" - Schema not found", 'red');
         }
-        echo PHP_EOL;
     }
 }

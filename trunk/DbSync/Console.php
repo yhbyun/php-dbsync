@@ -36,10 +36,19 @@
  */
 class DbSync_Console
 {
+    /**
+     * @var array
+     */
     protected $_actions = array();
 
+    /**
+     * @var array
+     */
     protected $_options = array();
 
+    /**
+     * @var array
+     */
     protected $_progname;
 
     /**

@@ -33,17 +33,13 @@ class DbSync_Table_Schema extends DbSync_Table_AbstractTable
     protected $_filename = 'schema';
 
     /**
-     * Save schema
+     * Get data to store in config file
      *
-     * @param string $filename
+     * @return array
      */
-    public function save($filename)
+    public function getDataToStore()
     {
-        if (!$this->isWriteable()) {
-            throw new $this->_exceptionClass("Schema dir is not writable");
-        }
-
-        $this->_fileAdapter->write($filename, $this->_dbAdapter->parseSchema($this->getTableName()));
+        return $this->_dbAdapter->parseSchema($this->getTableName());
     }
 
     /**
@@ -54,7 +50,7 @@ class DbSync_Table_Schema extends DbSync_Table_AbstractTable
     public function createAlter()
     {
         if (!$filename = $this->getFilePath()) {
-            throw new $this->_exceptionClass("Scheme for table {$this->getTableName()} not found");
+            throw new $this->_exceptionClass("Config for table '{$this->getTableName()}' not found");
         }
         $data = $this->_fileAdapter->load($filename);
 
@@ -80,24 +76,5 @@ class DbSync_Table_Schema extends DbSync_Table_AbstractTable
     public function dropDbTable()
     {
         return $this->_dbAdapter->dropTable($this->getTableName());
-    }
-
-    /**
-     * Delete file
-     *
-     * @throws Exception
-     * @return boolen
-     */
-    public function deleteFile()
-    {
-        if (!$filename = $this->getFilePath()) {
-            throw new $this->_exceptionClass("Data for table {$this->getTableName()} not found");
-        }
-
-        if (!$this->isWriteable()) {
-            throw new $this->_exceptionClass("Data file is not writable");
-        }
-
-        return @unlink($filename);
     }
 }
