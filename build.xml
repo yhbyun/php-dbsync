@@ -221,6 +221,6 @@
         <echo message="##teamcity[publishArtifacts '${basedir}/build/logs/phpunit.clover.xml']" />
     </target>
 
-    <target name="build" depends="phpunit, phploc, phpcb, phpcs, pdepend, phpcpd, phpmd" />
+    <target name="build" depends="phpunit, phploc, phpcb, phpcs, pdepend, phpcpd, phpmd, doxygen" />
 
 </project>
