@@ -106,7 +106,7 @@ class DbSync_Table_Trigger extends DbSync_Table_AbstractTable
      */
     public function getDataToStore()
     {
-        $this->_dbAdapter->parseTrigger($this->getTriggerName());
+        return $this->_dbAdapter->parseTrigger($this->getTriggerName());
     }
 
     /**
