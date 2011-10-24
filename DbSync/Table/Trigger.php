@@ -33,24 +33,6 @@ class DbSync_Table_Trigger extends DbSync_Table_AbstractTable
     protected $_triggerName;
 
     /**
-     * Constructor
-     *
-     * @param DbSync_Table_DbAdapter_AdapterInterface $db
-     * @param string $path
-     * @param string $tableName
-     * @param string $triggerName
-     */
-    public function __construct(DbSync_Table_DbAdapter_AdapterInterface $adapter,
-        $path, $tableName = null, $triggerName = null)
-    {
-        parent::__construct($adapter, $path, $tableName);
-
-        if ($triggerName) {
-            $this->setTriggerName($triggerName);
-        }
-    }
-
-    /**
      * Get trigger name
      *
      * @return string
@@ -118,17 +100,13 @@ class DbSync_Table_Trigger extends DbSync_Table_AbstractTable
     }
 
     /**
-     * Save schema
+     * Get data to store in config file
      *
-     * @param string $filename
+     * @return array
      */
-    public function save($filename)
+    public function getDataToStore()
     {
-        if (!$this->isWriteable()) {
-            throw new $this->_exceptionClass("Triggers dir is not writable");
-        }
-
-        $this->_fileAdapter->write($filename, $this->_dbAdapter->parseTrigger($this->getTriggerName()));
+        $this->_dbAdapter->parseTrigger($this->getTriggerName());
     }
 
     /**
@@ -139,7 +117,7 @@ class DbSync_Table_Trigger extends DbSync_Table_AbstractTable
     public function createSql()
     {
         if (!$filename = $this->getFilePath()) {
-            throw new $this->_exceptionClass("Config for {$this->getTriggerName()} not found");
+            throw new $this->_exceptionClass("Config for '{$this->getTriggerName()}' not found");
         }
 
         $config = $this->_fileAdapter->load($filename);
@@ -167,26 +145,6 @@ class DbSync_Table_Trigger extends DbSync_Table_AbstractTable
     {
         return $this->_dbAdapter->dropTrigger($this->getTriggerName());
     }
-
-    /**
-     * Delete file
-     *
-     * @throws Exception
-     * @return boolen
-     */
-    public function deleteFile()
-    {
-        if (!$filename = $this->getFilePath()) {
-            throw new $this->_exceptionClass("Config for {$this->getTriggerName()} not found");
-        }
-
-        if (!$this->isWriteable()) {
-            throw new $this->_exceptionClass("Config file is not writable");
-        }
-
-        return @unlink($filename);
-    }
-
 
     /**
      * Get triggers list

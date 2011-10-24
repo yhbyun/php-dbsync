@@ -27,44 +27,40 @@
  */
 class DbSync_Table_Data extends DbSync_Table_AbstractTable
 {
+    const PUSH_TYPE_FORCE = 1;
+    const PUSH_TYPE_MERGE = 2;
+
     /**
      * @var string
      */
     protected $_filename = 'data';
 
     /**
-     * Fetch all data from table
+     * Get data to store in config file
      *
-     * @param string $filename
+     * @return array
      */
-    public function save($filename)
+    public function getDataToStore()
     {
-        if (!$this->isWriteable()) {
-            throw new $this->_exceptionClass("Data dir is not writable");
-        }
-
-        $this->_fileAdapter->write($filename, $this->_dbAdapter->fetchData($this->getTableName()));
+        return $this->_dbAdapter->fetchData($this->getTableName());
     }
 
     /**
      * Push data to db table
      *
-     * @param boolen $force
+     * @param boolen $force false
+     * @param boolen $merge false
      * @return boolen
      * @throws Exception
      */
-    public function push($force = false)
+    public function push($type = null)
     {
         if (!$filename = $this->getFilePath()) {
-            throw new $this->_exceptionClass("Data for {$this->getTableName()} not found");
+            throw new $this->_exceptionClass("Config for '{$this->getTableName()}' not found");
         }
 
-        if (!$this->hasDbTable()) {
-            throw new $this->_exceptionClass("Table '{$this->getTableName()}' not found");
-        }
-
-        if (!$this->isEmptyTable()) {
-            if (!$force) {
+        if (!$this->isEmptyTable() && self::PUSH_TYPE_MERGE != $type) {
+            if (self::PUSH_TYPE_FORCE != $type) {
                 throw new $this->_exceptionClass("Table '{$this->getTableName()}' is not empty");
             }
             $this->_dbAdapter->truncate($this->getTableName());
@@ -75,31 +71,10 @@ class DbSync_Table_Data extends DbSync_Table_AbstractTable
         if (!current($data)) {
             return false;
         }
+        if (self::PUSH_TYPE_MERGE == $type && !$this->isEmptyTable()) {
+            return $this->_dbAdapter->merge($data, $this->getTableName());
+        }
         return $this->_dbAdapter->insert($data, $this->getTableName());
-    }
-
-    /**
-     * Merge data to db table
-     *
-     * @throws Exception
-     * @return boolean
-     */
-    public function merge()
-    {
-        if (!$filename = $this->getFilePath()) {
-            throw new $this->_exceptionClass("Data for table {$this->getTableName()} not found");
-        }
-        $data = $this->_fileAdapter->load($filename);
-
-        if (!current($data)) {
-            throw new $this->_exceptionClass("Data for '{$this->getTableName()}' is empty");
-        }
-
-        if (!$this->hasDbTable()) {
-            throw new $this->_exceptionClass("Table '{$this->getTableName()}' not found");
-        }
-
-        return $this->_dbAdapter->merge($data, $this->getTableName());
     }
 
     /**
@@ -109,6 +84,10 @@ class DbSync_Table_Data extends DbSync_Table_AbstractTable
      */
     public function isEmptyTable()
     {
+        if (!$this->hasDbTable()) {
+            throw new $this->_exceptionClass("Table '{$this->getTableName()}' not found");
+        }
+
         return $this->_dbAdapter->isEmpty($this->getTableName());
     }
 }

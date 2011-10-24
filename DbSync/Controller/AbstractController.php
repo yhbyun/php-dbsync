@@ -53,15 +53,14 @@ abstract class DbSync_Controller_AbstractController
             throw new Exception('Db adapter not set');
         }
 
+        if (empty($config['fileAdapter'])) {
+            throw new Exception('File adapter not set');
+        }
+
         $db = new $config['dbAdapter']($config['dbParams']);
         $file = new $config['fileAdapter']($config['path']);
 
-        $this->_model = new $this->_modelClass(
-            $db,
-            $file,
-            null,
-            $config['diffprog']
-        );
+        $this->_model = new $this->_modelClass($db, $file, $config['diffprog']);
 
         echo PHP_EOL;
     }
@@ -111,6 +110,7 @@ abstract class DbSync_Controller_AbstractController
                         echo $name . $this->colorize(" - " . $e->getMessage(), 'red');
                     }
                 }
+                echo PHP_EOL;
             }
         }
     }
@@ -171,13 +171,13 @@ abstract class DbSync_Controller_AbstractController
      */
     public function helpAction()
     {
-        echo "Usage {$this->_console->getProgname()} [action] [ [tableName] ... ] [--option]", PHP_EOL;
+        echo "Usage {$this->_console->getProgname()} [action] [ [tableName] ... ] [--option]";
 
-        echo PHP_EOL;
+        echo PHP_EOL . PHP_EOL;
 
-        echo $this->colorize("if tableName not specified action applied to all tables/configs"), PHP_EOL;
+        echo $this->colorize("if tableName not specified action applied to all tables/configs");
 
-        echo PHP_EOL;
+        echo PHP_EOL . PHP_EOL;
 
         $this->showUsage();
     }
@@ -218,8 +218,6 @@ abstract class DbSync_Controller_AbstractController
                 }
             }
         }
-
-        echo PHP_EOL;
     }
 
     /**
@@ -244,7 +242,6 @@ abstract class DbSync_Controller_AbstractController
                 echo $tableName . $this->colorize(" - Config not found", 'red');
             }
         }
-        echo PHP_EOL;
     }
 
     /**
@@ -270,7 +267,6 @@ abstract class DbSync_Controller_AbstractController
         } else {
             echo $tableName . $this->colorize(" - Table not found", 'red');
         }
-        echo PHP_EOL;
     }
 
     /**
@@ -292,7 +288,6 @@ abstract class DbSync_Controller_AbstractController
         } else {
             echo $tableName . $this->colorize(" - Table not found", 'red');
         }
-        echo PHP_EOL;
     }
 
     /**
@@ -317,7 +312,6 @@ abstract class DbSync_Controller_AbstractController
                 echo $tableName . $this->colorize(" - Schema not found", 'red');
             }
         }
-        echo PHP_EOL;
     }
 
     /**

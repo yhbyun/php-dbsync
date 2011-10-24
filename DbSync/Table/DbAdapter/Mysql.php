@@ -42,12 +42,36 @@ class DbSync_Table_DbAdapter_Mysql
      */
     public function __construct(array $config)
     {
-        $this->_db = new PDO(
+        $connection = new PDO(
             "mysql:host={$config['host']};dbname={$config['dbname']}",
             $config['username'],
             $config['password'],
             $config['options']
         );
+
+        $this->setConnection($connection);
+    }
+
+    /**
+     * Get connection
+     *
+     * @return PDO
+     */
+    public function getConnection()
+    {
+        return $this->_db;
+    }
+
+    /**
+     * Set connection
+     *
+     * @param PDO $connection
+     * @return DbSync_Table_DbAdapter_Mysql
+     */
+    public function setConnection(PDO $connection)
+    {
+        $this->_db = $connection;
+        return $this;
     }
 
     /**

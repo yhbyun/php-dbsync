@@ -55,30 +55,24 @@ abstract class DbSync_Table_AbstractTable
     /**
      * @var string
      */
-    protected $_exceptionClass = 'Exception';
+    protected $_exceptionClass = 'DbSync_Exception';
 
     /**
      * Constructor
      *
      * @param DbSync_Table_DbAdapter_AdapterInterface $db
      * @param DbSync_Table_FileAdapter_AdapterInterface $file
-     * @param string $tableName
      * @param string $diffProg
      */
     public function __construct(
         DbSync_Table_DbAdapter_AdapterInterface $db,
         DbSync_Table_FileAdapter_AdapterInterface $file,
-        $tableName = null,
         $diffProg = null)
     {
         $this->_dbAdapter = $db;
 
-
         $this->_fileAdapter = $file;
 
-        if ($tableName) {
-            $this->setTableName($tableName);
-        }
         if ($diffProg) {
             $this->setDiffProg($diffProg);
         }
@@ -120,6 +114,20 @@ abstract class DbSync_Table_AbstractTable
         $this->_tableName = (string) $tableName;
 
         return $this;
+    }
+
+    /**
+     * Save config file
+     *
+     * @param string $filename
+     */
+    public function save($filename)
+    {
+        if (!$this->isWriteable()) {
+            throw new $this->_exceptionClass("path '{$filename}' is not writable");
+        }
+
+        $this->_fileAdapter->write($filename, $this->getDataToStore());
     }
 
     /**
@@ -212,6 +220,25 @@ abstract class DbSync_Table_AbstractTable
     }
 
     /**
+     * Delete file
+     *
+     * @throws Exception
+     * @return boolen
+     */
+    public function deleteFile()
+    {
+        if (!$filename = $this->getFilePath()) {
+            throw new $this->_exceptionClass("Config for '{$this->getTriggerName()}' not found");
+        }
+
+        if (!$this->isWriteable()) {
+            throw new $this->_exceptionClass("Config file '{$filename}' is not writable");
+        }
+
+        return @unlink($filename);
+    }
+
+    /**
      * Get status
      *
      * @return boolen
@@ -252,7 +279,7 @@ abstract class DbSync_Table_AbstractTable
 
             $this->save($tmp);
 
-            if (file_get_contents($filename) !== file_get_contents($tmp)) {
+            if (sha1_file($filename) !== sha1_file($tmp)) {
                 exec("{$this->_diff} {$filename} {$tmp}", $output);
             }
             unlink($tmp);
@@ -272,7 +299,7 @@ abstract class DbSync_Table_AbstractTable
         $path = $this->getFilePath(false);
 
         if (!$this->isWriteable()) {
-            throw new $this->_exceptionClass("Filepath is not writable");
+            throw new $this->_exceptionClass("Path '{$path}' is not writable");
         }
 
         if (!realpath($path) || $force) {
