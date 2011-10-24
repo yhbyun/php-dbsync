@@ -129,7 +129,6 @@
         </exec>
         <zip destfile="${basedir}/build/html/docs.zip" basedir="${basedir}/docs/html"/>
         <echo message="##teamcity[publishArtifacts '${basedir}/build/html/docs.zip']" />
-        <delete dir="${basedir}/build/html/phpdoc"/>
     </target>
     
     <target name="phpunit" depends="prepare"  description="PHPUnit">
