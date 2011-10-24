@@ -81,7 +81,7 @@ class DbSync_Table_DataTest extends PHPUnit_Framework_TestCase
      * @expectedException        DbSync_Exception
      * @expectedExceptionMessage Config for 'users' not found
      */
-    public function push_ConfigNotFound()
+    public function push_configNotFound()
     {
         $tableName = 'users';
 
@@ -94,7 +94,7 @@ class DbSync_Table_DataTest extends PHPUnit_Framework_TestCase
         $model->expects($this->never())
               ->method('isEmptyTable');
 
-        $model->expects($this->once())
+        $model->expects($this->atLeastOnce())
               ->method('getTableName')
               ->will($this->returnValue($tableName));
 
@@ -127,17 +127,17 @@ class DbSync_Table_DataTest extends PHPUnit_Framework_TestCase
               ->method('getFilePath')
               ->will($this->returnValue($filepath));
 
-        $model->expects($this->once())
+        $model->expects($this->atLeastOnce())
               ->method('isEmptyTable')
               ->will($this->returnValue(true));
 
-        $model->expects($this->once())
+        $model->expects($this->atLeastOnce())
               ->method('getTableName')
               ->will($this->returnValue($tableName));
 
         $this->_fileAdapter->expects($this->once())
                            ->method('load')
-                           ->with($filepath)
+                           ->with($this->equalTo($filepath))
                            ->will($this->returnValue($data));
 
         $this->_dbAdapter->expects($this->never())
@@ -152,7 +152,7 @@ class DbSync_Table_DataTest extends PHPUnit_Framework_TestCase
      * @test
      *
      */
-    public function push_False()
+    public function push_emptyData()
     {
         $data = array();
         $tableName = 'users';
@@ -164,13 +164,12 @@ class DbSync_Table_DataTest extends PHPUnit_Framework_TestCase
               ->method('getFilePath')
               ->will($this->returnValue($filepath));
 
-        $model->expects($this->once())
-              ->method('isEmptyTable')
-              ->will($this->returnValue(true));
+        $model->expects($this->never())
+              ->method('isEmptyTable');
 
         $this->_fileAdapter->expects($this->once())
                            ->method('load')
-                           ->with($filepath)
+                           ->with($this->equalTo($filepath))
                            ->will($this->returnValue($data));
 
         $this->_dbAdapter->expects($this->never())
@@ -186,42 +185,7 @@ class DbSync_Table_DataTest extends PHPUnit_Framework_TestCase
      * @expectedException        DbSync_Exception
      * @expectedExceptionMessage  Table 'users' is not empty
      */
-    public function push_NotEmptyTable()
-    {
-        $data = array();
-        $tableName = 'users';
-        $filepath = 'tables/users';
-
-        $model = $this->_getMock(array('getFilePath', 'isEmptyTable', 'getTableName'));
-
-        $model->expects($this->once())
-              ->method('getFilePath')
-              ->will($this->returnValue($filepath));
-
-       $model->expects($this->once())
-              ->method('getTableName')
-              ->will($this->returnValue($tableName));
-
-        $model->expects($this->once())
-              ->method('isEmptyTable')
-              ->will($this->returnValue(false));
-
-        $this->_fileAdapter->expects($this->never())
-                           ->method('load');
-
-        $this->_dbAdapter->expects($this->never())
-                         ->method('insert');
-
-        $this->_dbAdapter->expects($this->never())
-                         ->method('truncate');
-        $model->push();
-    }
-
-    /**
-     * @test
-     *
-     */
-    public function push_Force()
+    public function push_notEmptyTable()
     {
         $data = array(
             array('id' => 1, 'name' => 'john')
@@ -235,17 +199,56 @@ class DbSync_Table_DataTest extends PHPUnit_Framework_TestCase
               ->method('getFilePath')
               ->will($this->returnValue($filepath));
 
-        $model->expects($this->once())
+       $model->expects($this->atLeastOnce())
+              ->method('getTableName')
+              ->will($this->returnValue($tableName));
+
+        $model->expects($this->atLeastOnce())
               ->method('isEmptyTable')
               ->will($this->returnValue(false));
 
-        $model->expects($this->exactly(2))
+        $this->_fileAdapter->expects($this->once())
+                           ->method('load')
+                           ->with($this->equalTo($filepath))
+                           ->will($this->returnValue($data));
+
+        $this->_dbAdapter->expects($this->never())
+                         ->method('insert');
+
+        $this->_dbAdapter->expects($this->never())
+                         ->method('truncate');
+        $model->push();
+    }
+
+    /**
+     * @test
+     *
+     */
+    public function push_force()
+    {
+        $data = array(
+            array('id' => 1, 'name' => 'john')
+        );
+        $tableName = 'users';
+        $filepath = 'tables/users';
+
+        $model = $this->_getMock(array('getFilePath', 'isEmptyTable', 'getTableName'));
+
+        $model->expects($this->once())
+              ->method('getFilePath')
+              ->will($this->returnValue($filepath));
+
+        $model->expects($this->atLeastOnce())
+              ->method('isEmptyTable')
+              ->will($this->returnValue(false));
+
+        $model->expects($this->atLeastOnce())
               ->method('getTableName')
               ->will($this->returnValue($tableName));
 
         $this->_fileAdapter->expects($this->once())
                            ->method('load')
-                           ->with($filepath)
+                           ->with($this->equalTo($filepath))
                            ->will($this->returnValue($data));
 
         $this->_dbAdapter->expects($this->once())
@@ -262,7 +265,7 @@ class DbSync_Table_DataTest extends PHPUnit_Framework_TestCase
      * @test
      *
      */
-    public function push_Merge()
+    public function push_merge()
     {
         $data = array(
             array('id' => 1, 'name' => 'john')
@@ -276,17 +279,17 @@ class DbSync_Table_DataTest extends PHPUnit_Framework_TestCase
               ->method('getFilePath')
               ->will($this->returnValue($filepath));
 
-        $model->expects($this->exactly(2))
+        $model->expects($this->atLeastOnce())
               ->method('isEmptyTable')
               ->will($this->returnValue(false));
 
-        $model->expects($this->once())
+        $model->expects($this->atLeastOnce())
               ->method('getTableName')
               ->will($this->returnValue($tableName));
 
         $this->_fileAdapter->expects($this->once())
                            ->method('load')
-                           ->with($filepath)
+                           ->with($this->equalTo($filepath))
                            ->will($this->returnValue($data));
 
         $this->_dbAdapter->expects($this->never())
@@ -302,17 +305,17 @@ class DbSync_Table_DataTest extends PHPUnit_Framework_TestCase
      * @test
      *
      */
-    public function isEmptyTable_True()
+    public function isEmptyTable_true()
     {
         $tableName = 'users';
 
         $model = $this->_getMock(array('hasDbTable', 'getTableName'));
 
-        $model->expects($this->once())
+        $model->expects($this->atLeastOnce())
               ->method('hasDbTable')
               ->will($this->returnValue(true));
 
-        $model->expects($this->once())
+        $model->expects($this->atLeastOnce())
               ->method('getTableName')
               ->will($this->returnValue($tableName));
 
@@ -328,7 +331,7 @@ class DbSync_Table_DataTest extends PHPUnit_Framework_TestCase
      * @test
      *
      */
-    public function isEmptyTable_False()
+    public function isEmptyTable_false()
     {
         $tableName = 'users';
 
@@ -338,7 +341,7 @@ class DbSync_Table_DataTest extends PHPUnit_Framework_TestCase
               ->method('hasDbTable')
               ->will($this->returnValue(true));
 
-        $model->expects($this->once())
+        $model->expects($this->atLeastOnce())
               ->method('getTableName')
               ->will($this->returnValue($tableName));
 
@@ -356,7 +359,7 @@ class DbSync_Table_DataTest extends PHPUnit_Framework_TestCase
      * @expectedException        DbSync_Exception
      * @expectedExceptionMessage Table 'users' not found
      */
-    public function isEmptyTable_Exception()
+    public function isEmptyTable_exception()
     {
         $tableName = 'users';
 
@@ -366,7 +369,7 @@ class DbSync_Table_DataTest extends PHPUnit_Framework_TestCase
               ->method('hasDbTable')
               ->will($this->returnValue(false));
 
-        $model->expects($this->once())
+        $model->expects($this->atLeastOnce())
               ->method('getTableName')
               ->will($this->returnValue($tableName));
 
@@ -379,7 +382,7 @@ class DbSync_Table_DataTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function getDataToStore()
+    public function generateConfigData()
     {
         $tableName = 'users';
         $data = array(
@@ -388,7 +391,7 @@ class DbSync_Table_DataTest extends PHPUnit_Framework_TestCase
 
         $model = $this->_getMock(array('getTableName'));
 
-        $model->expects($this->once())
+        $model->expects($this->atLeastOnce())
               ->method('getTableName')
               ->will($this->returnValue($tableName));
 
@@ -397,7 +400,7 @@ class DbSync_Table_DataTest extends PHPUnit_Framework_TestCase
                          ->with($this->equalTo($tableName))
                          ->will($this->returnValue($data));
 
-        $this->assertEquals($data, $model->getDataToStore());
+        $this->assertEquals($data, $model->generateConfigData());
     }
 }
 

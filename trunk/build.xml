@@ -2,61 +2,64 @@
 <project name="csf" default="build" basedir=".">
 
     <property name="appDir" value="${basedir}/DbSync" />
+    <property name="buildDir" value="${basedir}/build" />
+    <property name="logsDir" value="${buildDir}/logs" />
+    <property name="htmlDir" value="${buildDir}/html" />
     
     <target name="cleanup">
-        <delete dir="${basedir}/build/" />
+        <delete dir="${buildDir}" />
     </target>
     
     <target name="prepare" depends="cleanup">
-        <mkdir dir="${basedir}/build"/>
-        <mkdir dir="${basedir}/build/logs/"/>
-        <mkdir dir="${basedir}/build/html/phpdoc" />
-        <mkdir dir="${basedir}/build/html/phpcb" />
-        <mkdir dir="${basedir}/build/html/coverage" />
-        <mkdir dir="${basedir}/build/html/phpunit" />
+        <mkdir dir="${buildDir}" />
+        <mkdir dir="${logsDir}" />
+        <mkdir dir="${htmlDir}/docs" />
+        <mkdir dir="${htmlDir}/phpcb" />
+        <mkdir dir="${htmlDir}/coverage" />
+        <mkdir dir="${htmlDir}/phpunit" />
     </target>
     
     <target name="phploc" description="Tool for quickly measuring the size of a PHP project" depends="prepare">
-        <exec dir="${basedir}" executable="phploc" failonerror="false" osfamily="unix" output="${basedir}/build/logs/phploc.txt">
+        <exec dir="${basedir}" executable="phploc" failonerror="false" osfamily="unix" output="${logsDir}/phploc.log">
             <arg line="--count-tests" />
-            <arg line="--log-xml ${basedir}/build/logs/phploc.xml" />
+            <arg line="--log-xml ${logsDir}/phploc.xml" />
             <arg line="${appDir}" />
         </exec>
-        <exec dir="${basedir}" executable="cmd" failonerror="false" osfamily="windows" output="${basedir}\build\logs\phploc.txt">
+        <exec dir="${basedir}" executable="cmd" failonerror="false" osfamily="windows" output="${logsDir}\phploc.log">
             <arg line="/c phploc.bat" />
             <arg line="--count-tests" />
-            <arg line="--log-xml ${basedir}\build\logs\phploc.xml" />
+            <arg line="--log-xml ${logsDir}\phploc.xml" />
             <arg line="${appDir}" />
         </exec>
-        <echo message="##teamcity[publishArtifacts '${basedir}/build/logs/phploc.xml']" />
-        <echo message="##teamcity[publishArtifacts '${basedir}/build/logs/phploc.txt']" />
+        <echo message="##teamcity[publishArtifacts '${logsDir}/phploc.xml']" />
+        <echo message="##teamcity[publishArtifacts '${logsDir}/phploc.log']" />
     </target>
     
     <target name="phpcpd" description="Copy/Paste Detector" depends="prepare">
-        <exec dir="${basedir}" executable="phpcpd" failonerror="false" osfamily="unix" output="${basedir}/build/logs/phpcpd.txt">
-            <arg line="--log-pmd ${basedir}/build/logs/phpcpd.xml" />
+        <exec dir="${basedir}" executable="phpcpd" failonerror="false" osfamily="unix" output="${logsDir}/phpcpd.log">
+            <arg line="--log-pmd ${logsDir}/phpcpd.xml" />
             <arg line="${appDir}" />
         </exec>
-        <exec dir="${basedir}" executable="cmd" failonerror="false" osfamily="windows" output="${basedir}\build\logs\phpcpd.txt">
+        <exec dir="${basedir}" executable="cmd" failonerror="false" osfamily="windows" output="${logsDir}\phpcpd.log">
             <arg line="/c phpcpd.bat" />
-            <arg line="--log-pmd ${basedir}\build\logs\phpcpd.xml" />
+            <arg line="--log-pmd ${logsDir}\phpcpd.xml" />
             <arg line="${appDir}" />
         </exec>
-        <echo message="##teamcity[importData type='pmdCpd' path='${basedir}/build/logs/phpcpd.xml']"/>
-        <echo message="##teamcity[publishArtifacts '${basedir}/build/logs/phpcpd.txt']" />
-        <echo message="##teamcity[publishArtifacts '${basedir}/build/logs/phpcpd.xml']" />
+        <echo message="##teamcity[importData type='pmdCpd' path='${logsDir}/phpcpd.xml']"/>
+        <echo message="##teamcity[publishArtifacts '${logsDir}/phpcpd.log']" />
+        <echo message="##teamcity[publishArtifacts '${logsDir}/phpcpd.xml']" />
     </target>
 
     <target name="pmd" depends="prepare">
         <exec executable="phpmd" dir="${basedir}/">
             <arg line="application
                        xml codesize,unusedcode,naming
-                       --reportfile '${basedir}/build/logs/pmd.xml'"/>
+                       --reportfile '${logsDir}/pmd.xml'"/>
         </exec>
     </target>
     
     <target name="phpmd" description="PHP Mess Detector" depends="prepare">
-        <property name="pmd" value="${basedir}/build/logs/phpmd.xml" />
+        <property name="pmd" value="${logsDir}/phpmd.xml" />
         <exec dir="${basedir}" executable="phpmd" failonerror="false" osfamily="unix">
             <arg line="${appDir}" />
             <arg line="xml" />
@@ -74,24 +77,24 @@
     </target>
 
     <target name="phpcs" description="PHP_CodeSniffer" depends="prepare">
-        <exec dir="${basedir}" executable="phpcs" failonerror="false" osfamily="unix" output="${basedir}/build/logs/phpcs.txt">
+        <exec dir="${basedir}" executable="phpcs" failonerror="false" osfamily="unix" output="${logsDir}/phpcs.log">
             <arg line="--tab-width=4" />
             <arg line="--report=checkstyle" />
             <arg line="--standard=Zend" />
-            <arg line="--report-file=${basedir}/build/logs/phpcs.xml" />
+            <arg line="--report-file=${logsDir}/phpcs.xml" />
             <arg line="${appDir}" />
         </exec>
-        <exec dir="${basedir}" executable="cmd" failonerror="false" osfamily="windows" output="${basedir}\build\logs\phpcs.txt">
+        <exec dir="${basedir}" executable="cmd" failonerror="false" osfamily="windows" output="${logsDir}\phpcs.log">
             <arg line="/c phpcs.bat" />
             <arg line="--tab-width=4" />
             <arg line="--report=checkstyle" />
             <arg line="--standard=PEAR" />
-            <arg line="--report-file=${basedir}\build\logs\phpcs.xml" />
+            <arg line="--report-file=${logsDir}\phpcs.xml" />
             <arg line="${appDir}" />
         </exec>
-        <echo message="##teamcity[publishArtifacts '${basedir}/build/logs/phpcs.xml']" />
-        <echo message="##teamcity[importData type='checkstyle' path='${basedir}/build/logs/phpcs.xml']" />
-        <echo message="##teamcity[publishArtifacts '${basedir}/build/logs/phpcs.txt']" />
+        <echo message="##teamcity[publishArtifacts '${logsDir}/phpcs.xml']" />
+        <echo message="##teamcity[importData type='checkstyle' path='${logsDir}/phpcs.xml']" />
+        <echo message="##teamcity[publishArtifacts '${logsDir}/phpcs.log']" />
     </target>
 
     <target name="phpdoc" description="PhpDocumentor" depends="prepare">
@@ -100,7 +103,7 @@
         -->
         <exec dir="${basedir}" executable="phpdoc" failonerror="false" osfamily="unix">
             <arg line="--directory ${appDir}" />
-            <arg line="--target ${basedir}/build/html/phpdoc" />
+            <arg line="--target ${htmlDir}/phpdoc" />
             <arg line="--quiet off" />
             <arg line="--undocumentedelements on" />
             <arg line="--title Collector Rest Service" />
@@ -111,7 +114,7 @@
         <exec dir="${basedir}" executable="cmd" failonerror="false" osfamily="windows">
             <arg line="/c phpdoc.bat" />
             <arg line="--directory ${appDir}" />
-            <arg line="--target ${basedir}\build\html\phpdoc" />
+            <arg line="--target ${htmlDir}\phpdoc" />
             <arg line="--quiet off" />
             <arg line="--undocumentedelements on" />
             <arg line="--title Collector Rest Service" />
@@ -119,106 +122,125 @@
             <arg line="--output HTML:Smarty:PHP" />
             <arg line="--sourcecode on" />
         </exec>
-        <zip destfile="${basedir}/build/html/phpdoc.zip" basedir="${basedir}/build/html/phpdoc" />
-        <echo message="##teamcity[publishArtifacts '${basedir}/build/html/phpdoc.zip']" />
-        <delete dir="${basedir}/build/html/phpdoc"/>
+        <zip destfile="${htmlDir}/phpdoc.zip" basedir="${htmlDir}/phpdoc" />
+        <echo message="##teamcity[publishArtifacts '${htmlDir}/phpdoc.zip']" />
+        <delete dir="${htmlDir}/phpdoc"/>
     </target>
     
     <target name="doxygen" description="Doxygen" depends="prepare">
-        <exec dir="${basedir}" executable="doxygen" failonerror="false" osfamily="unix" output="${basedir}/build/logs/doxygen.txt">
+        <exec dir="${basedir}" executable="doxygen" failonerror="false" osfamily="unix" output="${logsDir}/doxygen.log">
         </exec>
-        <zip destfile="${basedir}/build/html/docs.zip" basedir="${basedir}/docs/html"/>
-        <echo message="##teamcity[publishArtifacts '${basedir}/build/html/docs.zip']" />
+        <zip destfile="${htmlDir}/docs.zip" basedir="${htmlDir}/docs"/>
+        <echo message="##teamcity[publishArtifacts '${htmlDir}/docs.zip']" />
+    </target>
+    
+    <target name="update-doc" description="Doxygen" depends="prepare, doxygen">
+        <exec dir="${basedir}" executable="doxygen" failonerror="false" osfamily="unix" output="${logsDir}/doxygen.log">
+        </exec>
+        <copy todir="${basedir}/docs">
+            <fileset dir="${htmlDir}/docs"/>
+        </copy>
     </target>
     
     <target name="phpunit" depends="prepare"  description="PHPUnit">
-        <mkdir dir="${basedir}/build/logs/coverage"/>
+        <mkdir dir="${logsDir}/coverage"/>
         
-        <property name="junit" value="${basedir}/build/logs/tests-report.xml" />
+        <property name="junit" value="${logsDir}/tests-report.xml" />
         
-        <exec executable="phpunit" dir="${basedir}/tests" failonerror="false" osfamily="unix" output="${basedir}/build/logs/phpunit.txt">
-            <arg line="--log-junit '${basedir}/build/logs/tests-report.xml'"/>
-            <arg line="--coverage-clover '${basedir}/build/logs/phpunit.clover.xml'"/>
-            <arg line="--coverage-html '${basedir}/build/html/coverage'"/>
+        <exec executable="phpunit" dir="${basedir}/tests" failonerror="false" osfamily="unix" output="${logsDir}/phpunit.log">
+            <arg line="--log-junit '${logsDir}/tests-report.xml'"/>
+            <arg line="--coverage-clover '${logsDir}/phpunit.clover.xml'"/>
+            <arg line="--coverage-html '${htmlDir}/coverage'"/>
             <arg line="."/>
         </exec>
         
-        <exec dir="${basedir}\tests" executable="cmd" failonerror="false" osfamily="windows" output="${basedir}\build\logs\phpunit.txt"> 
+        <exec dir="${basedir}\tests" executable="cmd" failonerror="false" osfamily="windows" output="${logsDir}\phpunit.log"> 
             <arg line="/c phpunit.bat" />
-            <arg line="--log-junit '${basedir}\build\logs\tests-report.xml'"/>
-            <arg line="--coverage-clover '${basedir}\build\logs\phpunit.clover.xml'"/>
-            <arg line="--coverage-html '${basedir}\build\html\coverage'"/>
+            <arg line="--log-junit '${logsDir}\tests-report.xml'"/>
+            <arg line="--coverage-clover '${logsDir}\phpunit.clover.xml'"/>
+            <arg line="--coverage-html '${htmlDir}\coverage'"/>
             <arg line="."/>
         </exec>
         
         <echo message="##teamcity[importData type='junit' path='${junit}']" />
-        <zip destfile="${basedir}/build/html/coverage.zip" basedir="${basedir}/build/html/coverage"/>
-        <echo message="##teamcity[publishArtifacts '${basedir}/build/html/coverage.zip']" />
+        <zip destfile="${htmlDir}/coverage.zip" basedir="${htmlDir}/coverage"/>
+        <echo message="##teamcity[publishArtifacts '${htmlDir}/coverage.zip']" />
     </target>
     
     
     
     <target name="phpdcd" description="PHP Dead Code Detector" depends="prepare">
-        <exec dir="${appDir}" executable="phpdcd" failonerror="false" osfamily="unix" output="${basedir}/build/logs/phpdcd.txt">
+        <exec dir="${appDir}" executable="phpdcd" failonerror="false" osfamily="unix" output="${logsDir}/phpdcd.log">
             <arg line="--recursive" />
             <arg line="${appDir}" />
         </exec>
-        <exec dir="${appDir}" executable="cmd" failonerror="false" osfamily="windows" output="${basedir}\build\logs\phpdcd.txt">
+        <exec dir="${appDir}" executable="cmd" failonerror="false" osfamily="windows" output="${logsDir}\phpdcd.log">
             <arg line="/c phpdcd.bat" />
             <arg line="--recursive" />
             <arg line="${appDir}" />
         </exec>
-        <echo message="##teamcity[publishArtifacts '${basedir}/build/logs/phpdcd.txt']" />
+        <echo message="##teamcity[publishArtifacts '${logsDir}/phpdcd.log']" />
     </target>
     
-    <target name="phpcb" description="PHP_CodeBrowser" depends="prepare">
+    <target name="phpcb" description="PHP_CodeBrowser" depends="prepare, phpunit">
         <exec dir="${basedir}" executable="phpcb" failonerror="false" osfamily="unix">
-            <arg line="--log ${basedir}/build/logs" />
+            <arg line="--log ${logsDir}" />
             <arg line="--source ${appDir}" />
-            <arg line="--output ${basedir}/build/html/phpcb" />
+            <arg line="--output ${htmlDir}/phpcb" />
         </exec>
         <exec dir="${basedir}" executable="cmd" failonerror="false" osfamily="windows">
             <arg line="/c phpcb.bat" />
-            <arg line="--log ${basedir}\build\logs" />
+            <arg line="--log ${logsDir}" />
             <arg line="--source ${appDir}" />
-            <arg line="--output ${basedir}\build\html\phpcb" />
+            <arg line="--output ${htmlDir}\phpcb" />
         </exec>
-        <zip destfile="${basedir}/build/html/phpcb.zip" basedir="${basedir}/build/html/phpcb" />
-        <echo message="##teamcity[publishArtifacts '${basedir}/build/html/phpcb.zip']" />
-        <delete dir="${basedir}/build/html/phpcb"/>
+        <zip destfile="${htmlDir}/phpcb.zip" basedir="${htmlDir}/phpcb" />
+        <echo message="##teamcity[publishArtifacts '${htmlDir}/phpcb.zip']" />
+        <delete dir="${htmlDir}/phpcb"/>
     </target>
     
     <target name="pdepend" description="PHP_Depend" depends="prepare">
         <!--
         @todo Use configuration=<file> argument. 
         -->
-        <exec dir="${basedir}" executable="pdepend" failonerror="false" osfamily="unix" output="${basedir}/build/logs/pdepend.txt">
-            <arg line="--jdepend-chart=${basedir}/build/logs/pdepend.jdepend.chart.svg"/>
-            <arg line="--jdepend-xml=${basedir}/build/logs/pdepend.jdepend.xml"/>
-            <arg line="--overview-pyramid=${basedir}/build/logs/pdepend.overview.pyramid.svg"/>
-            <arg line="--phpunit-xml=${basedir}/build/logs/pdepend.phpunit.xml"/>
-            <arg line="--summary-xml=${basedir}/build/logs/pdepend.summary.xml"/>
-            <arg line="--coverage-report=${basedir}/build/logs/phpunit.clover.xml"/>
+        <exec dir="${basedir}" executable="pdepend" failonerror="false" osfamily="unix" output="${logsDir}/pdepend.log">
+            <arg line="--jdepend-chart=${logsDir}/pdepend.jdepend.chart.svg"/>
+            <arg line="--jdepend-xml=${logsDir}/pdepend.jdepend.xml"/>
+            <arg line="--overview-pyramid=${logsDir}/pdepend.overview.pyramid.svg"/>
+            <arg line="--phpunit-xml=${logsDir}/pdepend.phpunit.xml"/>
+            <arg line="--summary-xml=${logsDir}/pdepend.summary.xml"/>
+            <arg line="--coverage-report=${logsDir}/phpunit.clover.xml"/>
             <arg line="--coderank-mode=inheritance,property,method"/>
             <arg line="${appDir}"/>
         </exec>
-        <exec dir="${basedir}" executable="cmd" failonerror="false" osfamily="windows" output="${basedir}\build\logs\pdepend.txt">
+        <exec dir="${basedir}" executable="cmd" failonerror="false" osfamily="windows" output="${logsDir}\pdepend.log">
             <arg line="/c pdepend.bat" />
-            <arg line="--jdepend-chart=${basedir}\build\logs\pdepend.jdepend.chart.svg"/>
-            <arg line="--jdepend-xml=${basedir}\build\logs\pdepend.jdepend.xml"/>
-            <arg line="--overview-pyramid=${basedir}\build\logs\pdepend.overview.pyramid.svg"/>
-            <arg line="--phpunit-xml=${basedir}\build\logs\pdepend.phpunit.xml"/>
-            <arg line="--summary-xml=${basedir}\build\logs\pdepend.summary.xml"/>
-            <arg line="--coverage-report=${basedir}\build\logs\phpunit.clover.xml"/>
+            <arg line="--jdepend-chart=${logsDir}\pdepend.jdepend.chart.svg"/>
+            <arg line="--jdepend-xml=${logsDir}\pdepend.jdepend.xml"/>
+            <arg line="--overview-pyramid=${logsDir}\pdepend.overview.pyramid.svg"/>
+            <arg line="--phpunit-xml=${logsDir}\pdepend.phpunit.xml"/>
+            <arg line="--summary-xml=${logsDir}\pdepend.summary.xml"/>
+            <arg line="--coverage-report=${logsDir}\phpunit.clover.xml"/>
             <arg line="--coderank-mode=inheritance,property,method"/>
             <arg line="${appDir}"/>
         </exec>
-        <echo message="##teamcity[publishArtifacts '${basedir}/build/logs/pdepend.jdepend.chart.svg']" />
-        <echo message="##teamcity[publishArtifacts '${basedir}/build/logs/pdepend.jdepend.xml']" />
-        <echo message="##teamcity[publishArtifacts '${basedir}/build/logs/pdepend.overview.pyramid.svg']" />
-        <echo message="##teamcity[publishArtifacts '${basedir}/build/logs/pdepend.phpunit.xml']" />
-        <echo message="##teamcity[publishArtifacts '${basedir}/build/logs/pdepend.summary.xml']" />
-        <echo message="##teamcity[publishArtifacts '${basedir}/build/logs/phpunit.clover.xml']" />
+        <echo message="##teamcity[publishArtifacts '${logsDir}/pdepend.jdepend.chart.svg']" />
+        <echo message="##teamcity[publishArtifacts '${logsDir}/pdepend.jdepend.xml']" />
+        <echo message="##teamcity[publishArtifacts '${logsDir}/pdepend.overview.pyramid.svg']" />
+        <echo message="##teamcity[publishArtifacts '${logsDir}/pdepend.phpunit.xml']" />
+        <echo message="##teamcity[publishArtifacts '${logsDir}/pdepend.summary.xml']" />
+        <echo message="##teamcity[publishArtifacts '${logsDir}/phpunit.clover.xml']" />
+    </target>
+    
+    <target name="checkout" description="Base task - update directory with new version from server and overwrite all conflicts with files from server">
+        <exec executable="svn" failonerror="true" output="${logsDir}/svn.log">
+            <arg line="up" />
+            <arg line="--force" />
+
+            <arg line="--accept theirs-full" />
+        </exec>
+
+        <echo message="##teamcity[publishArtifacts '${logsDir}/svn.log']" description="Import detailed svn log to TeamCity"/>
     </target>
 
     <target name="build" depends="phpunit, phploc, phpcb, phpcs, pdepend, phpcpd, phpmd, doxygen" />

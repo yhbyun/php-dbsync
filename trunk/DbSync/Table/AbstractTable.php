@@ -124,10 +124,10 @@ abstract class DbSync_Table_AbstractTable
     public function save($filename)
     {
         if (!$this->isWriteable()) {
-            throw new $this->_exceptionClass("path '{$filename}' is not writable");
+            throw new $this->_exceptionClass("Path '{$filename}' is not writable");
         }
 
-        $this->_fileAdapter->write($filename, $this->getDataToStore());
+        $this->_fileAdapter->write($filename, $this->generateConfigData());
     }
 
     /**
@@ -228,7 +228,7 @@ abstract class DbSync_Table_AbstractTable
     public function deleteFile()
     {
         if (!$filename = $this->getFilePath()) {
-            throw new $this->_exceptionClass("Config for '{$this->getTriggerName()}' not found");
+            throw new $this->_exceptionClass("Config file not found");
         }
 
         if (!$this->isWriteable()) {
@@ -245,10 +245,6 @@ abstract class DbSync_Table_AbstractTable
      */
     public function getStatus()
     {
-        if (!$this->hasFile()) {
-            throw new $this->_exceptionClass("Config for '{$this->getTableName()}' not found");
-        }
-
         $diff = $this->diff();
 
         return empty($diff);
@@ -270,20 +266,20 @@ abstract class DbSync_Table_AbstractTable
      */
     public function diff()
     {
-        $output = array();
-
         if (!$filename = $this->getFilePath()) {
-            $output[] = "Config for '{$this->getTableName()}' not found";
-        } else {
-            $tmp = $filename . '.tmp';
-
-            $this->save($tmp);
-
-            if (sha1_file($filename) !== sha1_file($tmp)) {
-                exec("{$this->_diff} {$filename} {$tmp}", $output);
-            }
-            unlink($tmp);
+            throw new $this->_exceptionClass("Config for '{$this->getTableName()}' not found");
         }
+
+        $output = array();
+        $tmp = $filename . '.tmp';
+
+        $this->save($tmp);
+
+        if (sha1_file($filename) !== sha1_file($tmp)) {
+            exec("{$this->_diff} {$filename} {$tmp}", $output);
+        }
+        unlink($tmp);
+
         return $output;
     }
 
@@ -296,13 +292,12 @@ abstract class DbSync_Table_AbstractTable
      */
     public function init($force = false)
     {
-        $path = $this->getFilePath(false);
+        if ($force || !$this->getFilePath()) {
+            $path = $this->getFilePath(false);
 
-        if (!$this->isWriteable()) {
-            throw new $this->_exceptionClass("Path '{$path}' is not writable");
-        }
-
-        if (!realpath($path) || $force) {
+            if (!$this->isWriteable()) {
+                throw new $this->_exceptionClass("Path '{$path}' is not writable");
+            }
             $this->save($path);
 
             return true;

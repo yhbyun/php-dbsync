@@ -37,7 +37,7 @@ class DbSync_Table_Schema extends DbSync_Table_AbstractTable
      *
      * @return array
      */
-    public function getDataToStore()
+    public function generateConfigData()
     {
         return $this->_dbAdapter->parseSchema($this->getTableName());
     }
@@ -47,10 +47,10 @@ class DbSync_Table_Schema extends DbSync_Table_AbstractTable
      *
      * @return string
      */
-    public function createAlter()
+    public function generateSql()
     {
         if (!$filename = $this->getFilePath()) {
-            throw new $this->_exceptionClass("Config for table '{$this->getTableName()}' not found");
+            throw new $this->_exceptionClass("Config for '{$this->getTableName()}' not found");
         }
         $data = $this->_fileAdapter->load($filename);
 
@@ -64,7 +64,7 @@ class DbSync_Table_Schema extends DbSync_Table_AbstractTable
      */
     public function push()
     {
-        return false !== $this->_dbAdapter->execute($this->createAlter());
+        return false !== $this->_dbAdapter->execute($this->generateSql());
     }
 
     /**

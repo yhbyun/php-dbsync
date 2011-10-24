@@ -69,7 +69,7 @@ class DbSync_Controller_SchemaController extends DbSync_Controller_AbstractContr
 
         if ($this->_model->hasFile()) {
             if ($this->_console->hasOption('show')) {
-                echo $this->_model->createAlter();
+                echo $this->_model->generateSql();
             } else {
                  if (!$this->_model->push()) {
                      echo $tableName . $this->colorize(" - Not updated", 'red');
