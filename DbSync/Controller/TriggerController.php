@@ -144,9 +144,13 @@ class DbSync_Controller_TriggerController extends DbSync_Controller_AbstractCont
 
         if ($this->_model->hasFile()) {
             if ($this->_console->hasOption('show')) {
-                echo $this->_model->createSql();
+                echo $this->_model->generateSql();
             } else {
-                 echo $triggerName . $this->colorize(" - Updated", 'green');
+                if (!$this->_model->push()) {
+                    echo $triggerName . $this->colorize(" - Not updated", 'red');
+                } else {
+                    echo $triggerName . $this->colorize(" - Updated", 'green');
+                }
             }
         } else {
             echo $triggerName . $this->colorize(" - Config not found", 'red');

@@ -104,7 +104,7 @@ class DbSync_Table_Trigger extends DbSync_Table_AbstractTable
      *
      * @return array
      */
-    public function getDataToStore()
+    public function generateConfigData()
     {
         return $this->_dbAdapter->parseTrigger($this->getTriggerName());
     }
@@ -114,7 +114,7 @@ class DbSync_Table_Trigger extends DbSync_Table_AbstractTable
      *
      * @return string
      */
-    public function createSql()
+    public function generateSql()
     {
         if (!$filename = $this->getFilePath()) {
             throw new $this->_exceptionClass("Config for '{$this->getTriggerName()}' not found");
@@ -132,7 +132,7 @@ class DbSync_Table_Trigger extends DbSync_Table_AbstractTable
      */
     public function push()
     {
-        return false !== $this->_dbAdapter->execute($this->createSql());
+        return false !== $this->_dbAdapter->execute($this->generateSql());
     }
 
     /**

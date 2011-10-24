@@ -40,7 +40,7 @@ class DbSync_Table_Data extends DbSync_Table_AbstractTable
      *
      * @return array
      */
-    public function getDataToStore()
+    public function generateConfigData()
     {
         return $this->_dbAdapter->fetchData($this->getTableName());
     }
@@ -59,21 +59,23 @@ class DbSync_Table_Data extends DbSync_Table_AbstractTable
             throw new $this->_exceptionClass("Config for '{$this->getTableName()}' not found");
         }
 
-        if (!$this->isEmptyTable() && self::PUSH_TYPE_MERGE != $type) {
+        $data = $this->_fileAdapter->load($filename);
+
+        if (!current($data)) {
+            return false;
+        }
+
+        if (!$this->isEmptyTable()) {
+            if (self::PUSH_TYPE_MERGE == $type) {
+                return $this->_dbAdapter->merge($data, $this->getTableName());
+            }
+
             if (self::PUSH_TYPE_FORCE != $type) {
                 throw new $this->_exceptionClass("Table '{$this->getTableName()}' is not empty");
             }
             $this->_dbAdapter->truncate($this->getTableName());
         }
 
-        $data = $this->_fileAdapter->load($filename);
-
-        if (!current($data)) {
-            return false;
-        }
-        if (self::PUSH_TYPE_MERGE == $type && !$this->isEmptyTable()) {
-            return $this->_dbAdapter->merge($data, $this->getTableName());
-        }
         return $this->_dbAdapter->insert($data, $this->getTableName());
     }
 

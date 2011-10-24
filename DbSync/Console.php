@@ -151,7 +151,7 @@ class DbSync_Console
         if ($this->hasOption($name)) {
             return $this->_options[$name];
         }
-        return false;
+        return $default;
     }
 
     /**
