@@ -267,7 +267,7 @@ abstract class DbSync_Table_AbstractTable
     public function diff()
     {
         if (!$filename = $this->getFilePath()) {
-            throw new $this->_exceptionClass("Config for '{$this->getTableName()}' not found");
+            throw new $this->_exceptionClass("Config file not found");
         }
 
         $output = array();

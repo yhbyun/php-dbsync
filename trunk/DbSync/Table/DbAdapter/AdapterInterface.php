@@ -83,11 +83,11 @@ interface DbSync_Table_DbAdapter_AdapterInterface
     public function getTriggerList();
 
     /**
-     * Get trigger info
+     * Get table name by trigger name
      *
      * @return string
      */
-    public function getTriggerInfo($triggerName);
+    public function getTableByTrigger($triggerName);
 
     /**
      * Get tables list

@@ -68,11 +68,11 @@ class DbSync_Table_Trigger extends DbSync_Table_AbstractTable
     public function getTableName()
     {
         if (!$this->_tableName) {
-            $trigger = $this->_dbAdapter->getTriggerInfo($this->getTriggerName());
-            if (isset($trigger->Table)) {
-                $this->_tableName = $trigger->Table;
-            } else {
-                $this->_tableName = $this->_fileAdapter->getTableNameByTriggerName($this->getTriggerName());
+            $trigger = $this->getTriggerName();
+            $this->_tableName = $this->_dbAdapter->getTableByTrigger($trigger);
+
+            if (!$this->_tableName){
+                $this->_tableName = $this->_fileAdapter->getTableByTrigger($trigger);
             }
         }
         return parent::getTableName();

@@ -33,6 +33,7 @@ $config = array(
     'diffprog' => 'diff'
 );
 
+require_once 'vfsStream/vfsStream.php';
 
 /**
  * File adapter classes
