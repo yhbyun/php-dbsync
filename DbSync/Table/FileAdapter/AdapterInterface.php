@@ -76,7 +76,7 @@ interface DbSync_Table_FileAdapter_AdapterInterface
      * @param string $triggerName
      * @return string
      */
-    public function getTableNameByTriggerName($triggerName);
+    public function getTableByTrigger($triggerName);
 
     /**
      * Get triggers list

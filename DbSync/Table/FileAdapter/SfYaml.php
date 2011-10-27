@@ -83,8 +83,9 @@ class DbSync_Table_FileAdapter_SfYaml
     public function getTableList($filename)
     {
         $list = array();
+        $path = "*/{$filename}." . self::FILE_EXTENSION;
 
-        foreach (new GlobIterator("{$this->_path}/*/{$filename}." . self::FILE_EXTENSION) as $file) {
+        foreach ($this->getIterator($path) as $file) {
             $list[] = basename(dirname($file->getPathname()));
         }
 
@@ -116,9 +117,11 @@ class DbSync_Table_FileAdapter_SfYaml
      * @param string $triggerName
      * @return string
      */
-    public function getTableNameByTriggerName($triggerName)
+    public function getTableByTrigger($triggerName)
     {
-        foreach (new GlobIterator("{$this->_path}/*/triggers/{$triggerName}." . self::FILE_EXTENSION) as $file) {
+        $path = "*/triggers/{$triggerName}." . self::FILE_EXTENSION;
+
+        foreach ($this->getIterator($path) as $file) {
             return basename(dirname(dirname($file->getPathname())));
         }
         return '';
@@ -133,15 +136,29 @@ class DbSync_Table_FileAdapter_SfYaml
     public function getTriggerList($tables = array())
     {
         $list = array();
+        $path = "/triggers/*." . self::FILE_EXTENSION;
 
         if (!$tables) {
             $tables = array('*');
         }
+
         foreach ((array) $tables as $tableName) {
-            foreach (new GlobIterator("{$this->_path}/{$tableName}/triggers/*." . self::FILE_EXTENSION) as $file) {
+            foreach ($this->getIterator($tableName . $path) as $file) {
                 $list[] = pathinfo($file->getFilename(), PATHINFO_FILENAME);
             }
         }
         return $list;
+    }
+
+    /**
+     * Get iterator
+     *
+     * @param string $path
+     * @param integer $flags
+     * @return GlobIterator
+     */
+    public function getIterator($path, $flags = FilesystemIterator::SKIP_DOTS)
+    {
+        return new GlobIterator($this->_path . '/' . $path, $flags);
     }
 }

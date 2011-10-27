@@ -18,8 +18,6 @@
  * @version  $Id$
  */
 
-require_once 'vfsStream/vfsStream.php';
-
 /**
  * DbSync_Table_AbstractTableTest
  *
@@ -565,6 +563,51 @@ class DbSync_Table_AbstractTableTest extends PHPUnit_Framework_TestCase
               ->method('save');
 
         $this->assertFalse($model->init());
+    }
+
+    /**
+     * diff
+     *
+     * @expectedException        DbSync_Exception
+     * @expectedExceptionMessage Config file not found
+     */
+    public function test_diff_noFile()
+    {
+        $model = $this->_getMock(array('getFilePath'));
+
+        $model->expects($this->once())
+              ->method('getFilePath')
+              ->will($this->returnValue(false));
+
+        $model->diff();
+    }
+
+    /**
+     * diff
+     *
+     */
+    public function test_diff()
+    {
+        vfsStream::setup('exampleDir');
+
+        $filepath = vfsStream::url('exampleDir/config.yml');
+        $filepathTmp = vfsStream::url('exampleDir/config.yml.tmp');
+        fopen($filepath, 'a');
+        fopen($filepathTmp, 'a');
+
+        $model = $this->_getMock(array('getFilePath', 'save'));
+
+        $model->expects($this->once())
+              ->method('getFilePath')
+              ->will($this->returnValue($filepath));
+
+        $model->expects($this->once())
+              ->method('save')
+              ->with($this->equalTo($filepath . '.tmp'));
+
+        $this->assertEmpty($model->diff());
+
+        $this->assertFalse(file_exists($filepathTmp));
     }
 }
 

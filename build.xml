@@ -130,7 +130,7 @@
     <target name="doxygen" description="Doxygen" depends="prepare">
         <exec dir="${basedir}" executable="doxygen" failonerror="false" osfamily="unix" output="${logsDir}/doxygen.log">
         </exec>
-        <zip destfile="${htmlDir}/docs.zip" basedir="${htmlDir}/docs"/>
+        <zip destfile="${htmlDir}/docs.zip" basedir="${htmlDir}/docs/html"/>
         <echo message="##teamcity[publishArtifacts '${htmlDir}/docs.zip']" />
     </target>
     

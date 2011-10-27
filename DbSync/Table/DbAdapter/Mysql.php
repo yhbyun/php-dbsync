@@ -336,6 +336,22 @@ class DbSync_Table_DbAdapter_Mysql
     }
 
     /**
+     * Get trigger info
+     *
+     * @param string $triggerName
+     * @return string
+     */
+    public function getTableByTrigger($triggerName)
+    {
+        $result = $this->getTriggerInfo($triggerName);
+
+        if (isset($result->Table)) {
+            return $result->Table;
+        }
+        return null;
+    }
+
+    /**
      * Get tables list
      *
      * @return array
@@ -457,7 +473,7 @@ class DbSync_Table_DbAdapter_Mysql
      */
     public function truncate($tableName)
     {
-        return $this->_db->exec("DELETE FROM {$tableName}");
+        return $this->execute("DELETE FROM {$tableName}");
     }
 
     /**
@@ -468,7 +484,7 @@ class DbSync_Table_DbAdapter_Mysql
      */
     public function dropTable($tableName)
     {
-        return $this->_db->exec("DROP TABLE IF EXISTS {$tableName}");
+        return $this->execute("DROP TABLE IF EXISTS {$tableName}");
     }
 
     /**
@@ -479,7 +495,7 @@ class DbSync_Table_DbAdapter_Mysql
      */
     public function dropTrigger($triggerName)
     {
-        return $this->_db->exec("DROP TRIGGER IF EXISTS {$triggerName}");
+        return $this->execute("DROP TRIGGER IF EXISTS {$triggerName}");
     }
 
     /**
