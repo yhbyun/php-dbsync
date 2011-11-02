@@ -50,11 +50,11 @@ abstract class DbSync_Controller_AbstractController
     public function __construct(array $config)
     {
         if (empty($config['dbAdapter'])) {
-            throw new Exception('Db adapter not set');
+            throw new DbSync_Exception('Db adapter not set');
         }
 
         if (empty($config['fileAdapter'])) {
-            throw new Exception('File adapter not set');
+            throw new DbSync_Exception('File adapter not set');
         }
 
         $db = new $config['dbAdapter']($config['dbParams']);
@@ -63,6 +63,39 @@ abstract class DbSync_Controller_AbstractController
         $this->_model = new $this->_modelClass($db, $file, $config['diffprog']);
 
         echo PHP_EOL;
+    }
+
+    /**
+     * Get action method name
+     *
+     * @param string $action
+     * @return string
+     */
+    public function getActionMethod($action)
+    {
+        if (method_exists($this, $action . 'Action')) {
+            return $action . 'Action';
+        }
+        foreach (get_class_methods($this) as $methodName) {
+            if ('Action' == substr($methodName, -6)) {
+                $method = new ReflectionMethod($this, $methodName);
+
+                preg_match_all(
+                    "%\@alias\s(.*)(\r\n|\r|\n)%um",
+                    $method->getDocComment(),
+                    $matches
+                );
+
+                if ($matches['1']) {
+                    foreach ($matches['1'] as $match) {
+                        if ($action == $match) {
+                            return $methodName;
+                        }
+                    }
+                }
+            }
+        }
+        return 'helpAction';
     }
 
     /**
@@ -76,9 +109,10 @@ abstract class DbSync_Controller_AbstractController
         $this->_console = $console;
 
         $items = $console->getActions();
-        $action = array_shift($items) . 'Action';
 
-        if (!method_exists($this, $action) || 'helpAction' == $action) {
+        $action = $this->getActionMethod(array_shift($items));
+
+        if ('helpAction' == $action) {
             return $this->helpAction();
         }
 
@@ -106,7 +140,7 @@ abstract class DbSync_Controller_AbstractController
                     unset($items[$i]);
                     $updated = true;
                     echo PHP_EOL;
-                } catch (Exception $e) {
+                } catch (DbSync_Exception $e) {
                     if ($stop) {
                         echo $name . $this->colorize(" - " . $e->getMessage(), 'red');
                         echo PHP_EOL;
@@ -195,6 +229,8 @@ abstract class DbSync_Controller_AbstractController
         sort($methods);
         foreach ($methods as $methodName) {
             if ('Action' == substr($methodName, -6)) {
+                echo $this->colorize(substr($methodName, 0, -6), 'green');
+
                 $method = new ReflectionMethod($this, $methodName);
 
                 preg_match_all(
@@ -202,8 +238,6 @@ abstract class DbSync_Controller_AbstractController
                     $method->getDocComment(),
                     $matches
                 );
-
-                echo $this->colorize(substr($methodName, 0, -6), 'green');
 
                 if ($matches['1']) {
                     foreach ($matches['1'] as $match) {
@@ -224,16 +258,18 @@ abstract class DbSync_Controller_AbstractController
     /**
      * Status
      *
+     * @alias st
+     *
      * @return Check sync status (Ok/Unsyncronized)
      */
     public function statusAction()
     {
-        $tableName = $this->_model->getTableName();
+        $name = $this->_model->getName();
 
         if ($this->_model->getStatus()) {
-            echo $tableName . $this->colorize(" - Ok", 'green');
+            echo $name . $this->colorize(" - Ok", 'green');
         } else {
-            echo $tableName . $this->colorize(" - Unsyncronized", 'red');
+            echo $name . $this->colorize(" - Unsyncronized", 'red');
         }
     }
 
@@ -244,42 +280,65 @@ abstract class DbSync_Controller_AbstractController
      */
     public function initAction()
     {
-        $tableName = $this->_model->getTableName();
+        $name = $this->_model->getName();
 
         if ($this->_model->init()) {
-            echo $tableName . $this->colorize(" - Ok", 'green');
+            echo $name . $this->colorize(" - Ok", 'green');
         } else {
-            echo $tableName . $this->colorize(" - Already has config", 'red');
+            echo $name . $this->colorize(" - Already has config", 'red');
         }
     }
 
     /**
      * Pull
      *
-     * @return Override current table config(s) file by new created from database
+     * @return Override current config(s) file by new created from database
      */
     public function pullAction()
     {
-        $tableName = $this->_model->getTableName();
+        $name = $this->_model->getName();
 
         $this->_model->pull();
-        echo $tableName . $this->colorize(" - Ok", 'green');
+        echo $name . $this->colorize(" - Ok", 'green');
     }
 
     /**
      * Diff
      *
-     * @return Show diff between database table schema and schema config file
+     * @alias di
+     *
+     * @return Show diff between database entity and config file
      */
     public function diffAction()
     {
-        $tableName = $this->_model->getTableName();
+        $name = $this->_model->getName();
 
         if ($this->_model->getStatus()) {
-            echo $tableName . $this->colorize(" - OK", 'green');
+            echo $name . $this->colorize(" - OK", 'green');
         } else {
-            echo $tableName . $this->colorize(" - Unsyncronized", 'red');
+            echo $name . $this->colorize(" - Unsyncronized", 'red');
             echo PHP_EOL, join(PHP_EOL, $this->_model->diff());
+        }
+    }
+
+    /**
+     * Push
+     *
+     * @return Override database entity by current config file entity
+     * @return Use {--show|yellow} to only display alter code
+     */
+    public function pushAction()
+    {
+        $name = $this->_model->getName();
+
+        if ($this->_console->hasOption('show')) {
+            echo $this->_model->generateSql();
+        } else {
+             if (!$this->_model->push()) {
+                 echo $name . $this->colorize(" - Not updated", 'red');
+             } else {
+                 echo $name . $this->colorize(" - Updated", 'green');
+             }
         }
     }
 

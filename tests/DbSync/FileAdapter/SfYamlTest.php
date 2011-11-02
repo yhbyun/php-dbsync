@@ -88,8 +88,10 @@ class DbSync_FileAdapter_SfYamlTest extends PHPUnit_Framework_TestCase
         $result = $this->_path . '/data/' . $tableName
                 . '.' . DbSync_FileAdapter_SfYaml::FILE_EXTENSION;
 
-        $model = $this->getMock('DbSync_Model_Table_Data', null, array(), '', false);
-        $model->setTableName($tableName);
+        $model = $this->getMock('DbSync_Model_Table_Data', array(), array(), '', false);
+        $model->expects($this->any())
+              ->method('getTableName')
+              ->will($this->returnValue($tableName));
 
         $this->assertEquals($result, $adapter->getFilePath($model));
     }
@@ -106,8 +108,10 @@ class DbSync_FileAdapter_SfYamlTest extends PHPUnit_Framework_TestCase
         $result = $this->_path . '/trigger/' . $triggerName
                 . '.' . DbSync_FileAdapter_SfYaml::FILE_EXTENSION;
 
-        $model = $this->getMock('DbSync_Model_Table_Trigger', null, array(), '', false);
-        $model->setTriggerName($triggerName);
+        $model = $this->getMock('DbSync_Model_Table_Trigger', array(), array(), '', false);
+        $model->expects($this->any())
+              ->method('getTriggerName')
+              ->will($this->returnValue($triggerName));
 
         $this->assertEquals($result, $adapter->getFilePath($model));
     }

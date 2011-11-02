@@ -38,6 +38,7 @@ class DbSync_Model_Table_Trigger extends DbSync_Model_Table_AbstractTable
      * Get trigger name
      *
      * @return string
+     * @throws DbSync_Exception
      */
     public function getTriggerName()
     {
@@ -60,6 +61,16 @@ class DbSync_Model_Table_Trigger extends DbSync_Model_Table_AbstractTable
         $this->_tableName = null;
 
         return $this;
+    }
+
+    /**
+     * Get trigger name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->getTriggerName();
     }
 
     /**
@@ -94,6 +105,7 @@ class DbSync_Model_Table_Trigger extends DbSync_Model_Table_AbstractTable
      * Generate Sql code
      *
      * @return string
+     * @throws DbSync_Exception
      */
     public function generateSql()
     {
@@ -109,7 +121,6 @@ class DbSync_Model_Table_Trigger extends DbSync_Model_Table_AbstractTable
     /**
      * Delete Table
      *
-     * @throws Exception
      * @return boolen
      */
     public function dropTrigger()

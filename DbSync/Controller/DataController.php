@@ -40,44 +40,46 @@ class DbSync_Controller_DataController extends DbSync_Controller_AbstractControl
      */
     public function pushAction()
     {
-        $tableName = $this->_model->getTableName();
+        $name = $this->_model->getName();
 
         if ($this->_model->hasFile()) {
             $force = $this->_console->hasOption('force');
             if (!$force && !$this->_model->isEmptyTable()) {
-                echo $tableName . $this->colorize(" - is dirty use --force for cleanup or try merge instead of push");
+                echo $name . $this->colorize(" - is dirty use --force for cleanup or try merge instead of push");
             } else {
                 $type = ($force) ? DbSync_Model_Table_Data::PUSH_TYPE_FORCE : null;
 
                 if (!$this->_model->push($type)) {
-                    echo $tableName . $this->colorize(" - Not updated", 'red');
+                    echo $name . $this->colorize(" - Not updated", 'red');
                 } else {
-                    echo $tableName . $this->colorize(" - Updated", 'green');
+                    echo $name . $this->colorize(" - Updated", 'green');
                 }
             }
         } else {
-            echo $tableName . $this->colorize(" - Data not found", 'red');
+            echo $name . $this->colorize(" - Data not found", 'red');
         }
     }
 
     /**
      * Merge
      *
+     * @alias mg
+     *
      * @return Merge data rows from config file to database table
      */
     public function mergeAction()
     {
-        $tableName = $this->_model->getTableName();
+        $name = $this->_model->getName();
 
         if ($this->_model->hasFile()) {
             if ($this->_model->isEmptyTable()) {
-                echo $tableName . $this->colorize(' - is empty use push instead', 'red');
+                echo $name . $this->colorize(' - is empty use push instead', 'red');
             } else {
                 $this->_model->push(DbSync_Model_Table_Data::PUSH_TYPE_MERGE);
-                echo $tableName . $this->colorize(" - Updated", 'green');
+                echo $name . $this->colorize(" - Updated", 'green');
             }
         } else {
-            echo $tableName . $this->colorize(" - Data not found", 'red');
+            echo $name . $this->colorize(" - Data not found", 'red');
         }
     }
 }

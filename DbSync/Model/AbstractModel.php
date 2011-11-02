@@ -91,6 +91,7 @@ abstract class DbSync_Model_AbstractModel
      * Save config file
      *
      * @param string $filename
+     * @throws DbSync_Exception
      */
     public function save($filename)
     {
@@ -123,7 +124,6 @@ abstract class DbSync_Model_AbstractModel
      * Get config filepath
      *
      * @param boolen $real
-     * @throws Exception
      * @return string
      */
     public function getFilePath($real = true)
@@ -149,7 +149,7 @@ abstract class DbSync_Model_AbstractModel
     /**
      * Delete file
      *
-     * @throws Exception
+     * @throws DbSync_Exception
      * @return boolen
      */
     public function deleteFile()
@@ -200,6 +200,7 @@ abstract class DbSync_Model_AbstractModel
      * Get diff
      *
      * @return array
+     * @throws DbSync_Exception
      */
     public function diff()
     {
@@ -225,7 +226,7 @@ abstract class DbSync_Model_AbstractModel
      * Init
      *
      * @param boolen $force
-     * @throws Exception
+     * @throws DbSync_Exception
      * @return boolean
      */
     public function init($force = false)

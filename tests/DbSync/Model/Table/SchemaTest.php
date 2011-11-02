@@ -64,15 +64,28 @@ class DbSync_Model_Table_SchemaTest extends PHPUnit_Framework_TestCase
      * Get mock
      *
      * @param array $methods
+     * @param array $stubs
      * @return PHPUnit_Framework_MockObject_MockObject
      */
-    protected function _getMock($methods)
+    protected function _getMock($methods = array(), array $stubs = array('getTableName' => 'users'))
     {
-        return $this->getMock(
+        if (is_array($methods)) {
+            $methods = array_merge($methods, array_keys($stubs));
+        }
+
+        $mock = $this->getMock(
             'DbSync_Model_Table_Schema',
             $methods,
             array($this->_dbAdapter, $this->_fileAdapter, 'diff')
         );
+        if ($stubs) {
+            foreach ($stubs as $stubMethod => $stubValue) {
+                $mock->expects($this->any())
+                     ->method($stubMethod)
+                     ->will($this->returnValue($stubValue));
+            }
+        }
+        return $mock;
     }
 
     /**
@@ -83,24 +96,18 @@ class DbSync_Model_Table_SchemaTest extends PHPUnit_Framework_TestCase
      */
     public function generateSql_configNotFound()
     {
-        $tableName = 'users';
-
-        $model = $this->_getMock(array('getFilePath', 'getTableName'));
+        $model = $this->_getMock(array('getFilePath'));
 
         $model->expects($this->once())
               ->method('getFilePath')
               ->will($this->returnValue(false));
-
-        $model->expects($this->atLeastOnce())
-              ->method('getTableName')
-              ->will($this->returnValue($tableName));
 
         $this->_fileAdapter->expects($this->never())
                            ->method('load');
 
         $this->_dbAdapter->expects($this->never())
                          ->method('createAlter');
-        $model->push();
+        $model->generateSql();
     }
 
     /**
@@ -121,15 +128,11 @@ class DbSync_Model_Table_SchemaTest extends PHPUnit_Framework_TestCase
             )
         );
 
-        $model = $this->_getMock(array('getFilePath', 'getTableName'));
+        $model = $this->_getMock(array('getFilePath'));
 
         $model->expects($this->once())
               ->method('getFilePath')
               ->will($this->returnValue($filename));
-
-        $model->expects($this->atLeastOnce())
-              ->method('getTableName')
-              ->will($this->returnValue($tableName));
 
         $this->_fileAdapter->expects($this->once())
                            ->method('load')
@@ -159,11 +162,7 @@ class DbSync_Model_Table_SchemaTest extends PHPUnit_Framework_TestCase
             )
         );
 
-        $model = $this->_getMock(array('getTableName'));
-
-        $model->expects($this->atLeastOnce())
-              ->method('getTableName')
-              ->will($this->returnValue($tableName));
+        $model = $this->_getMock();
 
         $this->_dbAdapter->expects($this->once())
                          ->method('parseSchema')
@@ -179,20 +178,8 @@ class DbSync_Model_Table_SchemaTest extends PHPUnit_Framework_TestCase
     public function dropDbTable()
     {
         $tableName = 'users';
-        $data = array(
-            'name' => $tableName,
-            'charset' => 'UTF-8',
-            'engine' => 'MyISAM',
-            'columns' => array(
-                'name' => array('type' => 'varchar(255)', 'default' => null)
-            )
-        );
 
-        $model = $this->_getMock(array('getTableName'));
-
-        $model->expects($this->atLeastOnce())
-              ->method('getTableName')
-              ->will($this->returnValue($tableName));
+        $model = $this->_getMock();
 
         $this->_dbAdapter->expects($this->once())
                          ->method('dropTable')
