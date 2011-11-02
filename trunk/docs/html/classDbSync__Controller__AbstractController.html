@@ -83,6 +83,7 @@ Inheritance diagram for DbSync_Controller_AbstractController:</div>
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDbSync__Controller__AbstractController.html#a6afb890b457d835ce2fc37177a73268c">__construct</a> (array $config)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDbSync__Controller__AbstractController.html#a7a3b608e12b8e9d3de6def607c0cbe28">getActionMethod</a> ($action)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDbSync__Controller__AbstractController.html#a26c95d326895bcad46f6b61a3674f5c6">dispatch</a> (<a class="el" href="classDbSync__Console.html">DbSync_Console</a> $console)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDbSync__Controller__AbstractController.html#ac07432b2dbe3854b4f7924fa7887215c">getItemsList</a> ($action)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDbSync__Controller__AbstractController.html#a40107b1c2a0d5e2f3da236a5c32c2f93">__destruct</a> ()</td></tr>
@@ -92,6 +93,7 @@ Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDbSync__Controller__AbstractController.html#ae973fdc065acffa90f43425b2d480794">initAction</a> ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDbSync__Controller__AbstractController.html#ab0e568570a013d19ba46b44c4e1e4aa4">pullAction</a> ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDbSync__Controller__AbstractController.html#a94bd514ad322a37bf6bf2158b98b69b7">diffAction</a> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDbSync__Controller__AbstractController.html#a92abb57b71e100a6c771f8a54b6e2225">pushAction</a> ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDbSync__Controller__AbstractController.html#abcec7de3ac2e1a43ff35ec2190a9c8d3">colorize</a> ($text, $color= 'yellow')</td></tr>
 <tr><td colspan="2"><h2><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
@@ -235,9 +237,8 @@ Protected Attributes</h2></td></tr>
 </div>
 <div class="memdoc">
 <p>Diff</p>
-<dl class="return"><dt><b>Returns:</b></dt><dd>Show diff between database table schema and schema config file </dd></dl>
-
-<p>Reimplemented in <a class="el" href="classDbSync__Controller__TriggerController.html#a485f3483de2efad7b59b9cb5cef694b4">DbSync_Controller_TriggerController</a>.</p>
+<p>di</p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>Show diff between database entity and config file </dd></dl>
 
 </div>
 </div>
@@ -263,6 +264,31 @@ Protected Attributes</h2></td></tr>
   </dd>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>mixed </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a7a3b608e12b8e9d3de6def607c0cbe28"></a><!-- doxytag: member="DbSync_Controller_AbstractController::getActionMethod" ref="a7a3b608e12b8e9d3de6def607c0cbe28" args="($action)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">DbSync_Controller_AbstractController::getActionMethod </td>
+          <td>(</td>
+          <td class="paramtype">$&#160;</td>
+          <td class="paramname"><em>action</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Get action method name</p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">string</td><td class="paramname">$action</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>string </dd></dl>
 
 </div>
 </div>
@@ -329,8 +355,6 @@ Protected Attributes</h2></td></tr>
 <p>Init</p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>Create config file(s) </dd></dl>
 
-<p>Reimplemented in <a class="el" href="classDbSync__Controller__TriggerController.html#ac5ee83f5159f52d4327632347a25c2dd">DbSync_Controller_TriggerController</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="ab0e568570a013d19ba46b44c4e1e4aa4"></a><!-- doxytag: member="DbSync_Controller_AbstractController::pullAction" ref="ab0e568570a013d19ba46b44c4e1e4aa4" args="()" -->
@@ -347,9 +371,29 @@ Protected Attributes</h2></td></tr>
 </div>
 <div class="memdoc">
 <p>Pull</p>
-<dl class="return"><dt><b>Returns:</b></dt><dd>Override current table config(s) file by new created from database </dd></dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>Override current config(s) file by new created from database </dd></dl>
 
-<p>Reimplemented in <a class="el" href="classDbSync__Controller__TriggerController.html#ada505e291b61976b9a9a8b3a1b64e998">DbSync_Controller_TriggerController</a>.</p>
+</div>
+</div>
+<a class="anchor" id="a92abb57b71e100a6c771f8a54b6e2225"></a><!-- doxytag: member="DbSync_Controller_AbstractController::pushAction" ref="a92abb57b71e100a6c771f8a54b6e2225" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">DbSync_Controller_AbstractController::pushAction </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Push</p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>Override database entity by current config file entity </dd>
+<dd>
+Use {--show|yellow} to only display alter code </dd></dl>
+
+<p>Reimplemented in <a class="el" href="classDbSync__Controller__DataController.html#a905f98b976e7fa950805cb40f569cbc9">DbSync_Controller_DataController</a>.</p>
 
 </div>
 </div>
@@ -384,6 +428,7 @@ Protected Attributes</h2></td></tr>
 </div>
 <div class="memdoc">
 <p>Status</p>
+<p>st</p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>Check sync status (Ok/Unsyncronized) </dd></dl>
 
 <p>Reimplemented in <a class="el" href="classDbSync__Controller__TriggerController.html#a08d8439a825dd363b7fb8df076056f65">DbSync_Controller_TriggerController</a>.</p>
@@ -408,7 +453,7 @@ Protected Attributes</h2></td></tr>
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Mon Oct 24 2011 06:34:38 for DbSync by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Thu Nov 3 2011 03:55:08 for DbSync by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>
