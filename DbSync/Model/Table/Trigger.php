@@ -73,7 +73,7 @@ class DbSync_Model_Table_Trigger extends DbSync_Model_Table_AbstractTable
             $trigger = $this->getTriggerName();
             $this->_tableName = $this->_dbAdapter->getTableByTrigger($trigger);
 
-            if (!$this->_tableName){
+            if (!$this->_tableName) {
                 $this->_tableName = $this->_fileAdapter->getTableByTrigger($trigger);
             }
         }
