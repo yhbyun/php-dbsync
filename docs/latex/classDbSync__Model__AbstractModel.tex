@@ -1,0 +1,299 @@
+\hypertarget{classDbSync__Model__AbstractModel}{
+\section{DbSync\_\-Model\_\-AbstractModel Class Reference}
+\label{classDbSync__Model__AbstractModel}\index{DbSync\_\-Model\_\-AbstractModel@{DbSync\_\-Model\_\-AbstractModel}}
+}
+Inheritance diagram for DbSync\_\-Model\_\-AbstractModel:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.434783cm]{classDbSync__Model__AbstractModel}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classDbSync__Model__AbstractModel_a465d0b66eecc5bafe16c60a091818300}{\_\-\_\-construct} (\hyperlink{interfaceDbSync__DbAdapter__AdapterInterface}{DbSync\_\-DbAdapter\_\-AdapterInterface} \$db, \hyperlink{interfaceDbSync__FileAdapter__AdapterInterface}{DbSync\_\-FileAdapter\_\-AdapterInterface} \$file, \$diffProg=null)
+\item 
+\hyperlink{classDbSync__Model__AbstractModel_a3e74113d284bb77851210687c81132f0}{setDiffProg} (\$diffProg)
+\item 
+\hyperlink{classDbSync__Model__AbstractModel_a96803106cf4d9cd9397b36d51f968d48}{getName} ()
+\item 
+\hyperlink{classDbSync__Model__AbstractModel_aefc6efadc58c0252f5b40aaf1dd6ca3e}{save} (\$filename)
+\item 
+\hyperlink{classDbSync__Model__AbstractModel_a7c06c50106b8d6ed078a0c418daad2f6}{isWriteable} ()
+\item 
+\hyperlink{classDbSync__Model__AbstractModel_af11e8e35d3bf6119f2954836b844c5e4}{getFilePath} (\$real=true)
+\item 
+\hyperlink{classDbSync__Model__AbstractModel_ad2e2053df76dca54927230109adadb32}{hasFile} ()
+\item 
+\hyperlink{classDbSync__Model__AbstractModel_ad3165926fb191710d68d987548bc377a}{deleteFile} ()
+\item 
+\hyperlink{classDbSync__Model__AbstractModel_a2bde0fab39d14e31f2fb38c3401ac092}{getStatus} ()
+\item 
+\hyperlink{classDbSync__Model__AbstractModel_aa31931e01689ce7f5841a8fb268a753c}{pull} ()
+\item 
+\hyperlink{classDbSync__Model__AbstractModel_a93a3912dbc5e1667fde4dea420e36470}{push} ()
+\item 
+\hyperlink{classDbSync__Model__AbstractModel_aa340f69f9ed1f60df7238bc971db6489}{diff} ()
+\item 
+\hyperlink{classDbSync__Model__AbstractModel_a6dc082b13e12f68902dd659bc38c8865}{init} (\$force=false)
+\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classDbSync__Model__AbstractModel_a2c382721c637e9e8e1255f30cd63a1c7}{
+{\bfseries \$\_\-dbAdapter}}
+\label{classDbSync__Model__AbstractModel_a2c382721c637e9e8e1255f30cd63a1c7}
+
+\item 
+\hypertarget{classDbSync__Model__AbstractModel_aaa04c006f050eab22fed7403eddc7683}{
+{\bfseries \$\_\-fileAdapter}}
+\label{classDbSync__Model__AbstractModel_aaa04c006f050eab22fed7403eddc7683}
+
+\item 
+\hypertarget{classDbSync__Model__AbstractModel_a9a61531b7ae157f0d61e04e3e139f761}{
+{\bfseries \$\_\-diff} = 'diff'}
+\label{classDbSync__Model__AbstractModel_a9a61531b7ae157f0d61e04e3e139f761}
+
+\item 
+\hypertarget{classDbSync__Model__AbstractModel_afc456aa77dbba891beec93ca092d1a0a}{
+{\bfseries \$\_\-exceptionClass} = '\hyperlink{classDbSync__Exception}{DbSync\_\-Exception}'}
+\label{classDbSync__Model__AbstractModel_afc456aa77dbba891beec93ca092d1a0a}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classDbSync__Model__AbstractModel_a465d0b66eecc5bafe16c60a091818300}{
+\index{DbSync\_\-Model\_\-AbstractModel@{DbSync\_\-Model\_\-AbstractModel}!\_\-\_\-construct@{\_\-\_\-construct}}
+\index{\_\-\_\-construct@{\_\-\_\-construct}!DbSync_Model_AbstractModel@{DbSync\_\-Model\_\-AbstractModel}}
+\subsubsection[{\_\-\_\-construct}]{\setlength{\rightskip}{0pt plus 5cm}DbSync\_\-Model\_\-AbstractModel::\_\-\_\-construct (
+\begin{DoxyParamCaption}
+\item[{{\bf DbSync\_\-DbAdapter\_\-AdapterInterface} \$}]{db, }
+\item[{{\bf DbSync\_\-FileAdapter\_\-AdapterInterface} \$}]{file, }
+\item[{\$}]{diffProg = {\ttfamily null}}
+\end{DoxyParamCaption}
+)}}
+\label{classDbSync__Model__AbstractModel_a465d0b66eecc5bafe16c60a091818300}
+Constructor
+
+
+\begin{DoxyParams}[1]{Parameters}
+\hyperlink{interfaceDbSync__DbAdapter__AdapterInterface}{DbSync\_\-DbAdapter\_\-AdapterInterface} & {\em \$db} & \\
+\hline
+\hyperlink{interfaceDbSync__FileAdapter__AdapterInterface}{DbSync\_\-FileAdapter\_\-AdapterInterface} & {\em \$file} & \\
+\hline
+string & {\em \$diffProg} & \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classDbSync__Model__AbstractModel_ad3165926fb191710d68d987548bc377a}{
+\index{DbSync\_\-Model\_\-AbstractModel@{DbSync\_\-Model\_\-AbstractModel}!deleteFile@{deleteFile}}
+\index{deleteFile@{deleteFile}!DbSync_Model_AbstractModel@{DbSync\_\-Model\_\-AbstractModel}}
+\subsubsection[{deleteFile}]{\setlength{\rightskip}{0pt plus 5cm}DbSync\_\-Model\_\-AbstractModel::deleteFile (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}
+\label{classDbSync__Model__AbstractModel_ad3165926fb191710d68d987548bc377a}
+Delete file
+
+
+\begin{DoxyExceptions}{Exceptions}
+{\em \hyperlink{classDbSync__Exception}{DbSync\_\-Exception}} & \\
+\hline
+\end{DoxyExceptions}
+\begin{DoxyReturn}{Returns}
+boolen 
+\end{DoxyReturn}
+\hypertarget{classDbSync__Model__AbstractModel_aa340f69f9ed1f60df7238bc971db6489}{
+\index{DbSync\_\-Model\_\-AbstractModel@{DbSync\_\-Model\_\-AbstractModel}!diff@{diff}}
+\index{diff@{diff}!DbSync_Model_AbstractModel@{DbSync\_\-Model\_\-AbstractModel}}
+\subsubsection[{diff}]{\setlength{\rightskip}{0pt plus 5cm}DbSync\_\-Model\_\-AbstractModel::diff (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}
+\label{classDbSync__Model__AbstractModel_aa340f69f9ed1f60df7238bc971db6489}
+Get diff
+
+\begin{DoxyReturn}{Returns}
+array 
+\end{DoxyReturn}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em \hyperlink{classDbSync__Exception}{DbSync\_\-Exception}} & \\
+\hline
+\end{DoxyExceptions}
+\hypertarget{classDbSync__Model__AbstractModel_af11e8e35d3bf6119f2954836b844c5e4}{
+\index{DbSync\_\-Model\_\-AbstractModel@{DbSync\_\-Model\_\-AbstractModel}!getFilePath@{getFilePath}}
+\index{getFilePath@{getFilePath}!DbSync_Model_AbstractModel@{DbSync\_\-Model\_\-AbstractModel}}
+\subsubsection[{getFilePath}]{\setlength{\rightskip}{0pt plus 5cm}DbSync\_\-Model\_\-AbstractModel::getFilePath (
+\begin{DoxyParamCaption}
+\item[{\$}]{real = {\ttfamily true}}
+\end{DoxyParamCaption}
+)}}
+\label{classDbSync__Model__AbstractModel_af11e8e35d3bf6119f2954836b844c5e4}
+Get config filepath
+
+
+\begin{DoxyParams}[1]{Parameters}
+boolen & {\em \$real} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+string 
+\end{DoxyReturn}
+\hypertarget{classDbSync__Model__AbstractModel_a96803106cf4d9cd9397b36d51f968d48}{
+\index{DbSync\_\-Model\_\-AbstractModel@{DbSync\_\-Model\_\-AbstractModel}!getName@{getName}}
+\index{getName@{getName}!DbSync_Model_AbstractModel@{DbSync\_\-Model\_\-AbstractModel}}
+\subsubsection[{getName}]{\setlength{\rightskip}{0pt plus 5cm}DbSync\_\-Model\_\-AbstractModel::getName (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}abstract\mbox{]}}}}
+\label{classDbSync__Model__AbstractModel_a96803106cf4d9cd9397b36d51f968d48}
+Get item name
+
+\begin{DoxyReturn}{Returns}
+string 
+\end{DoxyReturn}
+
+
+Reimplemented in \hyperlink{classDbSync__Model__Table__AbstractTable_a88726b043a43248114ca3e3faa9025d2}{DbSync\_\-Model\_\-Table\_\-AbstractTable}, and \hyperlink{classDbSync__Model__Table__Trigger_a82965dc7d44b8c3722b4830c6c7cc7ea}{DbSync\_\-Model\_\-Table\_\-Trigger}.
+
+\hypertarget{classDbSync__Model__AbstractModel_a2bde0fab39d14e31f2fb38c3401ac092}{
+\index{DbSync\_\-Model\_\-AbstractModel@{DbSync\_\-Model\_\-AbstractModel}!getStatus@{getStatus}}
+\index{getStatus@{getStatus}!DbSync_Model_AbstractModel@{DbSync\_\-Model\_\-AbstractModel}}
+\subsubsection[{getStatus}]{\setlength{\rightskip}{0pt plus 5cm}DbSync\_\-Model\_\-AbstractModel::getStatus (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}
+\label{classDbSync__Model__AbstractModel_a2bde0fab39d14e31f2fb38c3401ac092}
+Get status
+
+\begin{DoxyReturn}{Returns}
+boolen 
+\end{DoxyReturn}
+\hypertarget{classDbSync__Model__AbstractModel_ad2e2053df76dca54927230109adadb32}{
+\index{DbSync\_\-Model\_\-AbstractModel@{DbSync\_\-Model\_\-AbstractModel}!hasFile@{hasFile}}
+\index{hasFile@{hasFile}!DbSync_Model_AbstractModel@{DbSync\_\-Model\_\-AbstractModel}}
+\subsubsection[{hasFile}]{\setlength{\rightskip}{0pt plus 5cm}DbSync\_\-Model\_\-AbstractModel::hasFile (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}
+\label{classDbSync__Model__AbstractModel_ad2e2053df76dca54927230109adadb32}
+Has file
+
+\begin{DoxyReturn}{Returns}
+boolen 
+\end{DoxyReturn}
+\hypertarget{classDbSync__Model__AbstractModel_a6dc082b13e12f68902dd659bc38c8865}{
+\index{DbSync\_\-Model\_\-AbstractModel@{DbSync\_\-Model\_\-AbstractModel}!init@{init}}
+\index{init@{init}!DbSync_Model_AbstractModel@{DbSync\_\-Model\_\-AbstractModel}}
+\subsubsection[{init}]{\setlength{\rightskip}{0pt plus 5cm}DbSync\_\-Model\_\-AbstractModel::init (
+\begin{DoxyParamCaption}
+\item[{\$}]{force = {\ttfamily false}}
+\end{DoxyParamCaption}
+)}}
+\label{classDbSync__Model__AbstractModel_a6dc082b13e12f68902dd659bc38c8865}
+Init
+
+
+\begin{DoxyParams}[1]{Parameters}
+boolen & {\em \$force} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em \hyperlink{classDbSync__Exception}{DbSync\_\-Exception}} & \\
+\hline
+\end{DoxyExceptions}
+\begin{DoxyReturn}{Returns}
+boolean 
+\end{DoxyReturn}
+\hypertarget{classDbSync__Model__AbstractModel_a7c06c50106b8d6ed078a0c418daad2f6}{
+\index{DbSync\_\-Model\_\-AbstractModel@{DbSync\_\-Model\_\-AbstractModel}!isWriteable@{isWriteable}}
+\index{isWriteable@{isWriteable}!DbSync_Model_AbstractModel@{DbSync\_\-Model\_\-AbstractModel}}
+\subsubsection[{isWriteable}]{\setlength{\rightskip}{0pt plus 5cm}DbSync\_\-Model\_\-AbstractModel::isWriteable (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}
+\label{classDbSync__Model__AbstractModel_a7c06c50106b8d6ed078a0c418daad2f6}
+Is directory writable
+
+\begin{DoxyReturn}{Returns}
+boolean 
+\end{DoxyReturn}
+\hypertarget{classDbSync__Model__AbstractModel_aa31931e01689ce7f5841a8fb268a753c}{
+\index{DbSync\_\-Model\_\-AbstractModel@{DbSync\_\-Model\_\-AbstractModel}!pull@{pull}}
+\index{pull@{pull}!DbSync_Model_AbstractModel@{DbSync\_\-Model\_\-AbstractModel}}
+\subsubsection[{pull}]{\setlength{\rightskip}{0pt plus 5cm}DbSync\_\-Model\_\-AbstractModel::pull (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}
+\label{classDbSync__Model__AbstractModel_aa31931e01689ce7f5841a8fb268a753c}
+Pull schema or data from db table to config file \hypertarget{classDbSync__Model__AbstractModel_a93a3912dbc5e1667fde4dea420e36470}{
+\index{DbSync\_\-Model\_\-AbstractModel@{DbSync\_\-Model\_\-AbstractModel}!push@{push}}
+\index{push@{push}!DbSync_Model_AbstractModel@{DbSync\_\-Model\_\-AbstractModel}}
+\subsubsection[{push}]{\setlength{\rightskip}{0pt plus 5cm}DbSync\_\-Model\_\-AbstractModel::push (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}
+\label{classDbSync__Model__AbstractModel_a93a3912dbc5e1667fde4dea420e36470}
+Alter db table
+
+\begin{DoxyReturn}{Returns}
+boolen 
+\end{DoxyReturn}
+\hypertarget{classDbSync__Model__AbstractModel_aefc6efadc58c0252f5b40aaf1dd6ca3e}{
+\index{DbSync\_\-Model\_\-AbstractModel@{DbSync\_\-Model\_\-AbstractModel}!save@{save}}
+\index{save@{save}!DbSync_Model_AbstractModel@{DbSync\_\-Model\_\-AbstractModel}}
+\subsubsection[{save}]{\setlength{\rightskip}{0pt plus 5cm}DbSync\_\-Model\_\-AbstractModel::save (
+\begin{DoxyParamCaption}
+\item[{\$}]{filename}
+\end{DoxyParamCaption}
+)}}
+\label{classDbSync__Model__AbstractModel_aefc6efadc58c0252f5b40aaf1dd6ca3e}
+Save config file
+
+
+\begin{DoxyParams}[1]{Parameters}
+string & {\em \$filename} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em \hyperlink{classDbSync__Exception}{DbSync\_\-Exception}} & \\
+\hline
+\end{DoxyExceptions}
+\hypertarget{classDbSync__Model__AbstractModel_a3e74113d284bb77851210687c81132f0}{
+\index{DbSync\_\-Model\_\-AbstractModel@{DbSync\_\-Model\_\-AbstractModel}!setDiffProg@{setDiffProg}}
+\index{setDiffProg@{setDiffProg}!DbSync_Model_AbstractModel@{DbSync\_\-Model\_\-AbstractModel}}
+\subsubsection[{setDiffProg}]{\setlength{\rightskip}{0pt plus 5cm}DbSync\_\-Model\_\-AbstractModel::setDiffProg (
+\begin{DoxyParamCaption}
+\item[{\$}]{diffProg}
+\end{DoxyParamCaption}
+)}}
+\label{classDbSync__Model__AbstractModel_a3e74113d284bb77851210687c81132f0}
+Set diff programm
+
+
+\begin{DoxyParams}[1]{Parameters}
+string & {\em \$diffProg} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\hyperlink{classDbSync__Model__AbstractModel}{DbSync\_\-Model\_\-AbstractModel} 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file:\begin{DoxyCompactItemize}
+\item 
+DbSync/Model/AbstractModel.php\end{DoxyCompactItemize}

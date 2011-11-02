@@ -13,6 +13,8 @@ Inheritance diagram for DbSync\_\-Controller\_\-AbstractController:\begin{figure
 \item 
 \hyperlink{classDbSync__Controller__AbstractController_a6afb890b457d835ce2fc37177a73268c}{\_\-\_\-construct} (array \$config)
 \item 
+\hyperlink{classDbSync__Controller__AbstractController_a7a3b608e12b8e9d3de6def607c0cbe28}{getActionMethod} (\$action)
+\item 
 \hyperlink{classDbSync__Controller__AbstractController_a26c95d326895bcad46f6b61a3674f5c6}{dispatch} (\hyperlink{classDbSync__Console}{DbSync\_\-Console} \$console)
 \item 
 \hyperlink{classDbSync__Controller__AbstractController_ac07432b2dbe3854b4f7924fa7887215c}{getItemsList} (\$action)
@@ -30,6 +32,8 @@ Inheritance diagram for DbSync\_\-Controller\_\-AbstractController:\begin{figure
 \hyperlink{classDbSync__Controller__AbstractController_ab0e568570a013d19ba46b44c4e1e4aa4}{pullAction} ()
 \item 
 \hyperlink{classDbSync__Controller__AbstractController_a94bd514ad322a37bf6bf2158b98b69b7}{diffAction} ()
+\item 
+\hyperlink{classDbSync__Controller__AbstractController_a92abb57b71e100a6c771f8a54b6e2225}{pushAction} ()
 \item 
 \hyperlink{classDbSync__Controller__AbstractController_abcec7de3ac2e1a43ff35ec2190a9c8d3}{colorize} (\$text, \$color= 'yellow')
 \end{DoxyCompactItemize}
@@ -143,13 +147,11 @@ string
 \label{classDbSync__Controller__AbstractController_a94bd514ad322a37bf6bf2158b98b69b7}
 Diff
 
+di
+
 \begin{DoxyReturn}{Returns}
-Show diff between database table schema and schema config file 
+Show diff between database entity and config file 
 \end{DoxyReturn}
-
-
-Reimplemented in \hyperlink{classDbSync__Controller__TriggerController_a485f3483de2efad7b59b9cb5cef694b4}{DbSync\_\-Controller\_\-TriggerController}.
-
 \hypertarget{classDbSync__Controller__AbstractController_a26c95d326895bcad46f6b61a3674f5c6}{
 \index{DbSync\_\-Controller\_\-AbstractController@{DbSync\_\-Controller\_\-AbstractController}!dispatch@{dispatch}}
 \index{dispatch@{dispatch}!DbSync_Controller_AbstractController@{DbSync\_\-Controller\_\-AbstractController}}
@@ -168,6 +170,25 @@ Dispatch
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
 mixed 
+\end{DoxyReturn}
+\hypertarget{classDbSync__Controller__AbstractController_a7a3b608e12b8e9d3de6def607c0cbe28}{
+\index{DbSync\_\-Controller\_\-AbstractController@{DbSync\_\-Controller\_\-AbstractController}!getActionMethod@{getActionMethod}}
+\index{getActionMethod@{getActionMethod}!DbSync_Controller_AbstractController@{DbSync\_\-Controller\_\-AbstractController}}
+\subsubsection[{getActionMethod}]{\setlength{\rightskip}{0pt plus 5cm}DbSync\_\-Controller\_\-AbstractController::getActionMethod (
+\begin{DoxyParamCaption}
+\item[{\$}]{action}
+\end{DoxyParamCaption}
+)}}
+\label{classDbSync__Controller__AbstractController_a7a3b608e12b8e9d3de6def607c0cbe28}
+Get action method name
+
+
+\begin{DoxyParams}[1]{Parameters}
+string & {\em \$action} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+string 
 \end{DoxyReturn}
 \hypertarget{classDbSync__Controller__AbstractController_ac07432b2dbe3854b4f7924fa7887215c}{
 \index{DbSync\_\-Controller\_\-AbstractController@{DbSync\_\-Controller\_\-AbstractController}!getItemsList@{getItemsList}}
@@ -224,10 +245,6 @@ Init
 \begin{DoxyReturn}{Returns}
 Create config file(s) 
 \end{DoxyReturn}
-
-
-Reimplemented in \hyperlink{classDbSync__Controller__TriggerController_ac5ee83f5159f52d4327632347a25c2dd}{DbSync\_\-Controller\_\-TriggerController}.
-
 \hypertarget{classDbSync__Controller__AbstractController_ab0e568570a013d19ba46b44c4e1e4aa4}{
 \index{DbSync\_\-Controller\_\-AbstractController@{DbSync\_\-Controller\_\-AbstractController}!pullAction@{pullAction}}
 \index{pullAction@{pullAction}!DbSync_Controller_AbstractController@{DbSync\_\-Controller\_\-AbstractController}}
@@ -240,11 +257,27 @@ Reimplemented in \hyperlink{classDbSync__Controller__TriggerController_ac5ee83f5
 Pull
 
 \begin{DoxyReturn}{Returns}
-Override current table config(s) file by new created from database 
+Override current config(s) file by new created from database 
+\end{DoxyReturn}
+\hypertarget{classDbSync__Controller__AbstractController_a92abb57b71e100a6c771f8a54b6e2225}{
+\index{DbSync\_\-Controller\_\-AbstractController@{DbSync\_\-Controller\_\-AbstractController}!pushAction@{pushAction}}
+\index{pushAction@{pushAction}!DbSync_Controller_AbstractController@{DbSync\_\-Controller\_\-AbstractController}}
+\subsubsection[{pushAction}]{\setlength{\rightskip}{0pt plus 5cm}DbSync\_\-Controller\_\-AbstractController::pushAction (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}
+\label{classDbSync__Controller__AbstractController_a92abb57b71e100a6c771f8a54b6e2225}
+Push
+
+\begin{DoxyReturn}{Returns}
+Override database entity by current config file entity 
+
+Use \{-\/-\/show$|$yellow\} to only display alter code 
 \end{DoxyReturn}
 
 
-Reimplemented in \hyperlink{classDbSync__Controller__TriggerController_ada505e291b61976b9a9a8b3a1b64e998}{DbSync\_\-Controller\_\-TriggerController}.
+Reimplemented in \hyperlink{classDbSync__Controller__DataController_a905f98b976e7fa950805cb40f569cbc9}{DbSync\_\-Controller\_\-DataController}.
 
 \hypertarget{classDbSync__Controller__AbstractController_aa27d714cc779879c43ca3621c65c65de}{
 \index{DbSync\_\-Controller\_\-AbstractController@{DbSync\_\-Controller\_\-AbstractController}!showUsage@{showUsage}}
@@ -265,6 +298,8 @@ Output actions usage message \hypertarget{classDbSync__Controller__AbstractContr
 )}}
 \label{classDbSync__Controller__AbstractController_a12b74400d214770030c52d2f29308f52}
 Status
+
+st
 
 \begin{DoxyReturn}{Returns}
 Check sync status (Ok/Unsyncronized) 

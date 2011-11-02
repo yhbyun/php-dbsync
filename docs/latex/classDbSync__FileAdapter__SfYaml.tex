@@ -1,0 +1,235 @@
+\hypertarget{classDbSync__FileAdapter__SfYaml}{
+\section{DbSync\_\-FileAdapter\_\-SfYaml Class Reference}
+\label{classDbSync__FileAdapter__SfYaml}\index{DbSync\_\-FileAdapter\_\-SfYaml@{DbSync\_\-FileAdapter\_\-SfYaml}}
+}
+Inheritance diagram for DbSync\_\-FileAdapter\_\-SfYaml:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classDbSync__FileAdapter__SfYaml}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classDbSync__FileAdapter__SfYaml_acb7865b3fc2f34a6ae75403f6a88157b}{\_\-\_\-construct} (\$path)
+\item 
+\hyperlink{classDbSync__FileAdapter__SfYaml_a186038cd277c53d0fd7512320dd8250a}{write} (\$filename, array \$data)
+\item 
+\hyperlink{classDbSync__FileAdapter__SfYaml_a9a7bffcb73b3b66d27f265791dbfb44f}{load} (\$filename)
+\item 
+\hyperlink{classDbSync__FileAdapter__SfYaml_a338a94760851e53949c22fe0454b0c7e}{getTableList} (\hyperlink{classDbSync__Model__AbstractModel}{DbSync\_\-Model\_\-AbstractModel} \$model)
+\item 
+\hyperlink{classDbSync__FileAdapter__SfYaml_ae5e8cd6bf146147d55e5a28090c52d0d}{getFilePath} (\hyperlink{classDbSync__Model__AbstractModel}{DbSync\_\-Model\_\-AbstractModel} \$model)
+\item 
+\hyperlink{classDbSync__FileAdapter__SfYaml_a3f3f1ade545de6e0ccade4243f9e4819}{getTableByTrigger} (\$triggerName)
+\item 
+\hyperlink{classDbSync__FileAdapter__SfYaml_a99575fdc0db3410879efe12a8df4cf2c}{getTriggerList} (\$tables=array())
+\item 
+\hyperlink{classDbSync__FileAdapter__SfYaml_a56bd9eed9769e0b7122bad64e372acd6}{getIterator} (\$path, \$flags=FilesystemIterator::SKIP\_\-DOTS)
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classDbSync__FileAdapter__SfYaml_a5f979fde3881a0d48322890061eecc00}{
+const {\bfseries FILE\_\-EXTENSION} = 'yml'}
+\label{classDbSync__FileAdapter__SfYaml_a5f979fde3881a0d48322890061eecc00}
+
+\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classDbSync__FileAdapter__SfYaml_a91b720068963d7b029c5b18334ad6091}{
+{\bfseries \$\_\-path}}
+\label{classDbSync__FileAdapter__SfYaml_a91b720068963d7b029c5b18334ad6091}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classDbSync__FileAdapter__SfYaml_acb7865b3fc2f34a6ae75403f6a88157b}{
+\index{DbSync\_\-FileAdapter\_\-SfYaml@{DbSync\_\-FileAdapter\_\-SfYaml}!\_\-\_\-construct@{\_\-\_\-construct}}
+\index{\_\-\_\-construct@{\_\-\_\-construct}!DbSync_FileAdapter_SfYaml@{DbSync\_\-FileAdapter\_\-SfYaml}}
+\subsubsection[{\_\-\_\-construct}]{\setlength{\rightskip}{0pt plus 5cm}DbSync\_\-FileAdapter\_\-SfYaml::\_\-\_\-construct (
+\begin{DoxyParamCaption}
+\item[{\$}]{path}
+\end{DoxyParamCaption}
+)}}
+\label{classDbSync__FileAdapter__SfYaml_acb7865b3fc2f34a6ae75403f6a88157b}
+Contructor
+
+
+\begin{DoxyParams}[1]{Parameters}
+string & {\em \$path} & \\
+\hline
+\end{DoxyParams}
+
+
+Implements \hyperlink{interfaceDbSync__FileAdapter__AdapterInterface_abb3e223a99e5c0cd131c59acc6d82fc8}{DbSync\_\-FileAdapter\_\-AdapterInterface}.
+
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classDbSync__FileAdapter__SfYaml_ae5e8cd6bf146147d55e5a28090c52d0d}{
+\index{DbSync\_\-FileAdapter\_\-SfYaml@{DbSync\_\-FileAdapter\_\-SfYaml}!getFilePath@{getFilePath}}
+\index{getFilePath@{getFilePath}!DbSync_FileAdapter_SfYaml@{DbSync\_\-FileAdapter\_\-SfYaml}}
+\subsubsection[{getFilePath}]{\setlength{\rightskip}{0pt plus 5cm}DbSync\_\-FileAdapter\_\-SfYaml::getFilePath (
+\begin{DoxyParamCaption}
+\item[{{\bf DbSync\_\-Model\_\-AbstractModel} \$}]{model}
+\end{DoxyParamCaption}
+)}}
+\label{classDbSync__FileAdapter__SfYaml_ae5e8cd6bf146147d55e5a28090c52d0d}
+Get config filepath
+
+
+\begin{DoxyParams}[1]{Parameters}
+boolen & {\em \$real} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em Exception} & \\
+\hline
+\end{DoxyExceptions}
+\begin{DoxyReturn}{Returns}
+string 
+\end{DoxyReturn}
+
+
+Implements \hyperlink{interfaceDbSync__FileAdapter__AdapterInterface_af99365b89b70a2be914b32bee7c73962}{DbSync\_\-FileAdapter\_\-AdapterInterface}.
+
+\hypertarget{classDbSync__FileAdapter__SfYaml_a56bd9eed9769e0b7122bad64e372acd6}{
+\index{DbSync\_\-FileAdapter\_\-SfYaml@{DbSync\_\-FileAdapter\_\-SfYaml}!getIterator@{getIterator}}
+\index{getIterator@{getIterator}!DbSync_FileAdapter_SfYaml@{DbSync\_\-FileAdapter\_\-SfYaml}}
+\subsubsection[{getIterator}]{\setlength{\rightskip}{0pt plus 5cm}DbSync\_\-FileAdapter\_\-SfYaml::getIterator (
+\begin{DoxyParamCaption}
+\item[{\$}]{path, }
+\item[{\$}]{flags = {\ttfamily FilesystemIterator::SKIP\_\-DOTS}}
+\end{DoxyParamCaption}
+)}}
+\label{classDbSync__FileAdapter__SfYaml_a56bd9eed9769e0b7122bad64e372acd6}
+Get iterator
+
+
+\begin{DoxyParams}[1]{Parameters}
+string & {\em \$path} & \\
+\hline
+integer & {\em \$flags} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+GlobIterator 
+\end{DoxyReturn}
+\hypertarget{classDbSync__FileAdapter__SfYaml_a3f3f1ade545de6e0ccade4243f9e4819}{
+\index{DbSync\_\-FileAdapter\_\-SfYaml@{DbSync\_\-FileAdapter\_\-SfYaml}!getTableByTrigger@{getTableByTrigger}}
+\index{getTableByTrigger@{getTableByTrigger}!DbSync_FileAdapter_SfYaml@{DbSync\_\-FileAdapter\_\-SfYaml}}
+\subsubsection[{getTableByTrigger}]{\setlength{\rightskip}{0pt plus 5cm}DbSync\_\-FileAdapter\_\-SfYaml::getTableByTrigger (
+\begin{DoxyParamCaption}
+\item[{\$}]{triggerName}
+\end{DoxyParamCaption}
+)}}
+\label{classDbSync__FileAdapter__SfYaml_a3f3f1ade545de6e0ccade4243f9e4819}
+Get tableName by triggerName
+
+
+\begin{DoxyParams}[1]{Parameters}
+string & {\em \$triggerName} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+string 
+\end{DoxyReturn}
+
+
+Implements \hyperlink{interfaceDbSync__FileAdapter__AdapterInterface_a11acefe78ea2cf6693390d280ed98ab5}{DbSync\_\-FileAdapter\_\-AdapterInterface}.
+
+\hypertarget{classDbSync__FileAdapter__SfYaml_a338a94760851e53949c22fe0454b0c7e}{
+\index{DbSync\_\-FileAdapter\_\-SfYaml@{DbSync\_\-FileAdapter\_\-SfYaml}!getTableList@{getTableList}}
+\index{getTableList@{getTableList}!DbSync_FileAdapter_SfYaml@{DbSync\_\-FileAdapter\_\-SfYaml}}
+\subsubsection[{getTableList}]{\setlength{\rightskip}{0pt plus 5cm}DbSync\_\-FileAdapter\_\-SfYaml::getTableList (
+\begin{DoxyParamCaption}
+\item[{{\bf DbSync\_\-Model\_\-AbstractModel} \$}]{model}
+\end{DoxyParamCaption}
+)}}
+\label{classDbSync__FileAdapter__SfYaml_a338a94760851e53949c22fe0454b0c7e}
+Get data tables list
+
+\begin{DoxyReturn}{Returns}
+array 
+\end{DoxyReturn}
+
+
+Implements \hyperlink{interfaceDbSync__FileAdapter__AdapterInterface_a6a01ded2d94740261a4ff748bd900bf2}{DbSync\_\-FileAdapter\_\-AdapterInterface}.
+
+\hypertarget{classDbSync__FileAdapter__SfYaml_a99575fdc0db3410879efe12a8df4cf2c}{
+\index{DbSync\_\-FileAdapter\_\-SfYaml@{DbSync\_\-FileAdapter\_\-SfYaml}!getTriggerList@{getTriggerList}}
+\index{getTriggerList@{getTriggerList}!DbSync_FileAdapter_SfYaml@{DbSync\_\-FileAdapter\_\-SfYaml}}
+\subsubsection[{getTriggerList}]{\setlength{\rightskip}{0pt plus 5cm}DbSync\_\-FileAdapter\_\-SfYaml::getTriggerList (
+\begin{DoxyParamCaption}
+\item[{\$}]{tables = {\ttfamily array()}}
+\end{DoxyParamCaption}
+)}}
+\label{classDbSync__FileAdapter__SfYaml_a99575fdc0db3410879efe12a8df4cf2c}
+Get triggers list
+
+
+\begin{DoxyParams}[1]{Parameters}
+array & {\em \$tables} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+array 
+\end{DoxyReturn}
+\hypertarget{classDbSync__FileAdapter__SfYaml_a9a7bffcb73b3b66d27f265791dbfb44f}{
+\index{DbSync\_\-FileAdapter\_\-SfYaml@{DbSync\_\-FileAdapter\_\-SfYaml}!load@{load}}
+\index{load@{load}!DbSync_FileAdapter_SfYaml@{DbSync\_\-FileAdapter\_\-SfYaml}}
+\subsubsection[{load}]{\setlength{\rightskip}{0pt plus 5cm}DbSync\_\-FileAdapter\_\-SfYaml::load (
+\begin{DoxyParamCaption}
+\item[{\$}]{filename}
+\end{DoxyParamCaption}
+)}}
+\label{classDbSync__FileAdapter__SfYaml_a9a7bffcb73b3b66d27f265791dbfb44f}
+Load data from file
+
+
+\begin{DoxyParams}[1]{Parameters}
+string & {\em \$filename} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+array 
+\end{DoxyReturn}
+
+
+Implements \hyperlink{interfaceDbSync__FileAdapter__AdapterInterface_a04bbebef17ee88c116b9ac67cc029f84}{DbSync\_\-FileAdapter\_\-AdapterInterface}.
+
+\hypertarget{classDbSync__FileAdapter__SfYaml_a186038cd277c53d0fd7512320dd8250a}{
+\index{DbSync\_\-FileAdapter\_\-SfYaml@{DbSync\_\-FileAdapter\_\-SfYaml}!write@{write}}
+\index{write@{write}!DbSync_FileAdapter_SfYaml@{DbSync\_\-FileAdapter\_\-SfYaml}}
+\subsubsection[{write}]{\setlength{\rightskip}{0pt plus 5cm}DbSync\_\-FileAdapter\_\-SfYaml::write (
+\begin{DoxyParamCaption}
+\item[{\$}]{filename, }
+\item[{array \$}]{data}
+\end{DoxyParamCaption}
+)}}
+\label{classDbSync__FileAdapter__SfYaml_a186038cd277c53d0fd7512320dd8250a}
+Write data to file
+
+
+\begin{DoxyParams}[1]{Parameters}
+string & {\em \$filename} & Full path \\
+\hline
+array & {\em \$data} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+int The function returns the number of bytes that were written to the file, or false on failure. 
+\end{DoxyReturn}
+
+
+Implements \hyperlink{interfaceDbSync__FileAdapter__AdapterInterface_a73ed1fa2cf12f3dc7f97981c4976b66b}{DbSync\_\-FileAdapter\_\-AdapterInterface}.
+
+
+
+The documentation for this class was generated from the following file:\begin{DoxyCompactItemize}
+\item 
+DbSync/FileAdapter/SfYaml.php\end{DoxyCompactItemize}

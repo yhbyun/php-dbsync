@@ -1,0 +1,437 @@
+\hypertarget{interfaceDbSync__DbAdapter__AdapterInterface}{
+\section{DbSync\_\-DbAdapter\_\-AdapterInterface Interface Reference}
+\label{interfaceDbSync__DbAdapter__AdapterInterface}\index{DbSync\_\-DbAdapter\_\-AdapterInterface@{DbSync\_\-DbAdapter\_\-AdapterInterface}}
+}
+Inheritance diagram for DbSync\_\-DbAdapter\_\-AdapterInterface:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{interfaceDbSync__DbAdapter__AdapterInterface}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{interfaceDbSync__DbAdapter__AdapterInterface_a29aeee3cbdac7e08ca3c08f464f5b443}{\_\-\_\-construct} (array \$config)
+\item 
+\hyperlink{interfaceDbSync__DbAdapter__AdapterInterface_a683e550d89b21e02e4068993f30079fc}{parseSchema} (\$tableName)
+\item 
+\hyperlink{interfaceDbSync__DbAdapter__AdapterInterface_acc0350206ef7c623402bb19633ad3f6a}{createAlter} (\$config, \$tableName)
+\item 
+\hyperlink{interfaceDbSync__DbAdapter__AdapterInterface_acea54c81f65be6ea4eceb8dcf3b93659}{parseTrigger} (\$triggerName)
+\item 
+\hyperlink{interfaceDbSync__DbAdapter__AdapterInterface_a2efd82563860bf45fc07fbeb4d67b056}{createTriggerSql} (\$config)
+\item 
+\hyperlink{interfaceDbSync__DbAdapter__AdapterInterface_a4e19047119e11123e47f8c8c14e0c665}{execute} (\$sql)
+\item 
+\hyperlink{interfaceDbSync__DbAdapter__AdapterInterface_a686c3e752907a09cc1d87fce2d2bb101}{getTriggerList} ()
+\item 
+\hyperlink{interfaceDbSync__DbAdapter__AdapterInterface_a6df405111c98ca40324423f8981d7974}{getTableByTrigger} (\$triggerName)
+\item 
+\hyperlink{interfaceDbSync__DbAdapter__AdapterInterface_a84b87f76dc8ebc123d42dda7393e0cb9}{getTableList} ()
+\item 
+\hyperlink{interfaceDbSync__DbAdapter__AdapterInterface_ac1cb4888b127b104ed231feae87d3056}{hasTable} (\$tableName)
+\item 
+\hyperlink{interfaceDbSync__DbAdapter__AdapterInterface_aa8f4119b6cc6cf5bfd0d97d45a849d9d}{hasTrigger} (\$triggerName)
+\item 
+\hyperlink{interfaceDbSync__DbAdapter__AdapterInterface_ad60b6d7e34fba4e763132e47134b35e1}{fetchData} (\$tableName)
+\item 
+\hyperlink{interfaceDbSync__DbAdapter__AdapterInterface_ad535c5d4d074383feb578fab1e71d2e7}{insert} (\$data, \$tableName)
+\item 
+\hyperlink{interfaceDbSync__DbAdapter__AdapterInterface_a06dfb3597de81841661535373ce06e0d}{merge} (\$data, \$tableName)
+\item 
+\hyperlink{interfaceDbSync__DbAdapter__AdapterInterface_a2cc0eb5ae7c4aa0b69a899e84040da83}{truncate} (\$tableName)
+\item 
+\hyperlink{interfaceDbSync__DbAdapter__AdapterInterface_a18ccca4e55a874ed85acd00506f4fff2}{dropTable} (\$tableName)
+\item 
+\hyperlink{interfaceDbSync__DbAdapter__AdapterInterface_afb0b32f718a3a499955444966929997b}{dropTrigger} (\$triggerName)
+\item 
+\hyperlink{interfaceDbSync__DbAdapter__AdapterInterface_abe0d20fb62067de68fb354adc3eb7e8a}{isEmpty} (\$tableName)
+\end{DoxyCompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{interfaceDbSync__DbAdapter__AdapterInterface_a29aeee3cbdac7e08ca3c08f464f5b443}{
+\index{DbSync\_\-DbAdapter\_\-AdapterInterface@{DbSync\_\-DbAdapter\_\-AdapterInterface}!\_\-\_\-construct@{\_\-\_\-construct}}
+\index{\_\-\_\-construct@{\_\-\_\-construct}!DbSync_DbAdapter_AdapterInterface@{DbSync\_\-DbAdapter\_\-AdapterInterface}}
+\subsubsection[{\_\-\_\-construct}]{\setlength{\rightskip}{0pt plus 5cm}DbSync\_\-DbAdapter\_\-AdapterInterface::\_\-\_\-construct (
+\begin{DoxyParamCaption}
+\item[{array \$}]{config}
+\end{DoxyParamCaption}
+)}}
+\label{interfaceDbSync__DbAdapter__AdapterInterface_a29aeee3cbdac7e08ca3c08f464f5b443}
+Constructor
+
+
+\begin{DoxyParams}[1]{Parameters}
+array & {\em \$config} & \\
+\hline
+\end{DoxyParams}
+
+
+Implemented in \hyperlink{classDbSync__DbAdapter__Mysql_abf098ec8f68514927dacce23e5a30030}{DbSync\_\-DbAdapter\_\-Mysql}.
+
+
+
+\subsection{Member Function Documentation}
+\hypertarget{interfaceDbSync__DbAdapter__AdapterInterface_acc0350206ef7c623402bb19633ad3f6a}{
+\index{DbSync\_\-DbAdapter\_\-AdapterInterface@{DbSync\_\-DbAdapter\_\-AdapterInterface}!createAlter@{createAlter}}
+\index{createAlter@{createAlter}!DbSync_DbAdapter_AdapterInterface@{DbSync\_\-DbAdapter\_\-AdapterInterface}}
+\subsubsection[{createAlter}]{\setlength{\rightskip}{0pt plus 5cm}DbSync\_\-DbAdapter\_\-AdapterInterface::createAlter (
+\begin{DoxyParamCaption}
+\item[{\$}]{config, }
+\item[{\$}]{tableName}
+\end{DoxyParamCaption}
+)}}
+\label{interfaceDbSync__DbAdapter__AdapterInterface_acc0350206ef7c623402bb19633ad3f6a}
+Generate Alter Table
+
+
+\begin{DoxyParams}[1]{Parameters}
+array & {\em \$config} & \\
+\hline
+string & {\em \$tableName} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+string 
+\end{DoxyReturn}
+
+
+Implemented in \hyperlink{classDbSync__DbAdapter__Mysql_a51b9a8196dcbef50547417d4fe8a0666}{DbSync\_\-DbAdapter\_\-Mysql}.
+
+\hypertarget{interfaceDbSync__DbAdapter__AdapterInterface_a2efd82563860bf45fc07fbeb4d67b056}{
+\index{DbSync\_\-DbAdapter\_\-AdapterInterface@{DbSync\_\-DbAdapter\_\-AdapterInterface}!createTriggerSql@{createTriggerSql}}
+\index{createTriggerSql@{createTriggerSql}!DbSync_DbAdapter_AdapterInterface@{DbSync\_\-DbAdapter\_\-AdapterInterface}}
+\subsubsection[{createTriggerSql}]{\setlength{\rightskip}{0pt plus 5cm}DbSync\_\-DbAdapter\_\-AdapterInterface::createTriggerSql (
+\begin{DoxyParamCaption}
+\item[{\$}]{config}
+\end{DoxyParamCaption}
+)}}
+\label{interfaceDbSync__DbAdapter__AdapterInterface_a2efd82563860bf45fc07fbeb4d67b056}
+Generate trigger sql
+
+
+\begin{DoxyParams}[1]{Parameters}
+array & {\em \$config} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+string 
+\end{DoxyReturn}
+
+
+Implemented in \hyperlink{classDbSync__DbAdapter__Mysql_af58ff620be0d1f4cac9b865ca0000fcf}{DbSync\_\-DbAdapter\_\-Mysql}.
+
+\hypertarget{interfaceDbSync__DbAdapter__AdapterInterface_a18ccca4e55a874ed85acd00506f4fff2}{
+\index{DbSync\_\-DbAdapter\_\-AdapterInterface@{DbSync\_\-DbAdapter\_\-AdapterInterface}!dropTable@{dropTable}}
+\index{dropTable@{dropTable}!DbSync_DbAdapter_AdapterInterface@{DbSync\_\-DbAdapter\_\-AdapterInterface}}
+\subsubsection[{dropTable}]{\setlength{\rightskip}{0pt plus 5cm}DbSync\_\-DbAdapter\_\-AdapterInterface::dropTable (
+\begin{DoxyParamCaption}
+\item[{\$}]{tableName}
+\end{DoxyParamCaption}
+)}}
+\label{interfaceDbSync__DbAdapter__AdapterInterface_a18ccca4e55a874ed85acd00506f4fff2}
+Drop table
+
+
+\begin{DoxyParams}[1]{Parameters}
+string & {\em \$tableName} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+number 
+\end{DoxyReturn}
+
+
+Implemented in \hyperlink{classDbSync__DbAdapter__Mysql_a95bec76ffdfe365cc68a682724443488}{DbSync\_\-DbAdapter\_\-Mysql}.
+
+\hypertarget{interfaceDbSync__DbAdapter__AdapterInterface_afb0b32f718a3a499955444966929997b}{
+\index{DbSync\_\-DbAdapter\_\-AdapterInterface@{DbSync\_\-DbAdapter\_\-AdapterInterface}!dropTrigger@{dropTrigger}}
+\index{dropTrigger@{dropTrigger}!DbSync_DbAdapter_AdapterInterface@{DbSync\_\-DbAdapter\_\-AdapterInterface}}
+\subsubsection[{dropTrigger}]{\setlength{\rightskip}{0pt plus 5cm}DbSync\_\-DbAdapter\_\-AdapterInterface::dropTrigger (
+\begin{DoxyParamCaption}
+\item[{\$}]{triggerName}
+\end{DoxyParamCaption}
+)}}
+\label{interfaceDbSync__DbAdapter__AdapterInterface_afb0b32f718a3a499955444966929997b}
+Drop trigger
+
+
+\begin{DoxyParams}[1]{Parameters}
+string & {\em \$triggerName} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+number 
+\end{DoxyReturn}
+
+
+Implemented in \hyperlink{classDbSync__DbAdapter__Mysql_a9a98e8e32ececd6cc3b101d5cc87fa4f}{DbSync\_\-DbAdapter\_\-Mysql}.
+
+\hypertarget{interfaceDbSync__DbAdapter__AdapterInterface_a4e19047119e11123e47f8c8c14e0c665}{
+\index{DbSync\_\-DbAdapter\_\-AdapterInterface@{DbSync\_\-DbAdapter\_\-AdapterInterface}!execute@{execute}}
+\index{execute@{execute}!DbSync_DbAdapter_AdapterInterface@{DbSync\_\-DbAdapter\_\-AdapterInterface}}
+\subsubsection[{execute}]{\setlength{\rightskip}{0pt plus 5cm}DbSync\_\-DbAdapter\_\-AdapterInterface::execute (
+\begin{DoxyParamCaption}
+\item[{\$}]{sql}
+\end{DoxyParamCaption}
+)}}
+\label{interfaceDbSync__DbAdapter__AdapterInterface_a4e19047119e11123e47f8c8c14e0c665}
+Execute sql query
+
+
+\begin{DoxyParams}[1]{Parameters}
+string & {\em \$sql} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+integer 
+\end{DoxyReturn}
+
+
+Implemented in \hyperlink{classDbSync__DbAdapter__Mysql_a279036935ed06d1cd41c4ec1d8b107cc}{DbSync\_\-DbAdapter\_\-Mysql}.
+
+\hypertarget{interfaceDbSync__DbAdapter__AdapterInterface_ad60b6d7e34fba4e763132e47134b35e1}{
+\index{DbSync\_\-DbAdapter\_\-AdapterInterface@{DbSync\_\-DbAdapter\_\-AdapterInterface}!fetchData@{fetchData}}
+\index{fetchData@{fetchData}!DbSync_DbAdapter_AdapterInterface@{DbSync\_\-DbAdapter\_\-AdapterInterface}}
+\subsubsection[{fetchData}]{\setlength{\rightskip}{0pt plus 5cm}DbSync\_\-DbAdapter\_\-AdapterInterface::fetchData (
+\begin{DoxyParamCaption}
+\item[{\$}]{tableName}
+\end{DoxyParamCaption}
+)}}
+\label{interfaceDbSync__DbAdapter__AdapterInterface_ad60b6d7e34fba4e763132e47134b35e1}
+Fetch all data from table
+
+\begin{DoxyReturn}{Returns}
+array 
+\end{DoxyReturn}
+
+
+Implemented in \hyperlink{classDbSync__DbAdapter__Mysql_a76d3e3c3e80fee76c7057724a55a8d58}{DbSync\_\-DbAdapter\_\-Mysql}.
+
+\hypertarget{interfaceDbSync__DbAdapter__AdapterInterface_a6df405111c98ca40324423f8981d7974}{
+\index{DbSync\_\-DbAdapter\_\-AdapterInterface@{DbSync\_\-DbAdapter\_\-AdapterInterface}!getTableByTrigger@{getTableByTrigger}}
+\index{getTableByTrigger@{getTableByTrigger}!DbSync_DbAdapter_AdapterInterface@{DbSync\_\-DbAdapter\_\-AdapterInterface}}
+\subsubsection[{getTableByTrigger}]{\setlength{\rightskip}{0pt plus 5cm}DbSync\_\-DbAdapter\_\-AdapterInterface::getTableByTrigger (
+\begin{DoxyParamCaption}
+\item[{\$}]{triggerName}
+\end{DoxyParamCaption}
+)}}
+\label{interfaceDbSync__DbAdapter__AdapterInterface_a6df405111c98ca40324423f8981d7974}
+Get table name by trigger name
+
+\begin{DoxyReturn}{Returns}
+string 
+\end{DoxyReturn}
+
+
+Implemented in \hyperlink{classDbSync__DbAdapter__Mysql_a1bb1fb6762c987d2bdcd243c37875a54}{DbSync\_\-DbAdapter\_\-Mysql}.
+
+\hypertarget{interfaceDbSync__DbAdapter__AdapterInterface_a84b87f76dc8ebc123d42dda7393e0cb9}{
+\index{DbSync\_\-DbAdapter\_\-AdapterInterface@{DbSync\_\-DbAdapter\_\-AdapterInterface}!getTableList@{getTableList}}
+\index{getTableList@{getTableList}!DbSync_DbAdapter_AdapterInterface@{DbSync\_\-DbAdapter\_\-AdapterInterface}}
+\subsubsection[{getTableList}]{\setlength{\rightskip}{0pt plus 5cm}DbSync\_\-DbAdapter\_\-AdapterInterface::getTableList (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}
+\label{interfaceDbSync__DbAdapter__AdapterInterface_a84b87f76dc8ebc123d42dda7393e0cb9}
+Get tables list
+
+\begin{DoxyReturn}{Returns}
+array 
+\end{DoxyReturn}
+
+
+Implemented in \hyperlink{classDbSync__DbAdapter__Mysql_ab6a45a23420b3f1e5817fbe287c53842}{DbSync\_\-DbAdapter\_\-Mysql}.
+
+\hypertarget{interfaceDbSync__DbAdapter__AdapterInterface_a686c3e752907a09cc1d87fce2d2bb101}{
+\index{DbSync\_\-DbAdapter\_\-AdapterInterface@{DbSync\_\-DbAdapter\_\-AdapterInterface}!getTriggerList@{getTriggerList}}
+\index{getTriggerList@{getTriggerList}!DbSync_DbAdapter_AdapterInterface@{DbSync\_\-DbAdapter\_\-AdapterInterface}}
+\subsubsection[{getTriggerList}]{\setlength{\rightskip}{0pt plus 5cm}DbSync\_\-DbAdapter\_\-AdapterInterface::getTriggerList (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}
+\label{interfaceDbSync__DbAdapter__AdapterInterface_a686c3e752907a09cc1d87fce2d2bb101}
+Get triggers list
+
+\begin{DoxyReturn}{Returns}
+array 
+\end{DoxyReturn}
+\hypertarget{interfaceDbSync__DbAdapter__AdapterInterface_ac1cb4888b127b104ed231feae87d3056}{
+\index{DbSync\_\-DbAdapter\_\-AdapterInterface@{DbSync\_\-DbAdapter\_\-AdapterInterface}!hasTable@{hasTable}}
+\index{hasTable@{hasTable}!DbSync_DbAdapter_AdapterInterface@{DbSync\_\-DbAdapter\_\-AdapterInterface}}
+\subsubsection[{hasTable}]{\setlength{\rightskip}{0pt plus 5cm}DbSync\_\-DbAdapter\_\-AdapterInterface::hasTable (
+\begin{DoxyParamCaption}
+\item[{\$}]{tableName}
+\end{DoxyParamCaption}
+)}}
+\label{interfaceDbSync__DbAdapter__AdapterInterface_ac1cb4888b127b104ed231feae87d3056}
+Is db table exists
+
+\begin{DoxyReturn}{Returns}
+boolen 
+\end{DoxyReturn}
+
+
+Implemented in \hyperlink{classDbSync__DbAdapter__Mysql_aceee5101dd14398aa51b7f3abfe88306}{DbSync\_\-DbAdapter\_\-Mysql}.
+
+\hypertarget{interfaceDbSync__DbAdapter__AdapterInterface_aa8f4119b6cc6cf5bfd0d97d45a849d9d}{
+\index{DbSync\_\-DbAdapter\_\-AdapterInterface@{DbSync\_\-DbAdapter\_\-AdapterInterface}!hasTrigger@{hasTrigger}}
+\index{hasTrigger@{hasTrigger}!DbSync_DbAdapter_AdapterInterface@{DbSync\_\-DbAdapter\_\-AdapterInterface}}
+\subsubsection[{hasTrigger}]{\setlength{\rightskip}{0pt plus 5cm}DbSync\_\-DbAdapter\_\-AdapterInterface::hasTrigger (
+\begin{DoxyParamCaption}
+\item[{\$}]{triggerName}
+\end{DoxyParamCaption}
+)}}
+\label{interfaceDbSync__DbAdapter__AdapterInterface_aa8f4119b6cc6cf5bfd0d97d45a849d9d}
+Is db trigger exists
+
+\begin{DoxyReturn}{Returns}
+boolen 
+\end{DoxyReturn}
+
+
+Implemented in \hyperlink{classDbSync__DbAdapter__Mysql_a7c89b938e8554a37e1244207cb75b3ff}{DbSync\_\-DbAdapter\_\-Mysql}.
+
+\hypertarget{interfaceDbSync__DbAdapter__AdapterInterface_ad535c5d4d074383feb578fab1e71d2e7}{
+\index{DbSync\_\-DbAdapter\_\-AdapterInterface@{DbSync\_\-DbAdapter\_\-AdapterInterface}!insert@{insert}}
+\index{insert@{insert}!DbSync_DbAdapter_AdapterInterface@{DbSync\_\-DbAdapter\_\-AdapterInterface}}
+\subsubsection[{insert}]{\setlength{\rightskip}{0pt plus 5cm}DbSync\_\-DbAdapter\_\-AdapterInterface::insert (
+\begin{DoxyParamCaption}
+\item[{\$}]{data, }
+\item[{\$}]{tableName}
+\end{DoxyParamCaption}
+)}}
+\label{interfaceDbSync__DbAdapter__AdapterInterface_ad535c5d4d074383feb578fab1e71d2e7}
+Push data to db table
+
+
+\begin{DoxyParams}[1]{Parameters}
+boolen & {\em \$force} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+boolen 
+\end{DoxyReturn}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em Exception} & \\
+\hline
+\end{DoxyExceptions}
+
+
+Implemented in \hyperlink{classDbSync__DbAdapter__Mysql_a5f9f2976276f71419539cb1da154f5de}{DbSync\_\-DbAdapter\_\-Mysql}.
+
+\hypertarget{interfaceDbSync__DbAdapter__AdapterInterface_abe0d20fb62067de68fb354adc3eb7e8a}{
+\index{DbSync\_\-DbAdapter\_\-AdapterInterface@{DbSync\_\-DbAdapter\_\-AdapterInterface}!isEmpty@{isEmpty}}
+\index{isEmpty@{isEmpty}!DbSync_DbAdapter_AdapterInterface@{DbSync\_\-DbAdapter\_\-AdapterInterface}}
+\subsubsection[{isEmpty}]{\setlength{\rightskip}{0pt plus 5cm}DbSync\_\-DbAdapter\_\-AdapterInterface::isEmpty (
+\begin{DoxyParamCaption}
+\item[{\$}]{tableName}
+\end{DoxyParamCaption}
+)}}
+\label{interfaceDbSync__DbAdapter__AdapterInterface_abe0d20fb62067de68fb354adc3eb7e8a}
+Is db table empty
+
+
+\begin{DoxyParams}[1]{Parameters}
+string & {\em \$tableName} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+boolean 
+\end{DoxyReturn}
+
+
+Implemented in \hyperlink{classDbSync__DbAdapter__Mysql_ab8b4ba488780a70e219b04cb893549df}{DbSync\_\-DbAdapter\_\-Mysql}.
+
+\hypertarget{interfaceDbSync__DbAdapter__AdapterInterface_a06dfb3597de81841661535373ce06e0d}{
+\index{DbSync\_\-DbAdapter\_\-AdapterInterface@{DbSync\_\-DbAdapter\_\-AdapterInterface}!merge@{merge}}
+\index{merge@{merge}!DbSync_DbAdapter_AdapterInterface@{DbSync\_\-DbAdapter\_\-AdapterInterface}}
+\subsubsection[{merge}]{\setlength{\rightskip}{0pt plus 5cm}DbSync\_\-DbAdapter\_\-AdapterInterface::merge (
+\begin{DoxyParamCaption}
+\item[{\$}]{data, }
+\item[{\$}]{tableName}
+\end{DoxyParamCaption}
+)}}
+\label{interfaceDbSync__DbAdapter__AdapterInterface_a06dfb3597de81841661535373ce06e0d}
+Merge data to db table
+
+
+\begin{DoxyExceptions}{Exceptions}
+{\em Exception} & \\
+\hline
+\end{DoxyExceptions}
+\begin{DoxyReturn}{Returns}
+boolean 
+\end{DoxyReturn}
+
+
+Implemented in \hyperlink{classDbSync__DbAdapter__Mysql_a8a92a7e594687733c08bacd9d4217521}{DbSync\_\-DbAdapter\_\-Mysql}.
+
+\hypertarget{interfaceDbSync__DbAdapter__AdapterInterface_a683e550d89b21e02e4068993f30079fc}{
+\index{DbSync\_\-DbAdapter\_\-AdapterInterface@{DbSync\_\-DbAdapter\_\-AdapterInterface}!parseSchema@{parseSchema}}
+\index{parseSchema@{parseSchema}!DbSync_DbAdapter_AdapterInterface@{DbSync\_\-DbAdapter\_\-AdapterInterface}}
+\subsubsection[{parseSchema}]{\setlength{\rightskip}{0pt plus 5cm}DbSync\_\-DbAdapter\_\-AdapterInterface::parseSchema (
+\begin{DoxyParamCaption}
+\item[{\$}]{tableName}
+\end{DoxyParamCaption}
+)}}
+\label{interfaceDbSync__DbAdapter__AdapterInterface_a683e550d89b21e02e4068993f30079fc}
+Parse schema
+
+\begin{DoxyReturn}{Returns}
+array 
+\end{DoxyReturn}
+
+
+Implemented in \hyperlink{classDbSync__DbAdapter__Mysql_a1eeb0ab74018b405fdd42ba5c37adc2d}{DbSync\_\-DbAdapter\_\-Mysql}.
+
+\hypertarget{interfaceDbSync__DbAdapter__AdapterInterface_acea54c81f65be6ea4eceb8dcf3b93659}{
+\index{DbSync\_\-DbAdapter\_\-AdapterInterface@{DbSync\_\-DbAdapter\_\-AdapterInterface}!parseTrigger@{parseTrigger}}
+\index{parseTrigger@{parseTrigger}!DbSync_DbAdapter_AdapterInterface@{DbSync\_\-DbAdapter\_\-AdapterInterface}}
+\subsubsection[{parseTrigger}]{\setlength{\rightskip}{0pt plus 5cm}DbSync\_\-DbAdapter\_\-AdapterInterface::parseTrigger (
+\begin{DoxyParamCaption}
+\item[{\$}]{triggerName}
+\end{DoxyParamCaption}
+)}}
+\label{interfaceDbSync__DbAdapter__AdapterInterface_acea54c81f65be6ea4eceb8dcf3b93659}
+Fetch db triggers
+
+\begin{DoxyReturn}{Returns}
+string 
+\end{DoxyReturn}
+
+
+Implemented in \hyperlink{classDbSync__DbAdapter__Mysql_acf8d25625a74af2fe9f31e4b621ef0f0}{DbSync\_\-DbAdapter\_\-Mysql}.
+
+\hypertarget{interfaceDbSync__DbAdapter__AdapterInterface_a2cc0eb5ae7c4aa0b69a899e84040da83}{
+\index{DbSync\_\-DbAdapter\_\-AdapterInterface@{DbSync\_\-DbAdapter\_\-AdapterInterface}!truncate@{truncate}}
+\index{truncate@{truncate}!DbSync_DbAdapter_AdapterInterface@{DbSync\_\-DbAdapter\_\-AdapterInterface}}
+\subsubsection[{truncate}]{\setlength{\rightskip}{0pt plus 5cm}DbSync\_\-DbAdapter\_\-AdapterInterface::truncate (
+\begin{DoxyParamCaption}
+\item[{\$}]{tableName}
+\end{DoxyParamCaption}
+)}}
+\label{interfaceDbSync__DbAdapter__AdapterInterface_a2cc0eb5ae7c4aa0b69a899e84040da83}
+Truncate table
+
+
+\begin{DoxyParams}[1]{Parameters}
+string & {\em \$tableName} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+number 
+\end{DoxyReturn}
+
+
+Implemented in \hyperlink{classDbSync__DbAdapter__Mysql_afb653194c5832eb8205adb4fe13a35db}{DbSync\_\-DbAdapter\_\-Mysql}.
+
+
+
+The documentation for this interface was generated from the following file:\begin{DoxyCompactItemize}
+\item 
+DbSync/DbAdapter/AdapterInterface.php\end{DoxyCompactItemize}
