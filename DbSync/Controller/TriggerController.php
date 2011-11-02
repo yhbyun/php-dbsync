@@ -30,10 +30,10 @@ class DbSync_Controller_TriggerController extends DbSync_Controller_AbstractCont
     /**
     * @var string
     */
-    protected $_modelClass = 'DbSync_Table_Trigger';
+    protected $_modelClass = 'DbSync_Model_Table_Trigger';
 
     /**
-     * @var DbSync_Table_Trigger
+     * @var DbSync_Model_Table_Trigger
      */
     protected $_model;
 
@@ -142,18 +142,14 @@ class DbSync_Controller_TriggerController extends DbSync_Controller_AbstractCont
     {
         $triggerName = $this->_model->getTriggerName();
 
-        if ($this->_model->hasFile()) {
-            if ($this->_console->hasOption('show')) {
-                echo $this->_model->generateSql();
-            } else {
-                if (!$this->_model->push()) {
-                    echo $triggerName . $this->colorize(" - Not updated", 'red');
-                } else {
-                    echo $triggerName . $this->colorize(" - Updated", 'green');
-                }
-            }
+        if ($this->_console->hasOption('show')) {
+            echo $this->_model->generateSql();
         } else {
-            echo $triggerName . $this->colorize(" - Config not found", 'red');
+            if (!$this->_model->push()) {
+                echo $triggerName . $this->colorize(" - Not updated", 'red');
+            } else {
+                echo $triggerName . $this->colorize(" - Updated", 'green');
+            }
         }
     }
 
@@ -167,18 +163,10 @@ class DbSync_Controller_TriggerController extends DbSync_Controller_AbstractCont
     {
         $triggerName = $this->_model->getTriggerName();
 
-        if ($this->_model->hasDbTrigger() && $this->_model->hasFile()) {
-            if ($this->_model->getStatus()) {
-                echo $triggerName . $this->colorize(" - Ok", 'green');
-            } else {
-                echo $triggerName . $this->colorize(" - Unsyncronized", 'red');
-            }
+        if ($this->_model->getStatus()) {
+            echo $triggerName . $this->colorize(" - Ok", 'green');
         } else {
-            if (!$this->_model->hasDbTrigger()) {
-                echo $triggerName . $this->colorize(" - Trigger not found", 'red');
-            } else {
-                echo $triggerName . $this->colorize(" - Config not found", 'red');
-            }
+            echo $triggerName . $this->colorize(" - Unsyncronized", 'red');
         }
     }
 
@@ -191,19 +179,10 @@ class DbSync_Controller_TriggerController extends DbSync_Controller_AbstractCont
     {
         $triggerName = $this->_model->getTriggerName();
 
-        if ($this->_model->hasDbTrigger()) {
-            if ($this->_model->hasFile()) {
-                echo $triggerName . $this->colorize(" - Already has data", 'red');
-            } else {
-                if ($this->_model->isWriteable()) {
-                    $this->_model->init();
-                    echo $triggerName . $this->colorize(" - Ok", 'green');
-                } else {
-                    echo $triggerName . $this->colorize(" - Path is not writeable", 'red');
-                }
-            }
+        if ($this->_model->init()) {
+            echo $triggerName . $this->colorize(" - Ok", 'green');
         } else {
-            echo $triggerName . $this->colorize(" - Trigger not found", 'red');
+            echo $triggerName . $this->colorize(" - Already has config", 'red');
         }
     }
 
@@ -216,16 +195,8 @@ class DbSync_Controller_TriggerController extends DbSync_Controller_AbstractCont
     {
         $triggerName = $this->_model->getTriggerName();
 
-        if ($this->_model->hasDbTrigger()) {
-            if ($this->_model->isWriteable()) {
-                $this->_model->pull();
-                echo $triggerName . $this->colorize(" - Ok", 'green');
-            } else {
-                echo $triggerName . $this->colorize(" - Path is not writeable", 'red');
-            }
-        } else {
-            echo $triggerName . $this->colorize(" - Trigger not found", 'red');
-        }
+        $this->_model->pull();
+        echo $triggerName . $this->colorize(" - Ok", 'green');
     }
 
     /**
@@ -237,16 +208,11 @@ class DbSync_Controller_TriggerController extends DbSync_Controller_AbstractCont
     {
         $triggerName = $this->_model->getTriggerName();
 
-        if ($this->_model->hasDbTrigger() && $this->_model->hasFile()) {
-            if (!$this->_model->getStatus()) {
-                echo join(PHP_EOL, $this->_model->diff()), PHP_EOL;
-            }
+        if ($this->_model->getStatus()) {
+            echo $triggerName . $this->colorize(" - Ok", 'green');
         } else {
-            if (!$this->_model->hasDbTrigger()) {
-                echo $triggerName . $this->colorize(" - Trigger not found", 'red');
-            } else {
-                echo $triggerName . $this->colorize(" - Config not found", 'red');
-            }
+            echo $triggerName . $this->colorize(" - Unsyncronized", 'red');
+            echo PHP_EOL, join(PHP_EOL, $this->_model->diff());
         }
     }
 }

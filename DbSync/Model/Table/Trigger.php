@@ -12,20 +12,22 @@
  * obtain it through the world-wide-web, please send an email
  * to maks.slesarenko@gmail.com so we can send you a copy immediately.
  *
- * @category DbSync
- * @package  DbSync_Table
- * @license  http://code.google.com/p/php-dbsync/wiki/License   New BSD License
- * @version  $Id$
+ * @category   DbSync
+ * @package    DbSync_Model
+ * @subpackage Table
+ * @license    http://code.google.com/p/php-dbsync/wiki/License   New BSD License
+ * @version    $Id$
  */
 
 /**
- * DbSync_Table_TableTrigger
+ * DbSync_Model_Table_Trigger
  *
- * @category DbSync
- * @package  DbSync_Table
- * @version  $Id$
+ * @category   DbSync
+ * @package    DbSync_Model
+ * @subpackage Table
+ * @version    $Id$
  */
-class DbSync_Table_Trigger extends DbSync_Table_AbstractTable
+class DbSync_Model_Table_Trigger extends DbSync_Model_Table_AbstractTable
 {
     /**
      * @var string
@@ -49,7 +51,7 @@ class DbSync_Table_Trigger extends DbSync_Table_AbstractTable
      * Set trigger name
      *
      * @param string $triggerName
-     * @return DbSync_Table
+     * @return DbSync_Model_Table_Trigger
      */
     public function setTriggerName($triggerName)
     {
@@ -79,27 +81,6 @@ class DbSync_Table_Trigger extends DbSync_Table_AbstractTable
     }
 
     /**
-     * Get config filepath
-     *
-     * @param boolen $real
-     * @throws Exception
-     * @return string
-     */
-    public function getFilePath($real = true)
-    {
-        $path = $this->_fileAdapter->getFilePath(
-            $this->getTableName(),
-            $this->getTriggerName(),
-            true
-        );
-
-        if ($real) {
-            return realpath($path);
-        }
-        return $path;
-    }
-
-    /**
      * Get data to store in config file
      *
      * @return array
@@ -123,16 +104,6 @@ class DbSync_Table_Trigger extends DbSync_Table_AbstractTable
         $config = $this->_fileAdapter->load($filename);
 
         return $this->_dbAdapter->createTriggerSql($config);
-    }
-
-    /**
-     * Alter db table
-     *
-     * @return boolen
-     */
-    public function push()
-    {
-        return false !== $this->_dbAdapter->execute($this->generateSql());
     }
 
     /**

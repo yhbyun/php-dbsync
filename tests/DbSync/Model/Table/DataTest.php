@@ -15,18 +15,18 @@
  * @category DbSync
  * @package  Tests
  * @license  http://code.google.com/p/php-dbsync/wiki/License   New BSD License
- * @version  $Id: Console.php 36 2011-10-23 15:15:19Z maks.slesarenko@gmail.com $
+ * @version  $Id$
  */
 
 /**
- * DbSync_Table_DataTest
+ * DbSync_Model_Table_DataTest
  *
  * @group    table
  * @category DbSync
  * @package  Tests
  * @version  $Id$
  */
-class DbSync_Table_DataTest extends PHPUnit_Framework_TestCase
+class DbSync_Model_Table_DataTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @var PHPUnit_Framework_MockObject_MockObject
@@ -69,7 +69,7 @@ class DbSync_Table_DataTest extends PHPUnit_Framework_TestCase
     protected function _getMock($methods)
     {
         return $this->getMock(
-            'DbSync_Table_Data',
+            'DbSync_Model_Table_Data',
             $methods,
             array($this->_dbAdapter, $this->_fileAdapter, 'diff')
         );
@@ -258,7 +258,7 @@ class DbSync_Table_DataTest extends PHPUnit_Framework_TestCase
                          ->method('insert')
                          ->with($this->equalTo($data), $this->equalTo($tableName));
 
-        $model->push(DbSync_Table_Data::PUSH_TYPE_FORCE);
+        $model->push(DbSync_Model_Table_Data::PUSH_TYPE_FORCE);
     }
 
     /**
@@ -298,7 +298,7 @@ class DbSync_Table_DataTest extends PHPUnit_Framework_TestCase
         $this->_dbAdapter->expects($this->once())
                          ->method('merge')
                          ->with($this->equalTo($data), $this->equalTo($tableName));
-        $model->push(DbSync_Table_Data::PUSH_TYPE_MERGE);
+        $model->push(DbSync_Model_Table_Data::PUSH_TYPE_MERGE);
     }
 
     /**

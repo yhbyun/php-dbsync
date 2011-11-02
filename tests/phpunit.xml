@@ -5,7 +5,7 @@
     convertNoticesToExceptions="true"
     convertWarningsToExceptions="true"
     stopOnFailure="false"
-    processIsolation="true"
+    processIsolation="false"
     syntaxCheck="true">
         
     <testsuite name="Main Test Suite">

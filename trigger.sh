@@ -19,7 +19,7 @@
 
 require_once 'config.php';
 
-require_once 'DbSync/Table/Trigger.php';
+require_once 'DbSync/Model/Table/Trigger.php';
 require_once 'DbSync/Controller/TriggerController.php';
 
 $console = new DbSync_Console();

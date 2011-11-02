@@ -30,7 +30,7 @@ class DbSync_Controller_SchemaController extends DbSync_Controller_AbstractContr
     /**
     * @var string
     */
-    protected $_modelClass = 'DbSync_Table_Schema';
+    protected $_modelClass = 'DbSync_Model_Table_Schema';
 
     /**
      * Delete
@@ -67,18 +67,14 @@ class DbSync_Controller_SchemaController extends DbSync_Controller_AbstractContr
     {
         $tableName = $this->_model->getTableName();
 
-        if ($this->_model->hasFile()) {
-            if ($this->_console->hasOption('show')) {
-                echo $this->_model->generateSql();
-            } else {
-                 if (!$this->_model->push()) {
-                     echo $tableName . $this->colorize(" - Not updated", 'red');
-                 } else {
-                     echo $tableName . $this->colorize(" - Updated", 'green');
-                 }
-            }
+        if ($this->_console->hasOption('show')) {
+            echo $this->_model->generateSql();
         } else {
-            echo $tableName . $this->colorize(" - Schema not found", 'red');
+             if (!$this->_model->push()) {
+                 echo $tableName . $this->colorize(" - Not updated", 'red');
+             } else {
+                 echo $tableName . $this->colorize(" - Updated", 'green');
+             }
         }
     }
 }
