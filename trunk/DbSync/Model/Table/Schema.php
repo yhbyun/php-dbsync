@@ -43,6 +43,7 @@ class DbSync_Model_Table_Schema extends DbSync_Model_Table_AbstractTable
      * Generate Alter Table
      *
      * @return string
+     * @throws DbSync_Exception
      */
     public function generateSql()
     {
@@ -57,7 +58,6 @@ class DbSync_Model_Table_Schema extends DbSync_Model_Table_AbstractTable
     /**
      * Delete Table
      *
-     * @throws Exception
      * @return boolen
      */
     public function dropDbTable()

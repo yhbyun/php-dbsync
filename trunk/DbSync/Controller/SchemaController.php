@@ -35,6 +35,8 @@ class DbSync_Controller_SchemaController extends DbSync_Controller_AbstractContr
     /**
      * Delete
      *
+     * @alias de
+     *
      * @return Delete table and config
      * @return Use {--db|yellow} to delete only form database
      * @return Use {--file|yellow} to delete only config file
@@ -54,27 +56,6 @@ class DbSync_Controller_SchemaController extends DbSync_Controller_AbstractContr
         if ($this->_model->hasDbTable() && !$this->_console->hasOption('file')) {
             $this->_model->dropDbTable();
             echo $tableName . $this->colorize(" - Database table deleted", 'green');
-        }
-    }
-
-    /**
-     * Push
-     *
-     * @return Override database schema by current schema config file
-     * @return Use {--show|yellow} to only display alter code
-     */
-    public function pushAction()
-    {
-        $tableName = $this->_model->getTableName();
-
-        if ($this->_console->hasOption('show')) {
-            echo $this->_model->generateSql();
-        } else {
-             if (!$this->_model->push()) {
-                 echo $tableName . $this->colorize(" - Not updated", 'red');
-             } else {
-                 echo $tableName . $this->colorize(" - Updated", 'green');
-             }
         }
     }
 }

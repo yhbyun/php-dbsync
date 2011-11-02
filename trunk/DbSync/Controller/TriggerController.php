@@ -106,6 +106,8 @@ class DbSync_Controller_TriggerController extends DbSync_Controller_AbstractCont
     /**
      * Delete
      *
+     * @alias de
+     *
      * @return Delete trigger and config
      * @return Use {--db|yellow} to delete only from database
      * @return Use {--file|yellow} to delete only config file
@@ -131,88 +133,16 @@ class DbSync_Controller_TriggerController extends DbSync_Controller_AbstractCont
         }
     }
 
-
-    /**
-     * Push
-     *
-     * @return Override database trigger by current config file
-     * @return Use {--show|yellow} to only display sql code
-     */
-    public function pushAction()
-    {
-        $triggerName = $this->_model->getTriggerName();
-
-        if ($this->_console->hasOption('show')) {
-            echo $this->_model->generateSql();
-        } else {
-            if (!$this->_model->push()) {
-                echo $triggerName . $this->colorize(" - Not updated", 'red');
-            } else {
-                echo $triggerName . $this->colorize(" - Updated", 'green');
-            }
-        }
-    }
-
     /**
      * Status
+     *
+     * @alias st
      *
      * @return Check triggers status (Ok/Unsyncronized)
      * @return Use {--table [[tableName] ... ]|yellow} to display triggers for certain table(s)
      */
     public function statusAction()
     {
-        $triggerName = $this->_model->getTriggerName();
-
-        if ($this->_model->getStatus()) {
-            echo $triggerName . $this->colorize(" - Ok", 'green');
-        } else {
-            echo $triggerName . $this->colorize(" - Unsyncronized", 'red');
-        }
-    }
-
-    /**
-     * Init
-     *
-     * @return Create database trigger config in specified path
-     */
-    public function initAction()
-    {
-        $triggerName = $this->_model->getTriggerName();
-
-        if ($this->_model->init()) {
-            echo $triggerName . $this->colorize(" - Ok", 'green');
-        } else {
-            echo $triggerName . $this->colorize(" - Already has config", 'red');
-        }
-    }
-
-    /**
-     * Pull
-     *
-     * @return Override current trigger config file by new created from database.
-     */
-    public function pullAction()
-    {
-        $triggerName = $this->_model->getTriggerName();
-
-        $this->_model->pull();
-        echo $triggerName . $this->colorize(" - Ok", 'green');
-    }
-
-    /**
-     * Diff
-     *
-     * @return Show diff between database trigger and config file
-     */
-    public function diffAction()
-    {
-        $triggerName = $this->_model->getTriggerName();
-
-        if ($this->_model->getStatus()) {
-            echo $triggerName . $this->colorize(" - Ok", 'green');
-        } else {
-            echo $triggerName . $this->colorize(" - Unsyncronized", 'red');
-            echo PHP_EOL, join(PHP_EOL, $this->_model->diff());
-        }
+        parent::statusAction();
     }
 }

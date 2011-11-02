@@ -48,7 +48,7 @@ class DbSync_Model_Table_Data extends DbSync_Model_Table_AbstractTable
      * @param boolen $force false
      * @param boolen $merge false
      * @return boolen
-     * @throws Exception
+     * @throws DbSync_Exception
      */
     public function push($type = null)
     {
@@ -80,6 +80,7 @@ class DbSync_Model_Table_Data extends DbSync_Model_Table_AbstractTable
      * Is db table dirty
      *
      * @return boolean
+     * @throws DbSync_Exception
      */
     public function isEmptyTable()
     {

@@ -39,6 +39,7 @@ abstract class DbSync_Model_Table_AbstractTable
      * Get table name
      *
      * @return string
+     * @throws DbSync_Exception
      */
     public function getTableName()
     {

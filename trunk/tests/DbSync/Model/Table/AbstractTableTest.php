@@ -64,15 +64,28 @@ class DbSync_Model_Table_AbstractTableTest extends PHPUnit_Framework_TestCase
      * Get mock
      *
      * @param array $methods
+     * @param array $stubs
      * @return PHPUnit_Framework_MockObject_MockObject
      */
-    protected function _getMock($methods)
+    protected function _getMock($methods = array(), array $stubs = array('getTableName' => 'users'))
     {
-        return $this->getMock(
+        if (is_array($methods)) {
+            $methods = array_merge($methods, array_keys($stubs));
+        }
+
+        $mock = $this->getMock(
             'DbSync_Model_Table_Schema',
             $methods,
             array($this->_dbAdapter, $this->_fileAdapter, 'diff')
         );
+        if ($stubs) {
+            foreach ($stubs as $stubMethod => $stubValue) {
+                $mock->expects($this->any())
+                     ->method($stubMethod)
+                     ->will($this->returnValue($stubValue));
+            }
+        }
+        return $mock;
     }
 
     /**
@@ -89,7 +102,23 @@ class DbSync_Model_Table_AbstractTableTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * getName
+     *
+     * @depends test_getTableName
+     */
+    public function test_getName()
+    {
+        $tableName = 'users';
+
+        $model = $this->_getMock();
+
+        $this->assertEquals($tableName, $model->getName());
+    }
+
+    /**
      * setTableName
+     *
+     * @depends test_getTableName
      */
     public function test_setTableName()
     {
@@ -103,134 +132,6 @@ class DbSync_Model_Table_AbstractTableTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * save
-     *
-     * @expectedException        DbSync_Exception
-     * @expectedExceptionMessage Path 'tablespath' is not writable
-     */
-    public function test_save_notWriteable()
-    {
-        $path = 'tablespath';
-        $model = $this->_getMock(array('isWriteable'));
-
-        $model->expects($this->atLeastOnce())
-              ->method('isWriteable')
-              ->will($this->returnValue(false));
-
-        $model->save($path);
-    }
-
-    /**
-     * save
-     *
-     */
-    public function test_save()
-    {
-        $path = 'tablespath';
-        $data = array('somedata');
-        $model = $this->_getMock(array('isWriteable', 'generateConfigData'));
-
-        $model->expects($this->atLeastOnce())
-              ->method('isWriteable')
-              ->will($this->returnValue(true));
-
-        $model->expects($this->once())
-              ->method('generateConfigData')
-              ->will($this->returnValue($data));
-
-        $this->_fileAdapter->expects($this->once())
-                           ->method('write')
-                           ->with($this->equalTo($path), $this->equalTo($data));
-
-        $model->save($path);
-    }
-
-    /**
-     * hasFile
-     *
-     */
-    public function test_hasFile()
-    {
-        $filepath = 'somepath';
-
-        $model = $this->_getMock(array('getFilePath'));
-
-        $model->expects($this->once())
-              ->method('getFilePath')
-              ->will($this->returnValue($filepath));
-
-        $this->assertTrue($model->hasFile($filepath));
-    }
-
-    /**
-     * hasFile
-     *
-     */
-    public function test_hasFile_false()
-    {
-        $filepath = null;
-
-        $model = $this->_getMock(array('getFilePath'));
-
-        $model->expects($this->once())
-              ->method('getFilePath')
-              ->will($this->returnValue($filepath));
-
-        $this->assertFalse($model->hasFile($filepath));
-    }
-
-    /**
-     * getStatus
-     *
-     */
-    public function test_getStatus_false()
-    {
-        $diff = array('some diff data');
-
-        $model = $this->_getMock(array('diff'));
-
-        $model->expects($this->once())
-              ->method('diff')
-              ->will($this->returnValue($diff));
-
-        $this->assertFalse($model->getStatus());
-    }
-
-    /**
-     * getStatus
-     *
-     */
-    public function test_getStatus()
-    {
-        $diff = array();
-
-        $model = $this->_getMock(array('diff'));
-
-        $model->expects($this->once())
-              ->method('diff')
-              ->will($this->returnValue($diff));
-
-        $this->assertTrue($model->getStatus());
-    }
-
-    /**
-     * pull
-     *
-     */
-    public function test_pull()
-    {
-        $diff = array();
-
-        $model = $this->_getMock(array('init'));
-
-        $model->expects($this->once())
-              ->method('init')
-              ->with($this->equalTo(true));
-
-        $model->pull();
-    }
-
-    /**
      * hasDbTable
      *
      */
@@ -238,11 +139,7 @@ class DbSync_Model_Table_AbstractTableTest extends PHPUnit_Framework_TestCase
     {
         $tableName = 'users';
 
-        $model = $this->_getMock(array('getTableName'));
-
-        $model->expects($this->any())
-              ->method('getTableName')
-              ->will($this->returnValue($tableName));
+        $model = $this->_getMock();
 
         $this->_dbAdapter->expects($this->once())
                          ->method('hasTable')
@@ -260,11 +157,7 @@ class DbSync_Model_Table_AbstractTableTest extends PHPUnit_Framework_TestCase
     {
         $tableName = 'users';
 
-        $model = $this->_getMock(array('getTableName'));
-
-        $model->expects($this->any())
-              ->method('getTableName')
-              ->will($this->returnValue($tableName));
+        $model = $this->_getMock();
 
         $this->_dbAdapter->expects($this->once())
                          ->method('hasTable')
@@ -335,266 +228,6 @@ class DbSync_Model_Table_AbstractTableTest extends PHPUnit_Framework_TestCase
         sort($result);
 
         $this->assertEquals($list, $result);
-    }
-
-    /**
-     * getFilePath
-     *
-     */
-    public function test_getFilePath_notReal()
-    {
-        $path = 'some path';
-
-        $model = $this->_getMock(null);
-
-        $this->_fileAdapter->expects($this->once())
-                           ->method('getFilePath')
-                           ->with($this->equalTo($model))
-                           ->will($this->returnValue($path));
-
-        $this->assertEquals($path, $model->getFilePath(false));
-    }
-
-    /**
-     * getFilePath
-     *
-     */
-    public function test_getFilePath()
-    {
-        $path = '.';
-        $model = $this->_getMock(null);
-
-
-        $this->_fileAdapter->expects($this->once())
-                           ->method('getFilePath')
-                           ->with($this->equalTo($model))
-                           ->will($this->returnValue($path));
-
-        $this->assertNotNull($model->getFilePath(true));
-    }
-
-    /**
-     * deleteFile
-     *
-     * @expectedException        DbSync_Exception
-     * @expectedExceptionMessage Config file not found
-     */
-    public function test_deleteFile_noFile()
-    {
-        $model = $this->_getMock(array('getFilePath', 'getTableName'));
-
-        $model->expects($this->once())
-              ->method('getFilePath')
-              ->will($this->returnValue(false));
-
-        $model->deleteFile();
-    }
-
-    /**
-     * deleteFile
-     *
-     * @expectedException        DbSync_Exception
-     * @expectedExceptionMessage Config file 'somepath' is not writable
-     */
-    public function test_deleteFile_notWriteable()
-    {
-        $filepath = 'somepath';
-
-        $model = $this->_getMock(array('getFilePath', 'isWriteable'));
-
-        $model->expects($this->once())
-              ->method('getFilePath')
-              ->will($this->returnValue($filepath));
-
-        $model->expects($this->atLeastOnce())
-              ->method('isWriteable')
-              ->will($this->returnValue(false));
-
-        $model->deleteFile();
-    }
-
-    /**
-     * deleteFile
-     *
-     */
-    public function test_deleteFile()
-    {
-        vfsStream::setup('exampleDir');
-
-        $tableName = 'users';
-        $filepath = vfsStream::url('exampleDir/asdfasdf.xml');
-        fopen($filepath, 'a');
-
-        $model = $this->_getMock(array('getFilePath', 'isWriteable'));
-
-        $model->expects($this->once())
-              ->method('getFilePath')
-              ->will($this->returnValue($filepath));
-
-        $model->expects($this->atLeastOnce())
-              ->method('isWriteable')
-              ->will($this->returnValue(true));
-
-        $this->assertTrue(file_exists($filepath));
-
-        $this->assertTrue($model->deleteFile());
-
-        $this->assertFalse(file_exists($filepath));
-    }
-
-    /**
-     * isWriteable
-     *
-     */
-    public function test_isWriteable()
-    {
-        vfsStream::setup('exampleDir');
-
-        $filepath = vfsStream::url('exampleDir/config.xml');
-        fopen($filepath, 'a');
-
-        $model = $this->_getMock(array('getFilePath'));
-
-        $model->expects($this->once())
-              ->method('getFilePath')
-              ->will($this->returnValue($filepath));
-
-        $this->assertTrue($model->isWriteable());
-    }
-
-    /**
-     * isWriteable
-     *
-     * @depends test_getFilePath_notReal
-     * @depends test_getFilePath_notReal
-     * @depends test_deleteFile_noFile
-     */
-    public function test_isWriteable_false()
-    {
-        vfsStream::setup('exampleDir');
-        $filepath = vfsStream::url('exampleDir/tables/config.xml');
-
-        $tableName = 'users';
-
-        $model = $this->_getMock(array('getTableName'));
-
-        $this->_fileAdapter->expects($this->exactly(2))
-                           ->method('getFilePath')
-                           ->will($this->returnValue($filepath));
-
-        $this->assertTrue($model->isWriteable());
-    }
-
-    /**
-     * init
-     *
-     * @expectedException        DbSync_Exception
-     * @expectedExceptionMessage Path 'somepath' is not writable
-     */
-    public function test_init_notWriteable()
-    {
-        $filepath = 'somepath';
-
-        $model = $this->_getMock(array('getFilePath', 'isWriteable'));
-
-        $model->expects($this->once())
-              ->method('getFilePath')
-              ->will($this->returnValue($filepath));
-
-        $model->expects($this->atLeastOnce())
-              ->method('isWriteable')
-              ->will($this->returnValue(false));
-
-        $model->init(true);
-    }
-
-    /**
-     * init
-     *
-     */
-    public function test_init()
-    {
-        $filepath = 'somepath';
-
-        $model = $this->_getMock(array('getFilePath', 'isWriteable', 'save'));
-
-        $model->expects($this->once())
-              ->method('getFilePath')
-              ->will($this->returnValue($filepath));
-
-        $model->expects($this->atLeastOnce())
-              ->method('isWriteable')
-              ->will($this->returnValue(true));
-
-        $model->expects($this->once())
-              ->method('save')
-              ->with($this->equalTo($filepath));
-
-        $this->assertTrue($model->init(true));
-    }
-
-    /**
-     * init
-     *
-     */
-    public function test_init_false()
-    {
-        $filepath = 'somepath';
-        $model = $this->_getMock(array('getFilePath', 'isWriteable', 'save'));
-
-        $model->expects($this->once())
-              ->method('getFilePath')
-              ->will($this->returnValue($filepath));
-
-        $model->expects($this->never())
-              ->method('save');
-
-        $this->assertFalse($model->init());
-    }
-
-    /**
-     * diff
-     *
-     * @expectedException        DbSync_Exception
-     * @expectedExceptionMessage Config file not found
-     */
-    public function test_diff_noFile()
-    {
-        $model = $this->_getMock(array('getFilePath'));
-
-        $model->expects($this->once())
-              ->method('getFilePath')
-              ->will($this->returnValue(false));
-
-        $model->diff();
-    }
-
-    /**
-     * diff
-     *
-     */
-    public function test_diff()
-    {
-        vfsStream::setup('exampleDir');
-
-        $filepath = vfsStream::url('exampleDir/config.yml');
-        $filepathTmp = vfsStream::url('exampleDir/config.yml.tmp');
-        fopen($filepath, 'a');
-        fopen($filepathTmp, 'a');
-
-        $model = $this->_getMock(array('getFilePath', 'save'));
-
-        $model->expects($this->once())
-              ->method('getFilePath')
-              ->will($this->returnValue($filepath));
-
-        $model->expects($this->once())
-              ->method('save')
-              ->with($this->equalTo($filepath . '.tmp'));
-
-        $this->assertEmpty($model->diff());
-
-        $this->assertFalse(file_exists($filepathTmp));
     }
 }
 

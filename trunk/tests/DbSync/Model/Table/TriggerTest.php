@@ -1,0 +1,362 @@
+<?php
+/**
+ * DbSync
+ *
+ * LICENSE
+ *
+ * This source file is subject to the new BSD license that is bundled
+ * with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://code.google.com/p/phplizard/wiki/License
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to maks.slesarenko@gmail.com so we can send you a copy immediately.
+ *
+ * @category DbSync
+ * @package  Tests
+ * @license  http://code.google.com/p/php-dbsync/wiki/License   New BSD License
+ * @version  $Id$
+ */
+
+/**
+ * DbSync_Model_Table_TriggerTest
+ *
+ * @group    table
+ * @category DbSync
+ * @package  Tests
+ * @version  $Id$
+ */
+class DbSync_Model_Table_TriggerTest extends PHPUnit_Framework_TestCase
+{
+    /**
+     * @var PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $_fileAdapter;
+
+    /**
+     * @var PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $_dbAdapter;
+
+    /**
+     * Prepares the environment before running a test.
+     */
+    protected function setUp()
+    {
+        parent::setUp();
+
+        global $config;
+
+        $this->_dbAdapter = $this->getMock($config['dbAdapter'], array(), array($config['dbParams']));
+        $this->_fileAdapter = $this->getMock($config['fileAdapter'], array(), array($config['path']));
+    }
+
+    /**
+     * Cleans up the environment after running a test.
+     */
+    protected function tearDown()
+    {
+        // TODO Auto-generated Console::tearDown()
+        parent::tearDown();
+    }
+
+    /**
+     * Get mock
+     *
+     * @param array $methods
+     * @param array $stubs
+     * @return PHPUnit_Framework_MockObject_MockObject
+     */
+    protected function _getMock($methods = array(), array $stubs = array('getTriggerName' => 'someTriggerName'))
+    {
+        if (is_array($methods)) {
+            $methods = array_merge($methods, array_keys($stubs));
+        }
+
+        $mock = $this->getMock(
+            'DbSync_Model_Table_Trigger',
+            $methods,
+            array($this->_dbAdapter, $this->_fileAdapter, 'diff')
+        );
+        if ($stubs) {
+            foreach ($stubs as $stubMethod => $stubValue) {
+                $mock->expects($this->any())
+                     ->method($stubMethod)
+                     ->will($this->returnValue($stubValue));
+            }
+        }
+        return $mock;
+    }
+
+    /**
+     * getTriggerName
+     *
+     * @expectedException        DbSync_Exception
+     * @expectedExceptionMessage Trigger name not set
+     */
+    public function test_getTriggerName()
+    {
+        $model = $this->_getMock(null);
+
+        $model->getTriggerName();
+    }
+
+    /**
+     * setTriggerName
+     *
+     */
+    public function test_setTriggerName()
+    {
+        $triggerName = 'users';
+
+        $model = $this->_getMock(null);
+
+        $model->setTriggerName($triggerName);
+
+        $this->assertEquals($triggerName, $model->getTriggerName());
+    }
+
+    /**
+     * getTableName
+     *
+     */
+    public function test_getTableName_fromDb()
+    {
+        $tableName = 'someTable';
+
+        $model = $this->_getMock();
+
+        $this->_dbAdapter->expects($this->once())
+                         ->method('getTableByTrigger')
+                         ->will($this->returnValue($tableName));
+
+        $this->_fileAdapter->expects($this->never())
+                           ->method('getTableByTrigger');
+
+        $this->assertEquals($tableName, $model->getTableName());
+    }
+
+    /**
+     * getTableName
+     *
+     */
+    public function test_getTableName_fromFile()
+    {
+        $tableName = 'someTable';
+
+        $model = $this->_getMock();
+
+        $this->_dbAdapter->expects($this->once())
+                         ->method('getTableByTrigger')
+                         ->will($this->returnValue(''));
+
+        $this->_fileAdapter->expects($this->once())
+                           ->method('getTableByTrigger')
+                           ->will($this->returnValue($tableName));
+        $this->assertEquals($tableName, $model->getTableName());
+    }
+
+    /**
+     * getName
+     *
+     * @depends test_getTableName_fromDb
+     * @depends test_getTableName_fromFile
+     */
+    public function test_getName()
+    {
+        $model = $this->_getMock();
+
+        $this->assertEquals('someTriggerName', $model->getName());
+    }
+
+    /**
+     * getListDb
+     *
+     */
+    public function test_getListDb()
+    {
+        $list = array('trigger1', 'articles', 'settings');
+
+        $model = $this->_getMock();
+
+        $this->_dbAdapter->expects($this->once())
+                         ->method('getTriggerList')
+                         ->will($this->returnValue($list));
+
+        $this->assertEquals($list, $model->getListDb(array()));
+    }
+
+    /**
+     * getListConfig
+     *
+     */
+    public function test_getListConfig()
+    {
+        $list = array('trigger1', 'articles', 'settings');
+
+        $model = $this->_getMock();
+
+        $this->_fileAdapter->expects($this->once())
+                           ->method('getTriggerList')
+                           ->will($this->returnValue($list));
+
+        $this->assertEquals($list, $model->getListConfig(array()));
+    }
+
+    /**
+     * getList
+     *
+     * @depends test_getListConfig
+     * @depends test_getListDb
+     */
+    public function test_getList()
+    {
+        $list1 = array('trigger1', 'articles', 'settings');
+        $list2 = array('users1', 'articles', 'settings2');
+        $list = array_unique(array_merge($list1, $list2));
+        sort($list);
+
+        $model = $this->_getMock(array('getListConfig', 'getListDb'));
+
+        $model->expects($this->once())
+              ->method('getListConfig')
+              ->will($this->returnValue($list1));
+
+        $model->expects($this->once())
+              ->method('getListDb')
+              ->will($this->returnValue($list2));
+
+        $result = $model->getList(array());
+        sort($result);
+
+        $this->assertEquals($list, $result);
+    }
+
+    /**
+     * hasDbTrigger
+     *
+     */
+    public function test_hasDbTrigger()
+    {
+        $model = $this->_getMock();
+
+        $this->_dbAdapter->expects($this->once())
+                         ->method('hasTrigger')
+                         ->with($this->equalTo('someTriggerName'))
+                         ->will($this->returnValue(true));
+
+        $this->assertTrue($model->hasDbTrigger());
+    }
+
+    /**
+     * hasDbTrigger
+     *
+     */
+    public function test_hasDbTrigger_false()
+    {
+        $model = $this->_getMock();
+
+        $this->_dbAdapter->expects($this->once())
+                         ->method('hasTrigger')
+                         ->with($this->equalTo('someTriggerName'))
+                         ->will($this->returnValue(false));
+
+        $this->assertFalse($model->hasDbTrigger());
+    }
+
+    /**
+     * dropTrigger
+     *
+     */
+    public function test_dropTrigger()
+    {
+        $model = $this->_getMock();
+
+        $this->_dbAdapter->expects($this->once())
+                         ->method('dropTrigger')
+                         ->with($this->equalTo('someTriggerName'))
+                         ->will($this->returnValue(true));
+
+        $this->assertTrue($model->dropTrigger());
+    }
+
+    /**
+     * generateConfigData
+     *
+     */
+    public function test_generateConfigData()
+    {
+        $data = array(
+            'name' => 'someTriggerName',
+            'charset' => 'UTF-8',
+            'engine' => 'MyISAM',
+            'columns' => array(
+                'name' => array('type' => 'varchar(255)', 'default' => null)
+            )
+        );
+
+        $model = $this->_getMock();
+
+        $this->_dbAdapter->expects($this->once())
+                         ->method('parseTrigger')
+                         ->with($this->equalTo('someTriggerName'))
+                         ->will($this->returnValue($data));
+
+        $this->assertEquals($data, $model->generateConfigData());
+    }
+
+    /**
+     * generateSql
+     *
+     * @expectedException        DbSync_Exception
+     * @expectedExceptionMessage Config for 'someTriggerName' not found
+     */
+    public function test_generateSql_configNotFound()
+    {
+        $model = $this->_getMock(array('getFilePath'));
+
+        $model->expects($this->once())
+              ->method('getFilePath')
+              ->will($this->returnValue(false));
+
+        $this->_fileAdapter->expects($this->never())
+                           ->method('load');
+
+        $this->_dbAdapter->expects($this->never())
+                         ->method('createAlter');
+        $model->generateSql();
+    }
+
+    /**
+     * generateSql
+     *
+     */
+    public function test_generateSql()
+    {
+        $filename = 'table/users';
+        $sql = 'Alter some table';
+        $data = array(
+            'name' => 'someTriggerName',
+            'table' => 'settings'
+        );
+
+        $model = $this->_getMock(array('getFilePath'));
+
+        $model->expects($this->once())
+              ->method('getFilePath')
+              ->will($this->returnValue($filename));
+
+        $this->_fileAdapter->expects($this->once())
+                           ->method('load')
+                           ->with($this->equalTo($filename))
+                           ->will($this->returnValue($data));
+
+        $this->_dbAdapter->expects($this->once())
+                         ->method('createTriggerSql')
+                         ->with($this->equalTo($data))
+                         ->will($this->returnValue($sql));
+
+        $this->assertEquals($sql, $model->generateSql());
+    }
+}
+
