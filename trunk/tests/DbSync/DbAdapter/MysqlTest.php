@@ -15,20 +15,20 @@
  * @category DbSync
  * @package  Tests
  * @license  http://code.google.com/p/php-dbsync/wiki/License   New BSD License
- * @version  $Id: AbstractTableTest.php 42 2011-10-24 20:09:38Z maks.slesarenko@gmail.com $
+ * @version  $Id$
  */
 
 require_once dirname(__FILE__) . '/PDO.php';
 
 /**
- * DbSync_Table_DbAdapter_MysqlTest
+ * DbSync_DbAdapter_MysqlTest
  *
  * @group    db
  * @category DbSync
  * @package  Tests
- * @version  $Id: AbstractTableTest.php 42 2011-10-24 20:09:38Z maks.slesarenko@gmail.com $
+ * @version  $Id$
  */
-class DbSync_Table_DbAdapter_MysqlTest extends PHPUnit_Framework_TestCase
+class DbSync_DbAdapter_MysqlTest extends PHPUnit_Framework_TestCase
 {
     /**
      * Prepares the environment before running a test.
@@ -54,8 +54,8 @@ class DbSync_Table_DbAdapter_MysqlTest extends PHPUnit_Framework_TestCase
      */
     protected function _getMock($methods = null)
     {
-        $adapter = $this->getMock('DbSync_Table_DbAdapter_Mysql', $methods, array(array()), '', false);
-        $adapter->setConnection($this->getMock('DbSync_Table_DbAdapter_PDO', array()));
+        $adapter = $this->getMock('DbSync_DbAdapter_Mysql', $methods, array(array()), '', false);
+        $adapter->setConnection($this->getMock('DbSync_DbAdapter_PDO', array()));
 
         return $adapter;
     }

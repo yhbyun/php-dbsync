@@ -33,7 +33,7 @@ abstract class DbSync_Controller_AbstractController
     protected $_modelClass;
 
     /**
-     * @var DbSync_Table_AbstractTable
+     * @var DbSync_Model_AbstractModel
      */
     protected $_model;
 
@@ -105,12 +105,13 @@ abstract class DbSync_Controller_AbstractController
 
                     unset($items[$i]);
                     $updated = true;
+                    echo PHP_EOL;
                 } catch (Exception $e) {
                     if ($stop) {
                         echo $name . $this->colorize(" - " . $e->getMessage(), 'red');
+                        echo PHP_EOL;
                     }
                 }
-                echo PHP_EOL;
             }
         }
     }
@@ -229,18 +230,10 @@ abstract class DbSync_Controller_AbstractController
     {
         $tableName = $this->_model->getTableName();
 
-        if ($this->_model->hasDbTable() && $this->_model->hasFile()) {
-            if ($this->_model->getStatus()) {
-                echo $tableName . $this->colorize(" - Ok", 'green');
-            } else {
-                echo $tableName . $this->colorize(" - Unsyncronized", 'red');
-            }
+        if ($this->_model->getStatus()) {
+            echo $tableName . $this->colorize(" - Ok", 'green');
         } else {
-            if (!$this->_model->hasDbTable()) {
-                echo $tableName . $this->colorize(" - Table not found", 'red');
-            } else {
-                echo $tableName . $this->colorize(" - Config not found", 'red');
-            }
+            echo $tableName . $this->colorize(" - Unsyncronized", 'red');
         }
     }
 
@@ -253,19 +246,10 @@ abstract class DbSync_Controller_AbstractController
     {
         $tableName = $this->_model->getTableName();
 
-        if ($this->_model->hasDbTable()) {
-            if ($this->_model->hasFile()) {
-                echo $tableName . $this->colorize(" - Already has config", 'red');
-            } else {
-                if ($this->_model->isWriteable()) {
-                    $this->_model->init();
-                    echo $tableName . $this->colorize(" - Ok", 'green');
-                } else {
-                    echo $tableName . $this->colorize(" - Path is not writeable", 'red');
-                }
-            }
+        if ($this->_model->init()) {
+            echo $tableName . $this->colorize(" - Ok", 'green');
         } else {
-            echo $tableName . $this->colorize(" - Table not found", 'red');
+            echo $tableName . $this->colorize(" - Already has config", 'red');
         }
     }
 
@@ -278,16 +262,8 @@ abstract class DbSync_Controller_AbstractController
     {
         $tableName = $this->_model->getTableName();
 
-        if ($this->_model->hasDbTable()) {
-            if ($this->_model->isWriteable()) {
-                $this->_model->pull();
-                echo $tableName . $this->colorize(" - Ok", 'green');
-            } else {
-                echo $tableName . $this->colorize(" - Path is not writeable", 'red');
-            }
-        } else {
-            echo $tableName . $this->colorize(" - Table not found", 'red');
-        }
+        $this->_model->pull();
+        echo $tableName . $this->colorize(" - Ok", 'green');
     }
 
     /**
@@ -299,18 +275,11 @@ abstract class DbSync_Controller_AbstractController
     {
         $tableName = $this->_model->getTableName();
 
-        if ($this->_model->hasDbTable() && $this->_model->hasFile()) {
-            if ($this->_model->getStatus()) {
-                echo $tableName . $this->colorize(" - OK", 'green');
-            } else {
-                echo join(PHP_EOL, $this->_model->diff());
-            }
+        if ($this->_model->getStatus()) {
+            echo $tableName . $this->colorize(" - OK", 'green');
         } else {
-            if (!$this->_model->hasDbTable()) {
-                echo $tableName . $this->colorize(" - Table not found", 'red');
-            } else {
-                echo $tableName . $this->colorize(" - Schema not found", 'red');
-            }
+            echo $tableName . $this->colorize(" - Unsyncronized", 'red');
+            echo PHP_EOL, join(PHP_EOL, $this->_model->diff());
         }
     }
 

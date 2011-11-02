@@ -20,8 +20,8 @@ set_include_path(get_include_path() . PATH_SEPARATOR . dirname(dirname(__FILE__)
  * @var array
  */
 $config = array(
-    'dbAdapter' => 'DbSync_Table_DbAdapter_Mysql',
-    'fileAdapter' => 'DbSync_Table_FileAdapter_SfYaml',
+    'dbAdapter' => 'DbSync_DbAdapter_Mysql',
+    'fileAdapter' => 'DbSync_FileAdapter_SfYaml',
     'dbParams' => array(
         'host'     => '',
         'dbname'   => 'dbSync',
@@ -39,28 +39,29 @@ require_once 'vfsStream/vfsStream.php';
  * File adapter classes
  */
 require_once 'SymfonyComponents/YAML/sfYaml.php';
-require_once 'DbSync/Table/FileAdapter/AdapterInterface.php';
-require_once 'DbSync/Table/FileAdapter/SfYaml.php';
+require_once 'DbSync/FileAdapter/AdapterInterface.php';
+require_once 'DbSync/FileAdapter/SfYaml.php';
 
 /**
  * Database adapter classes
  */
-require_once 'DbSync/Table/DbAdapter/AdapterInterface.php';
-require_once 'DbSync/Table/DbAdapter/Mysql.php';
+require_once 'DbSync/DbAdapter/AdapterInterface.php';
+require_once 'DbSync/DbAdapter/Mysql.php';
 
 /**
  * App classes
  */
 require_once 'DbSync/Exception.php';
 require_once 'DbSync/Console.php';
-require_once 'DbSync/Table/AbstractTable.php';
+require_once 'DbSync/Model/AbstractModel.php';
+require_once 'DbSync/Model/Table/AbstractTable.php';
 require_once 'DbSync/Controller/AbstractController.php';
 
-require_once 'DbSync/Table/Data.php';
+require_once 'DbSync/Model/Table/Data.php';
 require_once 'DbSync/Controller/DataController.php';
 
-require_once 'DbSync/Table/Trigger.php';
+require_once 'DbSync/Model/Table/Trigger.php';
 require_once 'DbSync/Controller/TriggerController.php';
 
-require_once 'DbSync/Table/Schema.php';
+require_once 'DbSync/Model/Table/Schema.php';
 require_once 'DbSync/Controller/SchemaController.php';

@@ -13,21 +13,19 @@
  * to maks.slesarenko@gmail.com so we can send you a copy immediately.
  *
  * @category   DbSync
- * @package    DbSync_Table
- * @subpackage DbAdapter
+ * @package    DbSync_DbAdapter
  * @license    http://code.google.com/p/php-dbsync/wiki/License   New BSD License
  * @version    $Id$
  */
 
 /**
- * DbSync_Table_DbAdapter_AdapterInterface
+ * DbSync_DbAdapter_AdapterInterface
  *
  * @category   DbSync
- * @package    DbSync_Table
- * @subpackage DbAdapter
+ * @package    DbSync_DbAdapter
  * @version    $Id$
  */
-interface DbSync_Table_DbAdapter_AdapterInterface
+interface DbSync_DbAdapter_AdapterInterface
 {
     /**
      * Constructor

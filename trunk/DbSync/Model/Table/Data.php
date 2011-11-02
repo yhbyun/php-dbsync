@@ -12,28 +12,25 @@
  * obtain it through the world-wide-web, please send an email
  * to maks.slesarenko@gmail.com so we can send you a copy immediately.
  *
- * @category DbSync
- * @package  DbSync_Table
- * @license  http://code.google.com/p/php-dbsync/wiki/License   New BSD License
- * @version  $Id$
+ * @category   DbSync
+ * @package    DbSync_Model
+ * @subpackage Table
+ * @license    http://code.google.com/p/php-dbsync/wiki/License   New BSD License
+ * @version    $Id$
  */
 
 /**
- * DbSync_Table_Data
+ * DbSync_Model_Table_Data
  *
- * @category DbSync
- * @package  DbSync_Table
- * @version  $Id$
+ * @category   DbSync
+ * @package    DbSync_Model
+ * @subpackage Table
+ * @version    $Id$
  */
-class DbSync_Table_Data extends DbSync_Table_AbstractTable
+class DbSync_Model_Table_Data extends DbSync_Model_Table_AbstractTable
 {
     const PUSH_TYPE_FORCE = 1;
     const PUSH_TYPE_MERGE = 2;
-
-    /**
-     * @var string
-     */
-    protected $_filename = 'data';
 
     /**
      * Get data to store in config file

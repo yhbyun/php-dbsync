@@ -19,14 +19,14 @@
  */
 
 /**
- * DbSync_Table_SchemaTest
+ * DbSync_Model_Table_SchemaTest
  *
  * @group    table
  * @category DbSync
  * @package  Tests
  * @version  $Id$
  */
-class DbSync_Table_SchemaTest extends PHPUnit_Framework_TestCase
+class DbSync_Model_Table_SchemaTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @var PHPUnit_Framework_MockObject_MockObject
@@ -69,7 +69,7 @@ class DbSync_Table_SchemaTest extends PHPUnit_Framework_TestCase
     protected function _getMock($methods)
     {
         return $this->getMock(
-            'DbSync_Table_Schema',
+            'DbSync_Model_Table_Schema',
             $methods,
             array($this->_dbAdapter, $this->_fileAdapter, 'diff')
         );

@@ -13,21 +13,19 @@
  * to maks.slesarenko@gmail.com so we can send you a copy immediately.
  *
  * @category   DbSync
- * @package    DbSync_Table
- * @subpackage FileAdapter
+ * @package    DbSync_FileAdapter
  * @license    http://code.google.com/p/php-dbsync/wiki/License   New BSD License
  * @version    $Id$
  */
 
 /**
- * DbSync_Table_FileAdapter_AdapterInterface
+ * DbSync_FileAdapter_AdapterInterface
  *
  * @category   DbSync
- * @package    DbSync_Table
- * @subpackage FileAdapter
+ * @package    DbSync_FileAdapter
  * @version    $Id$
  */
-interface DbSync_Table_FileAdapter_AdapterInterface
+interface DbSync_FileAdapter_AdapterInterface
 {
     /**
      * Contructor
@@ -59,16 +57,16 @@ interface DbSync_Table_FileAdapter_AdapterInterface
      *
      * @return array
      */
-    public function getTableList($filename);
+    public function getTableList(DbSync_Model_AbstractModel $model);
 
     /**
      * Get config filepath
      *
-     * @param boolen $real
+     * @param DbSync_Model_AbstractModel $model
      * @throws Exception
      * @return string
      */
-    public function getFilePath($tableName, $filename, $trigger = false);
+    public function getFilePath(DbSync_Model_AbstractModel $model);
 
     /**
      * Get tableName by triggerName

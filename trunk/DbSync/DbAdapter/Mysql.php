@@ -13,22 +13,19 @@
  * to maks.slesarenko@gmail.com so we can send you a copy immediately.
  *
  * @category   DbSync
- * @package    DbSync_Table
- * @subpackage DbAdapter
+ * @package    DbSync_DbAdapter
  * @license    http://code.google.com/p/php-dbsync/wiki/License   New BSD License
  * @version    $Id$
  */
 
 /**
- * DbSync_Table_DbAdapter_Mysql
+ * DbSync_DbAdapter_Mysql
  *
  * @category   DbSync
- * @package    DbSync_Table
- * @subpackage DbAdapter
+ * @package    DbSync_DbAdapter
  * @version    $Id$
  */
-class DbSync_Table_DbAdapter_Mysql
-    implements DbSync_Table_DbAdapter_AdapterInterface
+class DbSync_DbAdapter_Mysql implements DbSync_DbAdapter_AdapterInterface
 {
     /**
      * @var PDO
@@ -66,7 +63,7 @@ class DbSync_Table_DbAdapter_Mysql
      * Set connection
      *
      * @param PDO $connection
-     * @return DbSync_Table_DbAdapter_Mysql
+     * @return DbSync_DbAdapter_Mysql
      */
     public function setConnection(PDO $connection)
     {

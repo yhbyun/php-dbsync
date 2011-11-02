@@ -13,22 +13,19 @@
  * to maks.slesarenko@gmail.com so we can send you a copy immediately.
  *
  * @category   DbSync
- * @package    DbSync_Table
- * @subpackage FileAdapter
+ * @package    DbSync_FileAdapter
  * @license    http://code.google.com/p/php-dbsync/wiki/License   New BSD License
  * @version    $Id$
  */
 
 /**
- * DbSync_Table_FileAdapter_SfYaml
+ * DbSync_FileAdapter_SfYaml
  *
  * @category   DbSync
- * @package    DbSync_Table
- * @subpackage FileAdapter
+ * @package    DbSync_FileAdapter
  * @version    $Id$
  */
-class DbSync_Table_FileAdapter_SfYaml
-    implements DbSync_Table_FileAdapter_AdapterInterface
+class DbSync_FileAdapter_SfYaml implements DbSync_FileAdapter_AdapterInterface
 {
     /**
      * @var string
@@ -80,13 +77,26 @@ class DbSync_Table_FileAdapter_SfYaml
      *
      * @return array
      */
-    public function getTableList($filename)
+    public function getTableList(DbSync_Model_AbstractModel $model)
     {
         $list = array();
-        $path = "*/{$filename}." . self::FILE_EXTENSION;
+
+        switch (true) {
+            case $model instanceof DbSync_Model_Table_Schema:
+                $path = "schema/*." . self::FILE_EXTENSION;
+                break;
+            case $model instanceof DbSync_Model_Table_Data:
+                $path = "data/*." . self::FILE_EXTENSION;
+                break;
+            case $model instanceof DbSync_Model_Table_Trigger:
+                $path = "trigger/*." . self::FILE_EXTENSION;
+                break;
+            default:
+                throw new Exception('Model not supported');
+        }
 
         foreach ($this->getIterator($path) as $file) {
-            $list[] = basename(dirname($file->getPathname()));
+            $list[] = pathinfo($file->getFilename(), PATHINFO_FILENAME);
         }
 
         return $list;
@@ -99,15 +109,21 @@ class DbSync_Table_FileAdapter_SfYaml
      * @throws Exception
      * @return string
      */
-    public function getFilePath($tableName, $filename, $trigger = false)
+    public function getFilePath(DbSync_Model_AbstractModel $model)
     {
-        $path = $this->_path . '/' . $tableName . '/';
-
-        if ($trigger) {
-            $path .= 'triggers/';
+        switch (true) {
+            case $model instanceof DbSync_Model_Table_Schema:
+                $path = $this->_path . '/schema/' . $model->getTableName() . '.' . self::FILE_EXTENSION;
+                break;
+            case $model instanceof DbSync_Model_Table_Data:
+                $path = $this->_path . '/data/' . $model->getTableName() . '.' . self::FILE_EXTENSION;
+                break;
+            case $model instanceof DbSync_Model_Table_Trigger:
+                $path = $this->_path . '/trigger/' . $model->getTriggerName() . '.' . self::FILE_EXTENSION;
+                break;
+            default:
+                throw new Exception('Model not supported');
         }
-        $path .= $filename . '.' . self::FILE_EXTENSION;
-
         return $path;
     }
 
@@ -119,10 +135,13 @@ class DbSync_Table_FileAdapter_SfYaml
      */
     public function getTableByTrigger($triggerName)
     {
-        $path = "*/triggers/{$triggerName}." . self::FILE_EXTENSION;
+        $path = "trigger/{$triggerName}." . self::FILE_EXTENSION;
 
         foreach ($this->getIterator($path) as $file) {
-            return basename(dirname(dirname($file->getPathname())));
+            $config = $this->load($file->getPathname());
+            if (!empty($config['table'])) {
+                return $config['table'];
+            }
         }
         return '';
     }
@@ -136,16 +155,17 @@ class DbSync_Table_FileAdapter_SfYaml
     public function getTriggerList($tables = array())
     {
         $list = array();
-        $path = "/triggers/*." . self::FILE_EXTENSION;
+        $path = "trigger/*." . self::FILE_EXTENSION;
 
-        if (!$tables) {
-            $tables = array('*');
-        }
-
-        foreach ((array) $tables as $tableName) {
-            foreach ($this->getIterator($tableName . $path) as $file) {
-                $list[] = pathinfo($file->getFilename(), PATHINFO_FILENAME);
+        foreach ($this->getIterator($path) as $file) {
+            $triggerName = pathinfo($file->getFilename(), PATHINFO_FILENAME);
+            if ($tables) {
+                $tableName = $this->getTableByTrigger($triggerName);
+                if (!in_array($tableName, $tables)) {
+                    continue;
+                }
             }
+            $list[] = $triggerName;
         }
         return $list;
     }

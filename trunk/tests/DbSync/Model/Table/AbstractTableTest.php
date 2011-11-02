@@ -19,14 +19,14 @@
  */
 
 /**
- * DbSync_Table_AbstractTableTest
+ * DbSync_Model_Table_AbstractTableTest
  *
  * @group    table
  * @category DbSync
  * @package  Tests
  * @version  $Id$
  */
-class DbSync_Table_AbstractTableTest extends PHPUnit_Framework_TestCase
+class DbSync_Model_Table_AbstractTableTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @var PHPUnit_Framework_MockObject_MockObject
@@ -69,7 +69,7 @@ class DbSync_Table_AbstractTableTest extends PHPUnit_Framework_TestCase
     protected function _getMock($methods)
     {
         return $this->getMock(
-            'DbSync_Table_Schema',
+            'DbSync_Model_Table_Schema',
             $methods,
             array($this->_dbAdapter, $this->_fileAdapter, 'diff')
         );
@@ -343,18 +343,13 @@ class DbSync_Table_AbstractTableTest extends PHPUnit_Framework_TestCase
      */
     public function test_getFilePath_notReal()
     {
-        $tableName = 'users';
         $path = 'some path';
 
-        $model = $this->_getMock(array('getTableName'));
-
-        $model->expects($this->atLeastOnce())
-              ->method('getTableName')
-              ->will($this->returnValue($tableName));
+        $model = $this->_getMock(null);
 
         $this->_fileAdapter->expects($this->once())
                            ->method('getFilePath')
-                           ->with($this->equalTo($tableName))
+                           ->with($this->equalTo($model))
                            ->will($this->returnValue($path));
 
         $this->assertEquals($path, $model->getFilePath(false));
@@ -367,16 +362,12 @@ class DbSync_Table_AbstractTableTest extends PHPUnit_Framework_TestCase
     public function test_getFilePath()
     {
         $path = '.';
-        $tableName = 'users';
-        $model = $this->_getMock(array('getTableName'));
+        $model = $this->_getMock(null);
 
-        $model->expects($this->atLeastOnce())
-              ->method('getTableName')
-              ->will($this->returnValue($tableName));
 
         $this->_fileAdapter->expects($this->once())
                            ->method('getFilePath')
-                           ->with($this->equalTo($tableName))
+                           ->with($this->equalTo($model))
                            ->will($this->returnValue($path));
 
         $this->assertNotNull($model->getFilePath(true));
@@ -490,10 +481,6 @@ class DbSync_Table_AbstractTableTest extends PHPUnit_Framework_TestCase
         $this->_fileAdapter->expects($this->exactly(2))
                            ->method('getFilePath')
                            ->will($this->returnValue($filepath));
-
-        $model->expects($this->atLeastOnce())
-              ->method('getTableName')
-              ->will($this->returnValue($tableName));
 
         $this->assertTrue($model->isWriteable());
     }

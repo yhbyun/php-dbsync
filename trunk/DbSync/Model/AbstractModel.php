@@ -13,39 +13,29 @@
  * to maks.slesarenko@gmail.com so we can send you a copy immediately.
  *
  * @category DbSync
- * @package  DbSync_Table
+ * @package  DbSync_Model
  * @license  http://code.google.com/p/php-dbsync/wiki/License   New BSD License
  * @version  $Id$
  */
 
 /**
- * DbSync_Table
+ * DbSync_Model
  *
  * @category DbSync
- * @package  DbSync_Table
+ * @package  DbSync_Model
  * @version  $Id$
  */
-abstract class DbSync_Table_AbstractTable
+abstract class DbSync_Model_AbstractModel
 {
     /**
-     * @var DbSync_Table_DbAdapter_AdapterInterface
+     * @var DbSync_DbAdapter_AdapterInterface
      */
     protected $_dbAdapter;
 
     /**
-     * @var DbSync_Table_FileAdapter_AdapterInterface
+     * @var DbSync_FileAdapter_AdapterInterface
      */
     protected $_fileAdapter;
-
-    /**
-     * @var string
-     */
-    protected $_tableName;
-
-    /**
-     * @var string
-     */
-    protected $_filename;
 
     /**
      * @var string
@@ -60,13 +50,13 @@ abstract class DbSync_Table_AbstractTable
     /**
      * Constructor
      *
-     * @param DbSync_Table_DbAdapter_AdapterInterface $db
-     * @param DbSync_Table_FileAdapter_AdapterInterface $file
+     * @param DbSync_DbAdapter_AdapterInterface $db
+     * @param DbSync_FileAdapter_AdapterInterface $file
      * @param string $diffProg
      */
     public function __construct(
-        DbSync_Table_DbAdapter_AdapterInterface $db,
-        DbSync_Table_FileAdapter_AdapterInterface $file,
+        DbSync_DbAdapter_AdapterInterface $db,
+        DbSync_FileAdapter_AdapterInterface $file,
         $diffProg = null)
     {
         $this->_dbAdapter = $db;
@@ -82,7 +72,7 @@ abstract class DbSync_Table_AbstractTable
      * Set diff programm
      *
      * @param string $diffProg
-     * @return DbSync_Table_AbstractTable
+     * @return DbSync_Model_AbstractModel
      */
     public function setDiffProg($diffProg)
     {
@@ -91,30 +81,11 @@ abstract class DbSync_Table_AbstractTable
     }
 
     /**
-     * Get table name
+     * Get item name
      *
      * @return string
      */
-    public function getTableName()
-    {
-        if (!$this->_tableName) {
-            throw new $this->_exceptionClass('Table name not set');
-        }
-        return $this->_tableName;
-    }
-
-    /**
-     * Set table name
-     *
-     * @param string $tableName
-     * @return DbSync_Table_AbstractTable
-     */
-    public function setTableName($tableName)
-    {
-        $this->_tableName = (string) $tableName;
-
-        return $this;
-    }
+    abstract function getName();
 
     /**
      * Save config file
@@ -149,47 +120,6 @@ abstract class DbSync_Table_AbstractTable
     }
 
     /**
-     * Get db tables list
-     *
-     * @return array
-     */
-    public function getListDb()
-    {
-        return $this->_dbAdapter->getTableList();
-    }
-
-    /**
-     * Get config tables list
-     *
-     * @return array
-     */
-    public function getListConfig()
-    {
-        return $this->_fileAdapter->getTableList($this->_filename);
-    }
-
-    /**
-     * Get list
-     *
-     * @return array
-     */
-    public function getList()
-    {
-        $tables = array_merge($this->getListDb(), $this->getListConfig());
-        return array_unique($tables);
-    }
-
-    /**
-     * Is db table exists
-     *
-     * @return boolen
-     */
-    public function hasDbTable()
-    {
-        return $this->_dbAdapter->hasTable($this->getTableName());
-    }
-
-    /**
      * Get config filepath
      *
      * @param boolen $real
@@ -198,10 +128,7 @@ abstract class DbSync_Table_AbstractTable
      */
     public function getFilePath($real = true)
     {
-        $path = $this->_fileAdapter->getFilePath(
-            $this->getTableName(),
-            $this->_filename
-        );
+        $path = $this->_fileAdapter->getFilePath($this);
 
         if ($real) {
             return realpath($path);
@@ -260,6 +187,16 @@ abstract class DbSync_Table_AbstractTable
     }
 
     /**
+     * Alter db table
+     *
+     * @return boolen
+     */
+    public function push()
+    {
+        return false !== $this->_dbAdapter->execute($this->generateSql());
+    }
+
+    /**
      * Get diff
      *
      * @return array
@@ -276,6 +213,7 @@ abstract class DbSync_Table_AbstractTable
         $this->save($tmp);
 
         if (sha1_file($filename) !== sha1_file($tmp)) {
+            $output[] = $filename;
             exec("{$this->_diff} {$filename} {$tmp}", $output);
         }
         unlink($tmp);
