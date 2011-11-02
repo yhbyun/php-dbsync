@@ -27,7 +27,8 @@
  * @subpackage Table
  * @version    $Id$
  */
-abstract class DbSync_Model_Table_AbstractTable extends DbSync_Model_AbstractModel
+abstract class DbSync_Model_Table_AbstractTable
+    extends DbSync_Model_AbstractModel
 {
     /**
      * @var string

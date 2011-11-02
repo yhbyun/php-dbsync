@@ -83,17 +83,18 @@ class DbSync_FileAdapter_SfYaml implements DbSync_FileAdapter_AdapterInterface
 
         switch (true) {
             case $model instanceof DbSync_Model_Table_Schema:
-                $path = "schema/*." . self::FILE_EXTENSION;
+                $path = "schema";
                 break;
             case $model instanceof DbSync_Model_Table_Data:
-                $path = "data/*." . self::FILE_EXTENSION;
+                $path = "data";
                 break;
             case $model instanceof DbSync_Model_Table_Trigger:
-                $path = "trigger/*." . self::FILE_EXTENSION;
+                $path = "trigger";
                 break;
             default:
                 throw new Exception('Model not supported');
         }
+        $path .= "/*." . self::FILE_EXTENSION;
 
         foreach ($this->getIterator($path) as $file) {
             $list[] = pathinfo($file->getFilename(), PATHINFO_FILENAME);
@@ -113,18 +114,18 @@ class DbSync_FileAdapter_SfYaml implements DbSync_FileAdapter_AdapterInterface
     {
         switch (true) {
             case $model instanceof DbSync_Model_Table_Schema:
-                $path = $this->_path . '/schema/' . $model->getTableName() . '.' . self::FILE_EXTENSION;
+                $path = 'schema/' . $model->getTableName();
                 break;
             case $model instanceof DbSync_Model_Table_Data:
-                $path = $this->_path . '/data/' . $model->getTableName() . '.' . self::FILE_EXTENSION;
+                $path = 'data/' . $model->getTableName();
                 break;
             case $model instanceof DbSync_Model_Table_Trigger:
-                $path = $this->_path . '/trigger/' . $model->getTriggerName() . '.' . self::FILE_EXTENSION;
+                $path = 'trigger/' . $model->getTriggerName();
                 break;
             default:
                 throw new Exception('Model not supported');
         }
-        return $path;
+        return $this->_path . '/' . $path . '.' . self::FILE_EXTENSION;
     }
 
     /**
