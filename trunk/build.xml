@@ -134,6 +134,21 @@
         <echo message="##teamcity[publishArtifacts '${htmlDir}/docs.zip']" />
     </target>
     
+    <target name="download" description="Create build for download and sharing without not needed files" depends="svn phpunit">
+        <tstamp/>
+        <exec dir="${basedir}" executable="zip" failonerror="true" osfamily="unix" output="${logsDir}/download.log">
+            <arg line="-r '${buildDir}/dbSync-${DSTAMP}.zip'"/>
+            <arg line="DbSync"/>
+            <arg line="config.php.example"/>
+            <arg line="data.sh"/>
+            <arg line="schema.sh"/>
+            <arg line="trigger.sh"/>
+            <arg line="check.php"/>
+            <arg line="LICENSE.txt"/>
+            <arg line="README.txt"/>
+        </exec>
+    </target>
+    
     <target name="update-doc" description="Doxygen" depends="prepare, doxygen">
         <exec dir="${basedir}" executable="doxygen" failonerror="false" osfamily="unix" output="${logsDir}/doxygen.log">
         </exec>
@@ -243,6 +258,6 @@
         <echo message="##teamcity[publishArtifacts '${logsDir}/svn.log']" description="Import detailed svn log to TeamCity"/>
     </target>
 
-    <target name="build" depends="phpunit, phploc, phpcb, phpcs, pdepend, phpcpd, phpmd, doxygen" />
+    <target name="build" depends="svn phpunit, phploc, phpcb, phpcs, pdepend, phpcpd, phpmd, doxygen" />
 
 </project>

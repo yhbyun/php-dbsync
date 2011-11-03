@@ -92,7 +92,7 @@ class DbSync_FileAdapter_SfYaml implements DbSync_FileAdapter_AdapterInterface
                 $path = "trigger";
                 break;
             default:
-                throw new Exception('Model not supported');
+                throw new Exception("Model '" . get_class($model) . "' is not supported");
         }
         $path .= "/*." . self::FILE_EXTENSION;
 
@@ -123,7 +123,7 @@ class DbSync_FileAdapter_SfYaml implements DbSync_FileAdapter_AdapterInterface
                 $path = 'trigger/' . $model->getTriggerName();
                 break;
             default:
-                throw new Exception('Model not supported');
+                throw new Exception("Model '" . get_class($model) . "' is not supported");
         }
         return $this->_path . '/' . $path . '.' . self::FILE_EXTENSION;
     }
