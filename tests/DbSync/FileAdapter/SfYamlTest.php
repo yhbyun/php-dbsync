@@ -117,6 +117,24 @@ class DbSync_FileAdapter_SfYamlTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * getFilePath
+     *
+     */
+    public function test_getFilePath_exception()
+    {
+        $adapter = $this->_getMock();
+
+        $model = $model = $this->getMock('DbSync_Model_Table_AbstractTable', array(), array(), 'UnknownModel', false);
+
+        try {
+            $adapter->getFilePath($model);
+            $this->fail(__METHOD__ . ' - shoult fail');
+        } catch (Exception $e) {
+            $this->assertEquals("Model 'UnknownModel' is not supported", $e->getMessage());
+        }
+    }
+
+    /**
      * getTableList
      */
     public function test_getTableList()
@@ -144,6 +162,83 @@ class DbSync_FileAdapter_SfYamlTest extends PHPUnit_Framework_TestCase
             array('users', 'setting'),
             $adapter->getTableList($model)
         );
+    }
+
+    /**
+     * getTableList
+     */
+    public function test_getTableList_data()
+    {
+        mkdir($this->_path . '/data/', 0777, true);
+
+        fopen($this->_path . '/data/users.yml', "a");
+        fopen($this->_path . '/data/setting.yml', "a");
+
+        $adapter = $this->_getMock(array('getIterator'));
+        $adapter->expects($this->once())
+                ->method('getIterator')
+                ->with($this->equalTo('data/*.yml'))
+                ->will($this->returnValue(
+                    array(
+                        new SplFileObject($this->_path . '/data/users.yml'),
+                        new SplFileObject($this->_path . '/data/setting.yml')
+                    )
+                ));
+
+
+        $model = $this->getMock('DbSync_Model_Table_Data', null, array(), '', false);
+
+        $this->assertEquals(
+            array('users', 'setting'),
+            $adapter->getTableList($model)
+        );
+    }
+    /**
+     * getTableList
+     */
+    public function test_getTableList_trigger()
+    {
+        mkdir($this->_path . '/trigger/', 0777, true);
+
+        fopen($this->_path . '/trigger/users.yml', "a");
+        fopen($this->_path . '/trigger/setting.yml', "a");
+
+        $adapter = $this->_getMock(array('getIterator'));
+        $adapter->expects($this->once())
+                ->method('getIterator')
+                ->with($this->equalTo('trigger/*.yml'))
+                ->will($this->returnValue(
+                    array(
+                        new SplFileObject($this->_path . '/trigger/users.yml'),
+                        new SplFileObject($this->_path . '/trigger/setting.yml')
+                    )
+                ));
+
+
+        $model = $this->getMock('DbSync_Model_Table_Trigger', null, array(), '', false);
+
+        $this->assertEquals(
+            array('users', 'setting'),
+            $adapter->getTableList($model)
+        );
+    }
+
+    /**
+     * getTableList
+     *
+     */
+    public function test_getTableList_exception()
+    {
+        $adapter = $this->_getMock();
+
+        $model = $model = $this->getMock('DbSync_Model_Table_AbstractTable', array(), array(), 'UnknownModel2', false);
+
+        try {
+            $adapter->getTableList($model);
+            $this->fail(__METHOD__ . ' - shoult fail');
+        } catch (Exception $e) {
+            $this->assertEquals("Model 'UnknownModel2' is not supported", $e->getMessage());
+        }
     }
 
 

@@ -31,7 +31,7 @@ $config = array(
         'password' => '',
         'options'  => array()
     ),
-    'path' => 'tables',
+    'path' => 'sync',
     'diffprog' => 'diff'
 );
 
