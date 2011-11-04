@@ -28,7 +28,7 @@ require_once dirname(__FILE__) . '/PDO.php';
  * @package  Tests
  * @version  $Id$
  */
-class DbSync_DbAdapter_MysqlTest extends PHPUnit_Framework_TestCase
+class DbSync_DbAdapter_Pdo_MysqlTest extends PHPUnit_Framework_TestCase
 {
     /**
      * Prepares the environment before running a test.
@@ -54,72 +54,10 @@ class DbSync_DbAdapter_MysqlTest extends PHPUnit_Framework_TestCase
      */
     protected function _getMock($methods = null)
     {
-        $adapter = $this->getMock('DbSync_DbAdapter_Mysql', $methods, array(array()), '', false);
-        $adapter->setConnection($this->getMock('DbSync_DbAdapter_PDO', array()));
+        $adapter = $this->getMock('DbSync_DbAdapter_Pdo_Mysql', $methods, array(array()), '', false);
+        $adapter->setConnection($this->getMock('Stub_PDO', array()));
 
         return $adapter;
-    }
-
-    /**
-     * getConnection
-     *
-     */
-    public function test_getConnection()
-    {
-        $adapter = $this->_getMock();
-
-        $this->assertInstanceOf('PDO', $adapter->getConnection());
-    }
-
-    /**
-     * execute
-     */
-    public function test_execute()
-    {
-        $adapter = $this->_getMock();
-        $result = array('someresult');
-        $input = 'Select * from users';
-
-        $pdo = $adapter->getConnection();
-
-        $pdo->expects($this->once())
-            ->method('exec')
-            ->with($this->equalTo($input))
-            ->will($this->returnValue($result));
-
-        $this->assertEquals($result, $adapter->execute($input));
-    }
-
-    /**
-     * truncate
-     */
-    public function test_truncate()
-    {
-        $adapter = $this->_getMock(array('execute'));
-        $tableName = 'users';
-
-        $adapter->expects($this->once())
-                ->method('execute')
-                ->with($this->equalTo("DELETE FROM {$tableName}"))
-                ->will($this->returnValue(true));
-
-        $adapter->truncate($tableName);
-    }
-
-    /**
-     * dropTable
-     */
-    public function test_dropTable()
-    {
-        $adapter = $this->_getMock(array('execute'));
-        $tableName = 'users';
-
-        $adapter->expects($this->once())
-                ->method('execute')
-                ->with($this->equalTo("DROP TABLE IF EXISTS {$tableName}"))
-                ->will($this->returnValue(true));
-
-        $adapter->dropTable($tableName);
     }
 
     /**
@@ -161,56 +99,6 @@ class DbSync_DbAdapter_MysqlTest extends PHPUnit_Framework_TestCase
             ->will($this->returnValue($stmt));
 
         $this->assertEquals($result, $adapter->getTriggerInfo($triggerName));
-    }
-
-    /**
-     * isEmpty
-     */
-    public function test_isEmpty()
-    {
-        $adapter = $this->_getMock();
-        $result = 21;
-        $tableName = 'table_name';
-
-        $stmt = $this->getMock('PDOStatement');
-        $stmt->expects($this->once())
-             ->method('fetch')
-             ->with($this->equalTo(PDO::FETCH_COLUMN))
-             ->will($this->returnValue($result));
-
-        $pdo = $adapter->getConnection();
-
-        $pdo->expects($this->once())
-            ->method('query')
-            ->with($this->equalTo("SELECT COUNT(*) FROM `{$tableName}`"))
-            ->will($this->returnValue($stmt));
-
-        $this->assertFalse($adapter->isEmpty($tableName));
-    }
-
-    /**
-     * isEmpty
-     */
-    public function test_isEmpty_true()
-    {
-        $adapter = $this->_getMock();
-        $result = null;
-        $tableName = 'table_name';
-
-        $stmt = $this->getMock('PDOStatement');
-        $stmt->expects($this->once())
-             ->method('fetch')
-             ->with($this->equalTo(PDO::FETCH_COLUMN))
-             ->will($this->returnValue($result));
-
-        $pdo = $adapter->getConnection();
-
-        $pdo->expects($this->once())
-            ->method('query')
-            ->with($this->equalTo("SELECT COUNT(*) FROM `{$tableName}`"))
-            ->will($this->returnValue($stmt));
-
-        $this->assertTrue($adapter->isEmpty($tableName));
     }
 
     /**
@@ -335,31 +223,6 @@ class DbSync_DbAdapter_MysqlTest extends PHPUnit_Framework_TestCase
             ->will($this->returnValue($stmt));
 
         $this->assertEquals($result, $adapter->getTableList());
-    }
-
-    /**
-     * fetchData
-     */
-    public function test_fetchData()
-    {
-        $adapter = $this->_getMock();
-        $result = array('someresult');
-        $tableName = 'name';
-
-        $stmt = $this->getMock('PDOStatement');
-        $stmt->expects($this->once())
-             ->method('fetchAll')
-             ->with($this->equalTo(PDO::FETCH_ASSOC))
-             ->will($this->returnValue($result));
-
-        $pdo = $adapter->getConnection();
-
-        $pdo->expects($this->once())
-            ->method('query')
-            ->with($this->equalTo("SELECT * FROM {$tableName}"))
-            ->will($this->returnValue($stmt));
-
-        $this->assertEquals($result, $adapter->fetchData($tableName));
     }
 
     /**

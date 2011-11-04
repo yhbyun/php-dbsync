@@ -19,14 +19,14 @@
  */
 
 /**
- * DbSync_DbAdapter_PDO
+ * Stub_PDO
  *
  * @group    table
  * @category DbSync
  * @package  Tests
  * @version  $Id$
  */
-class DbSync_DbAdapter_PDO extends PDO
+class Stub_PDO extends PDO
 {
     /**
      * Constructor

@@ -257,6 +257,6 @@
         <echo message="##teamcity[publishArtifacts '${logsDir}/svn.log']" description="Import detailed svn log to TeamCity"/>
     </target>
 
-    <target name="build" depends="checkout, phpunit, phploc, phpcb, phpcs, pdepend, phpcpd, phpmd, doxygen" />
+    <target name="build" depends="phpunit, phploc, phpcb, phpcs, pdepend, phpcpd, phpmd, doxygen" />
 
 </project>

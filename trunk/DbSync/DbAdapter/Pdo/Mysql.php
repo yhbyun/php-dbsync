@@ -25,13 +25,8 @@
  * @package    DbSync_DbAdapter
  * @version    $Id$
  */
-class DbSync_DbAdapter_Mysql implements DbSync_DbAdapter_AdapterInterface
+class DbSync_DbAdapter_Pdo_Mysql extends DbSync_DbAdapter_Pdo_AbstractAdapter
 {
-    /**
-     * @var PDO
-     */
-    protected $_db;
-
     /**
      * Constructor
      *
@@ -50,30 +45,9 @@ class DbSync_DbAdapter_Mysql implements DbSync_DbAdapter_AdapterInterface
     }
 
     /**
-     * Get connection
-     *
-     * @return PDO
-     */
-    public function getConnection()
-    {
-        return $this->_db;
-    }
-
-    /**
-     * Set connection
-     *
-     * @param PDO $connection
-     * @return DbSync_DbAdapter_Mysql
-     */
-    public function setConnection(PDO $connection)
-    {
-        $this->_db = $connection;
-        return $this;
-    }
-
-    /**
      * Parse schema
      *
+     * @param string $tableName
      * @return array
      */
     public function parseSchema($tableName)
@@ -176,7 +150,7 @@ class DbSync_DbAdapter_Mysql implements DbSync_DbAdapter_AdapterInterface
      * @param string $tableName
      * @return string
      */
-    public function createAlter($config, $tableName)
+    public function createAlter(array $config, $tableName)
     {
         $query = array();
         if (!$this->hasTable($tableName)) {
@@ -246,6 +220,7 @@ class DbSync_DbAdapter_Mysql implements DbSync_DbAdapter_AdapterInterface
     /**
      * Fetch db triggers
      *
+     * @param string $triggerName
      * @return string
      */
     public function parseTrigger($triggerName)
@@ -270,7 +245,7 @@ class DbSync_DbAdapter_Mysql implements DbSync_DbAdapter_AdapterInterface
      * @param array $config
      * @return string
      */
-    public function createTriggerSql($config)
+    public function createTriggerSql(array $config)
     {
         $sql = array('DELIMITER $$');
 
@@ -286,17 +261,6 @@ class DbSync_DbAdapter_Mysql implements DbSync_DbAdapter_AdapterInterface
         $sql[] = 'DELIMITER ;';
 
         return join(PHP_EOL, $sql);
-    }
-
-    /**
-     * Execute sql query
-     *
-     * @param string $sql
-     * @return integer
-     */
-    public function execute($sql)
-    {
-        return $this->_db->exec($sql);
     }
 
     /**
@@ -333,7 +297,7 @@ class DbSync_DbAdapter_Mysql implements DbSync_DbAdapter_AdapterInterface
     }
 
     /**
-     * Get trigger info
+     * Get table name by trigger name
      *
      * @param string $triggerName
      * @return string
@@ -362,6 +326,7 @@ class DbSync_DbAdapter_Mysql implements DbSync_DbAdapter_AdapterInterface
     /**
      * Is db table exists
      *
+     * @param string $tableName
      * @return boolen
      */
     public function hasTable($tableName)
@@ -373,115 +338,13 @@ class DbSync_DbAdapter_Mysql implements DbSync_DbAdapter_AdapterInterface
     /**
      * Is db trigger exists
      *
+     * @param string $triggerName
      * @return boolen
      */
     public function hasTrigger($triggerName)
     {
         $result = $this->_db->query("SHOW TRIGGERS WHERE `Trigger` = '{$triggerName}';");
         return (bool) $result->fetch(PDO::FETCH_NUM);
-    }
-
-    /**
-     * Fetch all data from table
-     *
-     * @return array
-     */
-    public function fetchData($tableName)
-    {
-        $result = $this->_db->query("SELECT * FROM {$tableName}");
-
-        return $result->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    /**
-     * Push data to db table
-     *
-     * @param boolen $force
-     * @return boolen
-     * @throws Exception
-     */
-    public function insert($data, $tableName)
-    {
-        $row = current($data);
-        $columns = array_keys($row);
-
-        $values = '(' . join(', ', array_fill(0, count($columns), '?')) . ')';
-
-        $values = join(', ', array_fill(0, count($data), $values));
-        $sql = "INSERT INTO {$tableName} (" .join(', ', $columns) . ") VALUES {$values}";
-
-        $this->_db->beginTransaction();
-
-        $stmt = $this->_db->prepare($sql);
-
-        $i = 0;
-        foreach ($data as $row) {
-            foreach ($row as $columnValue) {
-                $stmt->bindValue(++$i, $columnValue);
-            }
-        }
-
-        try {
-            if ($stmt->execute()) {
-                return $this->_db->commit();
-            }
-        } catch (Exception $e) {
-            $this->_db->rollBack();
-            throw $e;
-        }
-        return false;
-    }
-
-    /**
-     * Merge data to db table
-     *
-     * @throws Exception
-     * @return boolean
-     */
-    public function merge($data, $tableName)
-    {
-        $row = current($data);
-        $columns = array_keys($row);
-
-        $values = '(' . join(', ', array_fill(0, count($columns), '?')) . ')';
-
-        $sql = "INSERT INTO {$tableName} (" .join(', ', $columns) . ") VALUES {$values}";
-
-        $this->_db->beginTransaction();
-
-        try {
-            foreach ($data as $row) {
-                $stmt = $this->_db->prepare($sql);
-                $stmt->execute(array_values($row));
-            }
-        } catch (Exception $e) {
-            $this->_db->rollBack();
-            throw $e;
-        }
-
-        return $this->_db->commit();
-    }
-
-    /**
-     * Truncate table
-     *
-     * @param string $tableName
-     * @return number
-     */
-    public function truncate($tableName)
-    {
-        return $this->execute("DELETE FROM {$tableName}");
-    }
-
-    /**
-     * Drop table
-     *
-     * @param string $tableName
-     * @return number
-     */
-    public function dropTable($tableName)
-    {
-        return $this->execute("DROP TABLE IF EXISTS {$tableName}");
     }
 
     /**
@@ -493,18 +356,6 @@ class DbSync_DbAdapter_Mysql implements DbSync_DbAdapter_AdapterInterface
     public function dropTrigger($triggerName)
     {
         return $this->execute("DROP TRIGGER IF EXISTS {$triggerName}");
-    }
-
-    /**
-     * Is db table empty
-     *
-     * @param string $tableName
-     * @return boolean
-     */
-    public function isEmpty($tableName)
-    {
-        $result = $this->_db->query("SELECT COUNT(*) FROM `{$tableName}`");
-        return false == $result->fetch(PDO::FETCH_COLUMN);
     }
 
     /**
