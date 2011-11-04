@@ -23,7 +23,7 @@ INSTALLATION
 
         d) Specify database adapter from one of the following:
 
-            for MySQL: DbSync_DbAdapter_Mysql (requires pdo_mysql)
+            for MySQL: DbSync_DbAdapter_Pdo_Mysql (requires pdo_mysql)
 
         e) Specify config files adapter from one of the following:
 

@@ -37,6 +37,7 @@ interface DbSync_DbAdapter_AdapterInterface
     /**
      * Parse schema
      *
+     * @param string $tableName
      * @return array
      */
     public function parseSchema($tableName);
@@ -48,11 +49,12 @@ interface DbSync_DbAdapter_AdapterInterface
      * @param string $tableName
      * @return string
      */
-    public function createAlter($config, $tableName);
+    public function createAlter(array $config, $tableName);
 
     /**
      * Fetch db triggers
      *
+     * @param string $triggerName
      * @return string
      */
     public function parseTrigger($triggerName);
@@ -63,7 +65,7 @@ interface DbSync_DbAdapter_AdapterInterface
      * @param array $config
      * @return string
      */
-    public function createTriggerSql($config);
+    public function createTriggerSql(array $config);
 
     /**
      * Execute sql query
@@ -76,13 +78,15 @@ interface DbSync_DbAdapter_AdapterInterface
     /**
      * Get triggers list
      *
+     * @param array $tables
      * @return array
      */
-    public function getTriggerList();
+    public function getTriggerList($tables = array());
 
     /**
      * Get table name by trigger name
      *
+     * @param string $triggerName
      * @return string
      */
     public function getTableByTrigger($triggerName);
@@ -97,6 +101,7 @@ interface DbSync_DbAdapter_AdapterInterface
     /**
      * Is db table exists
      *
+     * @param string $tableName
      * @return boolen
      */
     public function hasTable($tableName);
@@ -104,6 +109,7 @@ interface DbSync_DbAdapter_AdapterInterface
     /**
      * Is db trigger exists
      *
+     * @param string $triggerName
      * @return boolen
      */
     public function hasTrigger($triggerName);
@@ -111,6 +117,7 @@ interface DbSync_DbAdapter_AdapterInterface
     /**
      * Fetch all data from table
      *
+     * @param string $tableName
      * @return array
      */
     public function fetchData($tableName);
@@ -118,19 +125,20 @@ interface DbSync_DbAdapter_AdapterInterface
     /**
      * Push data to db table
      *
-     * @param boolen $force
+     * @param array  $data
+     * @param string $tableName
      * @return boolen
-     * @throws Exception
      */
-    public function insert($data, $tableName);
+    public function insert(array $data, $tableName);
 
     /**
      * Merge data to db table
      *
-     * @throws Exception
+     * @param array  $data
+     * @param string $tableName
      * @return boolean
      */
-    public function merge($data, $tableName);
+    public function merge(array $data, $tableName);
 
     /**
      * Truncate table

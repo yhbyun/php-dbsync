@@ -20,7 +20,7 @@ set_include_path(get_include_path() . PATH_SEPARATOR . dirname(dirname(__FILE__)
  * @var array
  */
 $config = array(
-    'dbAdapter' => 'DbSync_DbAdapter_Mysql',
+    'dbAdapter' => 'DbSync_DbAdapter_Pdo_Mysql',
     'fileAdapter' => 'DbSync_FileAdapter_SfYaml',
     'dbParams' => array(
         'host'     => '',
@@ -46,7 +46,8 @@ require_once 'DbSync/FileAdapter/SfYaml.php';
  * Database adapter classes
  */
 require_once 'DbSync/DbAdapter/AdapterInterface.php';
-require_once 'DbSync/DbAdapter/Mysql.php';
+require_once 'DbSync/DbAdapter/Pdo/AbstractAdapter.php';
+require_once 'DbSync/DbAdapter/Pdo/Mysql.php';
 
 /**
  * App classes
