@@ -19,11 +19,8 @@
 
 require_once 'config.php';
 
-require_once 'DbSync/Model/Table/Trigger.php';
-require_once 'DbSync/Controller/TriggerController.php';
-
 $console = new DbSync_Console();
 $console->parse();
 
-$controller = new DbSync_Controller_TriggerController($config);
-$controller->dispatch($console);
+$front = new DbSync_Controller_FrontController($config);
+$front->dispatch($console, 'trigger');

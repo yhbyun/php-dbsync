@@ -61,8 +61,6 @@ abstract class DbSync_Controller_AbstractController
         $file = new $config['fileAdapter']($config['path']);
 
         $this->_model = new $this->_modelClass($db, $file, $config['diffprog']);
-
-        echo PHP_EOL;
     }
 
     /**
@@ -188,15 +186,6 @@ abstract class DbSync_Controller_AbstractController
     {
         $this->_model->setTableName($name);
         $this->{$action}();
-    }
-
-    /**
-     * Descructor
-     *
-     */
-    public function __destruct()
-    {
-        echo PHP_EOL;
     }
 
     /**

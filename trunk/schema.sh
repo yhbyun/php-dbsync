@@ -19,12 +19,8 @@
 
 require_once 'config.php';
 
-require_once 'DbSync/Model/Table/Schema.php';
-require_once 'DbSync/Controller/SchemaController.php';
-
 $console = new DbSync_Console();
 $console->parse();
 
-
-$controller = new DbSync_Controller_SchemaController($config);
-$controller->dispatch($console);
+$front = new DbSync_Controller_FrontController($config);
+$front->dispatch($console, 'schema');

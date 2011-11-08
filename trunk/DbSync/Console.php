@@ -106,6 +106,18 @@ class DbSync_Console
     }
 
     /**
+     * Set arguments
+     *
+     * @param array $args
+     * @return DbSync_Console
+     */
+    public function setArguments(array $args)
+    {
+        $this->_arguments = $args;
+        return $this;
+    }
+
+    /**
      * Get argument
      *
      * @param integer $index
