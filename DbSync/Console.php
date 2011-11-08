@@ -23,11 +23,11 @@
  *
  * Simple console parser
  *
- * $> script.sh [action1 action2 ...] [--optionName=optionValue] [-optionName=optionValue]
+ * $> script.sh [arg1 arg2 ...] [--optionName=optionValue] [-optionName=optionValue]
  *
  * $> script.sh create user --name john --status
  *
- * $console->getActions() array() {0 => create, 1 => user}
+ * $console->getArguments() array() {0 => create, 1 => user}
  * $console->getOptions() array() {name => john, status => null}
  *
  * @category DbSync
@@ -39,7 +39,7 @@ class DbSync_Console
     /**
      * @var array
      */
-    protected $_actions = array();
+    protected $_arguments = array();
 
     /**
      * @var array
@@ -69,14 +69,14 @@ class DbSync_Console
      */
     public function parse()
     {
-        $searchActions =  true;
+        $searchArguments =  true;
 
         foreach ($_SERVER["argv"] as $arg) {
             if (strpos($arg, '-') === 0) {
-                $searchActions = false;
+                $searchArguments = false;
                 $this->_options[trim($arg, '-')] = null;
-            } elseif ($searchActions) {
-                $this->_actions[] = $arg;
+            } elseif ($searchArguments) {
+                $this->_arguments[] = $arg;
             } else {
                 if (count($this->_options)) {
                     end($this->_options);
@@ -96,38 +96,39 @@ class DbSync_Console
     }
 
     /**
-     * Get all actions
+     * Get all arguments
      *
      * @return array
      */
-    public function getActions()
+    public function getArguments()
     {
-        return $this->_actions;
+        return $this->_arguments;
     }
 
     /**
-     * Get action
+     * Get argument
      *
-     * @param integer $i
-     * @param mixed $default
+     * @param integer $index
+     * @param mixed   $default
+     * @return mixed
      */
-    public function getAction($i = 0, $default = false)
+    public function getArgument($index = 0, $default = false)
     {
-        if (isset($this->_actions[$i])) {
-            return $this->_actions[$i];
+        if (isset($this->_arguments[$index])) {
+            return $this->_arguments[$index];
         }
         return $default;
     }
 
     /**
-     * Has action
+     * Has argument
      *
-     * @param string $actionName
+     * @param string $argName
      * @return boolean
      */
-    public function hasAction($actionName)
+    public function hasArgument($argName)
     {
-        return in_array($actionName, $this->_actions);
+        return in_array($argName, $this->_arguments);
     }
 
     /**

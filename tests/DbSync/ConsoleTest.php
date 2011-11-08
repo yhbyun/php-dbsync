@@ -81,39 +81,39 @@ class DbSync_ConsoleTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test getActions()
+     * Test getArguments()
      *
      */
-    public function testGetActions()
+    public function testGetArguments()
     {
-        $this->assertEquals(array_slice($this->_fixture, 1, 3), $this->_console->getActions());
+        $this->assertEquals(array_slice($this->_fixture, 1, 3), $this->_console->getArguments());
     }
 
     /**
-     * Test getActions()
+     * Test getArgument()
      *
      */
-    public function testGetAction()
+    public function testGetArgument()
     {
-        $this->assertEquals($this->_fixture['2'], $this->_console->getAction(1));
+        $this->assertEquals($this->_fixture['2'], $this->_console->getArgument(1));
     }
 
     /**
-     * Test getAction()
+     * Test getArgument()
      *
      */
-    public function testGetActionFalse()
+    public function testGetArgumentFalse()
     {
-        $this->assertFalse($this->_console->getAction(4));
+        $this->assertFalse($this->_console->getArgument(4));
     }
 
     /**
-     * Test hasAction()
+     * Test hasArgument()
      *
      */
-    public function testHasAction()
+    public function testHasArgument()
     {
-        $this->assertTrue($this->_console->hasAction('do'));
+        $this->assertTrue($this->_console->hasArgument('do'));
     }
 
     /**
