@@ -108,7 +108,7 @@ abstract class DbSync_Controller_AbstractController
     {
         $this->_console = $console;
 
-        $items = $console->getActions();
+        $items = $console->getArguments();
 
         $action = $this->getActionMethod(array_shift($items));
 
