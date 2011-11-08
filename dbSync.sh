@@ -14,7 +14,7 @@
  * to maks.slesarenko@gmail.com so we can send you a copy immediately.
  *
  * @license  http://code.google.com/p/php-dbsync/wiki/License   New BSD License
- * @version  $Id$
+ * @version  $Id: schema.sh 44 2011-11-02 00:38:43Z maks.slesarenko@gmail.com $
  */
 
 require_once 'config.php';
@@ -23,4 +23,5 @@ $console = new DbSync_Console();
 $console->parse();
 
 $front = new DbSync_Controller_FrontController($config);
-$front->dispatch($console, 'data');
+
+$front->dispatch($console);
