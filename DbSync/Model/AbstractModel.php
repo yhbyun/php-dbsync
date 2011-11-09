@@ -7,7 +7,7 @@
  * This source file is subject to the new BSD license that is bundled
  * with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://code.google.com/p/phplizard/wiki/License
+ * http://code.google.com/p/php-dbsync/wiki/License
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to maks.slesarenko@gmail.com so we can send you a copy immediately.
@@ -95,7 +95,7 @@ abstract class DbSync_Model_AbstractModel
      */
     public function save($filename)
     {
-        if (!$this->isWriteable()) {
+        if (!$this->isWritable()) {
             throw new $this->_exceptionClass("Path '{$filename}' is not writable");
         }
 
@@ -107,7 +107,7 @@ abstract class DbSync_Model_AbstractModel
      *
      * @return boolean
      */
-    public function isWriteable()
+    public function isWritable()
     {
         if (!$path = $this->getFilePath()) {
             $path = dirname($this->getFilePath(false));
@@ -124,7 +124,7 @@ abstract class DbSync_Model_AbstractModel
      * Get config filepath
      *
      * @param boolen $real
-     * @return string
+     * @return string|null
      */
     public function getFilePath($real = true)
     {
@@ -158,7 +158,7 @@ abstract class DbSync_Model_AbstractModel
             throw new $this->_exceptionClass("Config file not found");
         }
 
-        if (!$this->isWriteable()) {
+        if (!$this->isWritable()) {
             throw new $this->_exceptionClass("Config file '{$filename}' is not writable");
         }
 
@@ -178,7 +178,7 @@ abstract class DbSync_Model_AbstractModel
     }
 
     /**
-     * Pull schema or data from db table to config file
+     * Pull schema or data from db to config file
      *
      */
     public function pull()
@@ -187,7 +187,7 @@ abstract class DbSync_Model_AbstractModel
     }
 
     /**
-     * Alter db table
+     * Alter db item
      *
      * @return boolen
      */
@@ -234,7 +234,7 @@ abstract class DbSync_Model_AbstractModel
         if ($force || !$this->getFilePath()) {
             $path = $this->getFilePath(false);
 
-            if (!$this->isWriteable()) {
+            if (!$this->isWritable()) {
                 throw new $this->_exceptionClass("Path '{$path}' is not writable");
             }
             $this->save($path);

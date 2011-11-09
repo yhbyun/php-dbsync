@@ -7,7 +7,7 @@
  * This source file is subject to the new BSD license that is bundled
  * with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://code.google.com/p/phplizard/wiki/License
+ * http://code.google.com/p/php-dbsync/wiki/License
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to maks.slesarenko@gmail.com so we can send you a copy immediately.
@@ -249,7 +249,7 @@ abstract class DbSync_Controller_AbstractController
      *
      * @alias st
      *
-     * @return Check sync status (Ok/Unsyncronized)
+     * @return Check sync status (Ok/Unsynchronized)
      */
     public function statusAction()
     {
@@ -258,7 +258,7 @@ abstract class DbSync_Controller_AbstractController
         if ($this->_model->getStatus()) {
             echo $name . $this->colorize(" - Ok", 'green');
         } else {
-            echo $name . $this->colorize(" - Unsyncronized", 'red');
+            echo $name . $this->colorize(" - Unsynchronized", 'red');
         }
     }
 
@@ -305,7 +305,7 @@ abstract class DbSync_Controller_AbstractController
         if ($this->_model->getStatus()) {
             echo $name . $this->colorize(" - OK", 'green');
         } else {
-            echo $name . $this->colorize(" - Unsyncronized", 'red');
+            echo $name . $this->colorize(" - Unsynchronized", 'red');
             echo PHP_EOL, join(PHP_EOL, $this->_model->diff());
         }
     }

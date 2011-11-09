@@ -7,7 +7,7 @@
  * This source file is subject to the new BSD license that is bundled
  * with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://code.google.com/p/phplizard/wiki/License
+ * http://code.google.com/p/php-dbsync/wiki/License
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to maks.slesarenko@gmail.com so we can send you a copy immediately.
@@ -74,7 +74,7 @@ class DbSync_Controller_FrontController
 
 
 
-            if (in_array($controller, array('schema', 'data', 'trigger'))) {
+            if (isset($this->_controllers[$controller])) {
                 $controllers = $controller;
 
                 //remove controller from arguments
@@ -86,9 +86,7 @@ class DbSync_Controller_FrontController
             }
         }
 
-        $controllers = (array) $controllers;
-
-        foreach ($controllers as $name) {
+        foreach ((array) $controllers as $name) {
             try {
                 echo ucfirst($name), ':', PHP_EOL;
                 $controller = new $this->_controllers[$name]($this->_config);

@@ -84,10 +84,10 @@ class DbSync_Model_AbstractModelTest extends PHPUnit_Framework_TestCase
     public function test_save_notWriteable()
     {
         $path = 'tablespath';
-        $model = $this->_getMock(array('isWriteable'));
+        $model = $this->_getMock(array('isWritable'));
 
         $model->expects($this->atLeastOnce())
-              ->method('isWriteable')
+              ->method('isWritable')
               ->will($this->returnValue(false));
 
         $model->save($path);
@@ -101,10 +101,10 @@ class DbSync_Model_AbstractModelTest extends PHPUnit_Framework_TestCase
     {
         $path = 'tablespath';
         $data = array('somedata');
-        $model = $this->_getMock(array('isWriteable', 'generateConfigData'));
+        $model = $this->_getMock(array('isWritable', 'generateConfigData'));
 
         $model->expects($this->atLeastOnce())
-              ->method('isWriteable')
+              ->method('isWritable')
               ->will($this->returnValue(true));
 
         $model->expects($this->once())
@@ -266,14 +266,14 @@ class DbSync_Model_AbstractModelTest extends PHPUnit_Framework_TestCase
     {
         $filepath = 'somepath';
 
-        $model = $this->_getMock(array('getFilePath', 'isWriteable'));
+        $model = $this->_getMock(array('getFilePath', 'isWritable'));
 
         $model->expects($this->once())
               ->method('getFilePath')
               ->will($this->returnValue($filepath));
 
         $model->expects($this->atLeastOnce())
-              ->method('isWriteable')
+              ->method('isWritable')
               ->will($this->returnValue(false));
 
         $model->deleteFile();
@@ -291,14 +291,14 @@ class DbSync_Model_AbstractModelTest extends PHPUnit_Framework_TestCase
         $filepath = vfsStream::url('exampleDir/asdfasdf.xml');
         fopen($filepath, 'a');
 
-        $model = $this->_getMock(array('getFilePath', 'isWriteable'));
+        $model = $this->_getMock(array('getFilePath', 'isWritable'));
 
         $model->expects($this->once())
               ->method('getFilePath')
               ->will($this->returnValue($filepath));
 
         $model->expects($this->atLeastOnce())
-              ->method('isWriteable')
+              ->method('isWritable')
               ->will($this->returnValue(true));
 
         $this->assertTrue(file_exists($filepath));
@@ -309,10 +309,10 @@ class DbSync_Model_AbstractModelTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * isWriteable
+     * isWritable
      *
      */
-    public function test_isWriteable()
+    public function test_isWritable()
     {
         vfsStream::setup('exampleDir');
 
@@ -325,17 +325,17 @@ class DbSync_Model_AbstractModelTest extends PHPUnit_Framework_TestCase
               ->method('getFilePath')
               ->will($this->returnValue($filepath));
 
-        $this->assertTrue($model->isWriteable());
+        $this->assertTrue($model->isWritable());
     }
 
     /**
-     * isWriteable
+     * isWritable
      *
      * @depends test_getFilePath_notReal
      * @depends test_getFilePath_notReal
      * @depends test_deleteFile_noFile
      */
-    public function test_isWriteable_false()
+    public function test_isWritable_false()
     {
         vfsStream::setup('exampleDir');
         $filepath = vfsStream::url('exampleDir/tables/config.xml');
@@ -348,7 +348,7 @@ class DbSync_Model_AbstractModelTest extends PHPUnit_Framework_TestCase
                            ->method('getFilePath')
                            ->will($this->returnValue($filepath));
 
-        $this->assertTrue($model->isWriteable());
+        $this->assertTrue($model->isWritable());
     }
 
     /**
@@ -357,18 +357,18 @@ class DbSync_Model_AbstractModelTest extends PHPUnit_Framework_TestCase
      * @expectedException        DbSync_Exception
      * @expectedExceptionMessage Path 'somepath' is not writable
      */
-    public function test_init_notWriteable()
+    public function test_init_notWritable()
     {
         $filepath = 'somepath';
 
-        $model = $this->_getMock(array('getFilePath', 'isWriteable'));
+        $model = $this->_getMock(array('getFilePath', 'isWritable'));
 
         $model->expects($this->once())
               ->method('getFilePath')
               ->will($this->returnValue($filepath));
 
         $model->expects($this->atLeastOnce())
-              ->method('isWriteable')
+              ->method('isWritable')
               ->will($this->returnValue(false));
 
         $model->init(true);
@@ -382,14 +382,14 @@ class DbSync_Model_AbstractModelTest extends PHPUnit_Framework_TestCase
     {
         $filepath = 'somepath';
 
-        $model = $this->_getMock(array('getFilePath', 'isWriteable', 'save'));
+        $model = $this->_getMock(array('getFilePath', 'isWritable', 'save'));
 
         $model->expects($this->once())
               ->method('getFilePath')
               ->will($this->returnValue($filepath));
 
         $model->expects($this->atLeastOnce())
-              ->method('isWriteable')
+              ->method('isWritable')
               ->will($this->returnValue(true));
 
         $model->expects($this->once())
@@ -406,7 +406,7 @@ class DbSync_Model_AbstractModelTest extends PHPUnit_Framework_TestCase
     public function test_init_false()
     {
         $filepath = 'somepath';
-        $model = $this->_getMock(array('getFilePath', 'isWriteable', 'save'));
+        $model = $this->_getMock(array('getFilePath', 'save'));
 
         $model->expects($this->once())
               ->method('getFilePath')
