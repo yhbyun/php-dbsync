@@ -188,4 +188,16 @@ class DbSync_Console
     {
         return $this->_progname;
     }
+
+    /**
+     * Set progname
+     *
+     * @param string $progname
+     * @return DbSync_Console
+     */
+    public function setProgname($progname)
+    {
+        $this->_progname = (string) $progname;
+        return $this;
+    }
 }
