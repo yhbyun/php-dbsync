@@ -7,7 +7,7 @@
  * This source file is subject to the new BSD license that is bundled
  * with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://code.google.com/p/phplizard/wiki/License
+ * http://code.google.com/p/php-dbsync/wiki/License
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to maks.slesarenko@gmail.com so we can send you a copy immediately.
@@ -117,7 +117,7 @@ class DbSync_Controller_TriggerController extends DbSync_Controller_AbstractCont
         $triggerName = $this->_model->getTriggerName();
 
         if ($this->_model->hasFile() && !$this->_console->hasOption('db')) {
-            if ($this->_model->isWriteable()) {
+            if ($this->_model->isWritable()) {
                 $this->_model->deleteFile();
                 echo $triggerName . $this->colorize(" - File deleted", 'green');
             } else {
@@ -138,7 +138,7 @@ class DbSync_Controller_TriggerController extends DbSync_Controller_AbstractCont
      *
      * @alias st
      *
-     * @return Check triggers status (Ok/Unsyncronized)
+     * @return Check triggers status (Ok/Unsynchronized)
      * @return Use {--table [[tableName] ... ]|yellow} to display triggers for certain table(s)
      */
     public function statusAction()
