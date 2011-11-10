@@ -27,7 +27,7 @@ INSTALLATION
 
         e) Specify config files adapter from one of the following:
 
-            for YAML: DbSync_FileAdapter_SfYaml (requires Symfony Yaml)
+            for YAML: DbSync_FileAdapter_SfYaml
 
     3 Make files schema.sh, data.sh, trigger.sh executable
 
@@ -40,10 +40,5 @@ DEPENDENCIES
 
     2 PDO extension
 
-    3 PEAR extension symfony/YAML (http://pear.symfony-project.com/)
-
-        If you have installed symfony/YAML without pear than edit include path in config.php
-        and replace "SymfonyComponents/YAML/sfYaml.php" with your path
-
-    4 Diff or CollorDiff installed
+    3 Diff or CollorDiff installed
 
