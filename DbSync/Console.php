@@ -144,6 +144,21 @@ class DbSync_Console
     }
 
     /**
+     * Get param from STDIN
+     *
+     * @param  string $default
+     * @return string
+     */
+    public function getStdParam($default = false)
+    {
+        $param = trim(fgets(STDIN));
+        if ($param) {
+            return $param;
+        }
+        return $default;
+    }
+
+    /**
      * Get options
      *
      * @return array
@@ -199,5 +214,36 @@ class DbSync_Console
     {
         $this->_progname = (string) $progname;
         return $this;
+    }
+
+    /**
+     * Colorize
+     *
+     * @todo move out
+     *
+     * @param string $text
+     * @param string $color
+     * @return string
+     */
+    public function colorize($text, $color = 'yellow')
+    {
+        switch ($color) {
+            case 'red':
+                $color = "1;31m";
+                break;
+            case 'green':
+                $color = "1;32m";
+                break;
+            case 'blue':
+                $color = "1;34m";
+                break;
+            case 'white':
+                $color = "1;37m";
+                break;
+            default:
+                $color = "1;33m";
+                break;
+        }
+        return "\033[" . $color . $text . "\033[m";
     }
 }

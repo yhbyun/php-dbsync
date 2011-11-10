@@ -1,0 +1,13 @@
+path        = "sync"
+
+diffprog    = "colordiff"
+
+fileAdapter = "DbSync_FileAdapter_SfYaml"
+dbAdapter   = "DbSync_DbAdapter_Pdo_Mysql"
+
+[dbParams]
+host     = ""
+dbname   = ""
+username = ""
+password = ""
+options  = ""
