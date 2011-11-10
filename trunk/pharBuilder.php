@@ -1,6 +1,6 @@
 <?php
 
-$phar=new Phar('phpdbsync.phar');
+$phar=new Phar('dbsync.phar');
 $phar->buildFromDirectory('DbSync/');
 $phar->buildFromDirectory('dependencies/');
 $phar->addFile('index.php');

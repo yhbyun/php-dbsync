@@ -37,6 +37,11 @@
 class DbSync_Console
 {
     /**
+     * @var resource
+     */
+    protected $_stdin = STDIN;
+
+    /**
      * @var array
      */
     protected $_arguments = array();
@@ -151,7 +156,7 @@ class DbSync_Console
      */
     public function getStdParam($default = false)
     {
-        $param = trim(fgets(STDIN));
+        $param = trim(fgets($this->_stdin));
         if ($param) {
             return $param;
         }

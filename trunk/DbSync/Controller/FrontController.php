@@ -32,10 +32,6 @@ class DbSync_Controller_FrontController
     const CONTROLLER_SCHEMA  = 'schema';
     const CONTROLLER_DATA    = 'data';
     const CONTROLLER_TRIGGER = 'trigger';
-    /**
-     * @var DbSync_Console
-     */
-    protected $_console;
 
     /**
      * @var array
@@ -58,21 +54,19 @@ class DbSync_Controller_FrontController
     /**
      * Constructor
      *
-     * @param DbSync_Console $console
      */
-    public function __construct(DbSync_Console $console)
+    public function __construct()
     {
-        $this->_console = $console;
-
         echo DbSync_Version::getCredits(), PHP_EOL, PHP_EOL;
     }
 
     /**
      * Load config
      *
+     * @param DbSync_Console $console
      * @return array
      */
-    public function loadConfig()
+    public function getConfig(DbSync_Console $console)
     {
         $filename = './' . self::CONFIG_FILE;
 
@@ -81,7 +75,7 @@ class DbSync_Controller_FrontController
                  PHP_EOL,
                  "Would you like to create config file here (YES/no): ";
 
-            $choice = $this->_console->getStdParam('yes');
+            $choice = $console->getStdParam('yes');
 
             if ('yes' == strtolower($choice)) {
                 if (!is_writable('.')) {
@@ -104,19 +98,20 @@ class DbSync_Controller_FrontController
     /**
      * Get controllers
      *
+     * @param DbSync_Console $console
      * @return array
      */
-    public function getControllers()
+    public function getControllers(DbSync_Console $console)
     {
-        $controller = $this->_console->getArgument(0);
+        $controller = $console->getArgument(0);
 
         if (isset($this->_controllers[$controller])) {
             $controllers = $controller;
 
             //remove controller from arguments
-            $args = $this->_console->getArguments();
+            $args = $console->getArguments();
             unset($args['0']);
-            $this->_console->setArguments($args);
+            $console->setArguments($args);
         } else {
             $controllers = array_keys($this->_controllers);
         }
@@ -126,18 +121,19 @@ class DbSync_Controller_FrontController
     /**
      * Dispatch
      *
+     * @param DbSync_Console $console
      */
-    public function dispatch()
+    public function dispatch(DbSync_Console $console)
     {
-        $config = $this->loadConfig();
+        $config = $this->getConfig($console);
 
-        $pharName = $this->_console->getProgname();
+        $pharName = $console->getProgname();
 
         if ('phar' != pathinfo($pharName, PATHINFO_EXTENSION)) {
             $pharName = false;
         }
 
-        foreach ($this->getControllers() as $name) {
+        foreach ($this->getControllers($console) as $name) {
             try {
                 echo ucfirst($name), ' Synchronization Tool: ', PHP_EOL;
 
@@ -146,14 +142,13 @@ class DbSync_Controller_FrontController
                 } else {
                     $progname = $this->_scripts[$name];
                 }
-
-                $this->_console->setProgname($progname);
+                $console->setProgname($progname);
 
                 $controller = new $this->_controllers[$name]($config);
 
-                $controller->dispatch($this->_console);
+                $controller->dispatch($console);
             } catch (Exception $e) {
-                echo $this->_console->colorize($e->getMessage(), 'red');
+                echo $console->colorize($e->getMessage(), 'red');
             }
 
             echo PHP_EOL;
