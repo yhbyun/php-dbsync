@@ -195,7 +195,7 @@ abstract class DbSync_Controller_AbstractController
      */
     public function helpAction()
     {
-        echo "Usage {$this->_console->getProgname()} [action] [ [tableName] ... ] [--option]";
+        echo "Usage: {$this->_console->getProgname()} [action] [ [tableName] ... ] [--option]";
 
         echo PHP_EOL . PHP_EOL;
 

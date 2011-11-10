@@ -12,16 +12,31 @@
  * obtain it through the world-wide-web, please send an email
  * to maks.slesarenko@gmail.com so we can send you a copy immediately.
  *
+ * @category DbSync
+ * @package  Tests
  * @license  http://code.google.com/p/php-dbsync/wiki/License   New BSD License
- * @version  $Id$
+ * @version  $Id: Console.php 36 2011-10-23 15:15:19Z maks.slesarenko@gmail.com $
  */
 
-require_once dirname(__FILE__) . '/init.php';
+/**
+ * Stub_Console
+ *
+ * @category DbSync
+ * @package  Tests
+ * @version  $Id$
+ */
+class Stub_Console extends DbSync_Console
+{
+    protected $_stdin;
 
-$console = new DbSync_Console();
+    /**
+     * Set stub stdin
+     *
+     * @param resource $stdin
+     */
+    public function setStdin($std)
+    {
+        $this->_stdin = $std;
+    }
+}
 
-$front = new DbSync_Controller_FrontController();
-
-$front->dispatch($console->parse());
-
-__HALT_COMPILER();

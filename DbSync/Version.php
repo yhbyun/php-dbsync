@@ -36,6 +36,6 @@ class DbSync_Version
      */
     public static function getCredits()
     {
-        return "Database Synchronization Toolkit " . self::VERSION . " by sm";
+        return "Database Synchronization Toolkit " . self::VERSION . " by SM";
     }
 }
