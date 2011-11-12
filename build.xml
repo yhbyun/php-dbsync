@@ -152,12 +152,28 @@
         </exec>
     </target>
     
-    <target name="phar-download" description="Create build for download and sharing without not needed files" depends="checkout, phpunit">
+    <target name="phar-download" description="Create build for download and sharing without not needed files" depends="prepare">
         <tstamp/>
-        <exec dir="${basedir}" executable="php" failonerror="true" osfamily="unix" output="${logsDir}/phar.log">
-            <arg line="pharBuilder.php"/>
+        <copy todir="${buildDir}/phar/DbSync">
+            <fileset dir="${basedir}/DbSync"/>
+        </copy>
+        <copy todir="${buildDir}/phar/dependencies">
+            <fileset dir="${basedir}/dependencies"/>
+        </copy>
+        <copy file="${basedir}/LICENSE.txt" todir="${buildDir}/phar" />
+
+        <copy file="${basedir}/README.txt" todir="${buildDir}/phar" />
+
+        <copy file="${basedir}/index.php" todir="${buildDir}/phar" />
+
+        <copy file="${basedir}/init.php" todir="${buildDir}/phar" />
+
+        <copy file="${basedir}/phpdbsync.ini.example" todir="${buildDir}/phar" />
+        
+        <exec dir="${buildDir}" executable="php" failonerror="true" osfamily="unix" output="${logsDir}/phar.log">
+            <arg line="${basedir}/pharBuilder.php"/>
         </exec>
-        <move file="dbsync.phar" tofile="${buildDir}/dbsync-${DSTAMP}.phar"/>
+        <move file="${buildDir}/dbsync.phar" tofile="${buildDir}/dbsync-${DSTAMP}.phar"/>
     </target>
     
     <target name="update-doc" description="Doxygen" depends="prepare, doxygen">
