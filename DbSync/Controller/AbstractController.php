@@ -45,22 +45,14 @@ abstract class DbSync_Controller_AbstractController
     /**
      * Constructor
      *
-     * @param array $config
+     * @param DbSync_DbAdapter_AdapterInterface $db
+     * @param DbSync_DbAdapter_AdapterInterface $file
+     * @param string $diffprog
      */
-    public function __construct(array $config)
+    public function __construct(DbSync_DbAdapter_AdapterInterface $db,
+        DbSync_FileAdapter_AdapterInterface $file, $diffprog)
     {
-        if (empty($config['dbAdapter'])) {
-            throw new DbSync_Exception('Db adapter not set');
-        }
-
-        if (empty($config['fileAdapter'])) {
-            throw new DbSync_Exception('File adapter not set');
-        }
-
-        $db = new $config['dbAdapter']($config['dbParams']);
-        $file = new $config['fileAdapter']($config['path']);
-
-        $this->_model = new $this->_modelClass($db, $file, $config['diffprog']);
+        $this->_model = new $this->_modelClass($db, $file, $diffprog);
     }
 
     /**

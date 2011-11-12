@@ -34,6 +34,9 @@ class DbSync_DbAdapter_Pdo_Mysql extends DbSync_DbAdapter_Pdo_AbstractAdapter
      */
     public function __construct(array $config)
     {
+        if (empty($config['dbname'])) {
+            throw new DbSync_Exception('Database name not set');
+        }
         $connection = new PDO(
             "mysql:host={$config['host']};dbname={$config['dbname']}",
             $config['username'],

@@ -16,7 +16,11 @@
  * @version  $Id$
  */
 
-require_once dirname(__FILE__) . '/init.php';
+defined('APPLICATION_PATH') || define('APPLICATION_PATH', dirname(__FILE__));
+
+defined('REAL_PATH') || define('REAL_PATH', realpath('.'));
+
+require_once APPLICATION_PATH . '/init.php';
 
 $console = new DbSync_Console();
 
