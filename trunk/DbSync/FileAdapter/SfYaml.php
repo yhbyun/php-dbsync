@@ -35,7 +35,7 @@ class DbSync_FileAdapter_SfYaml implements DbSync_FileAdapter_AdapterInterface
     /**
      * @var string
      */
-    protected $_path;
+    protected $_path = REAL_PATH;
 
     /**
      * Constructor
@@ -44,7 +44,7 @@ class DbSync_FileAdapter_SfYaml implements DbSync_FileAdapter_AdapterInterface
      */
     public function __construct($path)
     {
-        $this->_path = $path;
+        $this->_path .= '/' . ltrim($path, '/');
     }
 
     /**

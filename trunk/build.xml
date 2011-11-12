@@ -139,14 +139,25 @@
         <exec dir="${basedir}" executable="zip" failonerror="true" osfamily="unix" output="${logsDir}/download.log">
             <arg line="-r '${buildDir}/dbSync-${DSTAMP}.zip'"/>
             <arg line="DbSync"/>
-            <arg line="config.php.example"/>
+            <arg line="dependencies"/>
+            <arg line="phpdbsync.ini.example"/>
             <arg line="data.sh"/>
             <arg line="schema.sh"/>
             <arg line="trigger.sh"/>
-            <arg line="check.php"/>
+            <arg line="dbsync.sh"/>
+            <arg line="init.php"/>
+            <arg line="index.php"/>
             <arg line="LICENSE.txt"/>
             <arg line="README.txt"/>
         </exec>
+    </target>
+    
+    <target name="phar-download" description="Create build for download and sharing without not needed files" depends="checkout, phpunit">
+        <tstamp/>
+        <exec dir="${basedir}" executable="php" failonerror="true" osfamily="unix" output="${logsDir}/phar.log">
+            <arg line="pharBuilder.php"/>
+        </exec>
+        <move file="dbsync.phar" tofile="${buildDir}/dbsync-${DSTAMP}.phar"/>
     </target>
     
     <target name="update-doc" description="Doxygen" depends="prepare, doxygen">

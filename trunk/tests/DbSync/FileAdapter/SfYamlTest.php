@@ -35,8 +35,9 @@ class DbSync_FileAdapter_SfYamlTest extends PHPUnit_Framework_TestCase
     protected function setUp()
     {
         parent::setUp();
-        vfsStream::setup('exampleDir');
-        $this->_path = vfsStream::url('exampleDir');
+        $this->_path = 'exampleDir';
+        vfsStream::setup($this->_path);
+
     }
 
     /**
@@ -67,7 +68,7 @@ class DbSync_FileAdapter_SfYamlTest extends PHPUnit_Framework_TestCase
 
         $tableName = 'users';
 
-        $result = $this->_path . '/schema/' . $tableName
+        $result = vfsStream::url($this->_path) . '/schema/' . $tableName
                 . '.' . DbSync_FileAdapter_SfYaml::FILE_EXTENSION;
 
         $model = $this->getMock('DbSync_Model_Table_Schema', null, array(), '', false);
@@ -85,7 +86,7 @@ class DbSync_FileAdapter_SfYamlTest extends PHPUnit_Framework_TestCase
 
         $tableName = 'users';
 
-        $result = $this->_path . '/data/' . $tableName
+        $result = vfsStream::url($this->_path) . '/data/' . $tableName
                 . '.' . DbSync_FileAdapter_SfYaml::FILE_EXTENSION;
 
         $model = $this->getMock('DbSync_Model_Table_Data', array(), array(), '', false);
@@ -105,7 +106,7 @@ class DbSync_FileAdapter_SfYamlTest extends PHPUnit_Framework_TestCase
 
         $triggerName = 'users';
 
-        $result = $this->_path . '/trigger/' . $triggerName
+        $result = vfsStream::url($this->_path) . '/trigger/' . $triggerName
                 . '.' . DbSync_FileAdapter_SfYaml::FILE_EXTENSION;
 
         $model = $this->getMock('DbSync_Model_Table_Trigger', array(), array(), '', false);
@@ -139,10 +140,10 @@ class DbSync_FileAdapter_SfYamlTest extends PHPUnit_Framework_TestCase
      */
     public function test_getTableList()
     {
-        mkdir($this->_path . '/schema/', 0777, true);
+        mkdir(vfsStream::url($this->_path) . '/schema/', 0777, true);
 
-        fopen($this->_path . '/schema/users.yml', "a");
-        fopen($this->_path . '/schema/setting.yml', "a");
+        fopen(vfsStream::url($this->_path) . '/schema/users.yml', "a");
+        fopen(vfsStream::url($this->_path) . '/schema/setting.yml', "a");
 
         $adapter = $this->_getMock(array('getIterator'));
         $adapter->expects($this->once())
@@ -150,8 +151,8 @@ class DbSync_FileAdapter_SfYamlTest extends PHPUnit_Framework_TestCase
                 ->with($this->equalTo('schema/*.yml'))
                 ->will($this->returnValue(
                     array(
-                        new SplFileObject($this->_path . '/schema/users.yml'),
-                        new SplFileObject($this->_path . '/schema/setting.yml')
+                        new SplFileObject(vfsStream::url($this->_path) . '/schema/users.yml'),
+                        new SplFileObject(vfsStream::url($this->_path) . '/schema/setting.yml')
                     )
                 ));
 
@@ -169,10 +170,10 @@ class DbSync_FileAdapter_SfYamlTest extends PHPUnit_Framework_TestCase
      */
     public function test_getTableList_data()
     {
-        mkdir($this->_path . '/data/', 0777, true);
+        mkdir(vfsStream::url($this->_path) . '/data/', 0777, true);
 
-        fopen($this->_path . '/data/users.yml', "a");
-        fopen($this->_path . '/data/setting.yml', "a");
+        fopen(vfsStream::url($this->_path) . '/data/users.yml', "a");
+        fopen(vfsStream::url($this->_path) . '/data/setting.yml', "a");
 
         $adapter = $this->_getMock(array('getIterator'));
         $adapter->expects($this->once())
@@ -180,8 +181,8 @@ class DbSync_FileAdapter_SfYamlTest extends PHPUnit_Framework_TestCase
                 ->with($this->equalTo('data/*.yml'))
                 ->will($this->returnValue(
                     array(
-                        new SplFileObject($this->_path . '/data/users.yml'),
-                        new SplFileObject($this->_path . '/data/setting.yml')
+                        new SplFileObject(vfsStream::url($this->_path) . '/data/users.yml'),
+                        new SplFileObject(vfsStream::url($this->_path) . '/data/setting.yml')
                     )
                 ));
 
@@ -198,10 +199,10 @@ class DbSync_FileAdapter_SfYamlTest extends PHPUnit_Framework_TestCase
      */
     public function test_getTableList_trigger()
     {
-        mkdir($this->_path . '/trigger/', 0777, true);
+        mkdir(vfsStream::url($this->_path) . '/trigger/', 0777, true);
 
-        fopen($this->_path . '/trigger/users.yml', "a");
-        fopen($this->_path . '/trigger/setting.yml', "a");
+        fopen(vfsStream::url($this->_path) . '/trigger/users.yml', "a");
+        fopen(vfsStream::url($this->_path) . '/trigger/setting.yml', "a");
 
         $adapter = $this->_getMock(array('getIterator'));
         $adapter->expects($this->once())
@@ -209,8 +210,8 @@ class DbSync_FileAdapter_SfYamlTest extends PHPUnit_Framework_TestCase
                 ->with($this->equalTo('trigger/*.yml'))
                 ->will($this->returnValue(
                     array(
-                        new SplFileObject($this->_path . '/trigger/users.yml'),
-                        new SplFileObject($this->_path . '/trigger/setting.yml')
+                        new SplFileObject(vfsStream::url($this->_path) . '/trigger/users.yml'),
+                        new SplFileObject(vfsStream::url($this->_path) . '/trigger/setting.yml')
                     )
                 ));
 
@@ -247,11 +248,11 @@ class DbSync_FileAdapter_SfYamlTest extends PHPUnit_Framework_TestCase
      */
     public function test_getTriggerList()
     {
-        mkdir($this->_path . '/trigger/', 0777, true);
+        mkdir(vfsStream::url($this->_path) . '/trigger/', 0777, true);
 
-        fopen($this->_path . '/trigger/trigger1.yml', "a");
-        fopen($this->_path . '/trigger/trigger2.yml', "a");
-        fopen($this->_path . '/trigger/trigger3.yml', "a");
+        fopen(vfsStream::url($this->_path) . '/trigger/trigger1.yml', "a");
+        fopen(vfsStream::url($this->_path) . '/trigger/trigger2.yml', "a");
+        fopen(vfsStream::url($this->_path) . '/trigger/trigger3.yml', "a");
 
         $adapter = $this->_getMock(array('getIterator'));
         $adapter->expects($this->once())
@@ -259,9 +260,9 @@ class DbSync_FileAdapter_SfYamlTest extends PHPUnit_Framework_TestCase
                 ->with($this->equalTo('trigger/*.yml'))
                 ->will($this->returnValue(
                     array(
-                        new SplFileObject($this->_path . '/trigger/trigger1.yml'),
-                        new SplFileObject($this->_path . '/trigger/trigger2.yml'),
-                        new SplFileObject($this->_path . '/trigger/trigger3.yml')
+                        new SplFileObject(vfsStream::url($this->_path) . '/trigger/trigger1.yml'),
+                        new SplFileObject(vfsStream::url($this->_path) . '/trigger/trigger2.yml'),
+                        new SplFileObject(vfsStream::url($this->_path) . '/trigger/trigger3.yml')
                     )
                 ));
 
@@ -278,11 +279,11 @@ class DbSync_FileAdapter_SfYamlTest extends PHPUnit_Framework_TestCase
     {
         $tableName = 'users';
 
-        mkdir($this->_path . '/trigger/', 0777, true);
+        mkdir(vfsStream::url($this->_path) . '/trigger/', 0777, true);
 
-        fopen($this->_path . '/trigger/trigger1.yml', "a");
-        fopen($this->_path . '/trigger/trigger2.yml', "a");
-        fopen($this->_path . '/trigger/trigger3.yml', "a");
+        fopen(vfsStream::url($this->_path) . '/trigger/trigger1.yml', "a");
+        fopen(vfsStream::url($this->_path) . '/trigger/trigger2.yml', "a");
+        fopen(vfsStream::url($this->_path) . '/trigger/trigger3.yml', "a");
 
         $adapter = $this->_getMock(array('getIterator', 'getTableByTrigger'));
         $adapter->expects($this->once())
@@ -290,9 +291,9 @@ class DbSync_FileAdapter_SfYamlTest extends PHPUnit_Framework_TestCase
                 ->with($this->equalTo("trigger/*.yml"))
                 ->will($this->returnValue(
                     array(
-                        new SplFileObject($this->_path . '/trigger/trigger1.yml'),
-                        new SplFileObject($this->_path . '/trigger/trigger2.yml'),
-                        new SplFileObject($this->_path . '/trigger/trigger3.yml')
+                        new SplFileObject(vfsStream::url($this->_path) . '/trigger/trigger1.yml'),
+                        new SplFileObject(vfsStream::url($this->_path) . '/trigger/trigger2.yml'),
+                        new SplFileObject(vfsStream::url($this->_path) . '/trigger/trigger3.yml')
                     )
                 ));
 
@@ -318,11 +319,11 @@ class DbSync_FileAdapter_SfYamlTest extends PHPUnit_Framework_TestCase
      */
     public function test_getTableByTrigger()
     {
-        mkdir($this->_path . '/trigger/', 0777, true);
+        mkdir(vfsStream::url($this->_path) . '/trigger/', 0777, true);
 
-        fopen($this->_path . '/trigger/trigger1.yml', "a");
-        fopen($this->_path . '/trigger/trigger2.yml', "a");
-        fopen($this->_path . '/trigger/trigger3.yml', "a");
+        fopen(vfsStream::url($this->_path) . '/trigger/trigger1.yml', "a");
+        fopen(vfsStream::url($this->_path) . '/trigger/trigger2.yml', "a");
+        fopen(vfsStream::url($this->_path) . '/trigger/trigger3.yml', "a");
 
         $adapter = $this->_getMock(array('getIterator', 'load'));
         $adapter->expects($this->once())
@@ -330,12 +331,12 @@ class DbSync_FileAdapter_SfYamlTest extends PHPUnit_Framework_TestCase
                 ->with($this->equalTo("trigger/trigger1.yml"))
                 ->will($this->returnValue(
                     array(
-                        new SplFileObject($this->_path . '/trigger/trigger1.yml'),
+                        new SplFileObject(vfsStream::url($this->_path) . '/trigger/trigger1.yml'),
                     )
                 ));
         $adapter->expects($this->once())
                 ->method('load')
-                ->with($this->equalTo($this->_path . '/trigger/trigger1.yml'))
+                ->with($this->equalTo(vfsStream::url($this->_path) . '/trigger/trigger1.yml'))
                 ->will($this->returnValue(array('table' => 'users')));
 
         $this->assertEquals(
@@ -349,11 +350,11 @@ class DbSync_FileAdapter_SfYamlTest extends PHPUnit_Framework_TestCase
      */
     public function test_getTableByTrigger_notFound()
     {
-        mkdir($this->_path . '/trigger/', 0777, true);
+        mkdir(vfsStream::url($this->_path) . '/trigger/', 0777, true);
 
-        fopen($this->_path . '/trigger/trigger1.yml', "a");
-        fopen($this->_path . '/trigger/trigger2.yml', "a");
-        fopen($this->_path . '/trigger/trigger3.yml', "a");
+        fopen(vfsStream::url($this->_path) . '/trigger/trigger1.yml', "a");
+        fopen(vfsStream::url($this->_path) . '/trigger/trigger2.yml', "a");
+        fopen(vfsStream::url($this->_path) . '/trigger/trigger3.yml', "a");
 
         $adapter = $this->_getMock(array('getIterator'));
         $adapter->expects($this->once())
@@ -385,7 +386,7 @@ class DbSync_FileAdapter_SfYamlTest extends PHPUnit_Framework_TestCase
             'value' => 'somevalue'
         );
 
-        $file = $this->_path . '/config.yml';
+        $file = vfsStream::url($this->_path) . '/config.yml';
         fopen($file, 'a');
 
         $adapter = $this->_getMock();

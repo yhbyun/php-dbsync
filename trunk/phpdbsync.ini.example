@@ -1,11 +1,12 @@
 path        = "sync"
 
-diffprog    = "colordiff"
+diffprog    = "diff"
 
-fileAdapter = "DbSync_FileAdapter_SfYaml"
-dbAdapter   = "DbSync_DbAdapter_Pdo_Mysql"
+[adapters]
+file        = "DbSync_FileAdapter_SfYaml"
+db          = "DbSync_DbAdapter_Pdo_Mysql"
 
-[dbParams]
+[connection]
 host     = ""
 dbname   = ""
 username = ""

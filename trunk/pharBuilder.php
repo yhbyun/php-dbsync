@@ -1,8 +1,8 @@
 <?php
 
 $phar=new Phar('dbsync.phar');
-$phar->buildFromDirectory('DbSync/');
-$phar->buildFromDirectory('dependencies/');
+$phar->buildFromDirectory('DbSync');
+$phar->buildFromDirectory('dependencies');
 $phar->addFile('index.php');
 $phar->addFile('init.php');
 $phar->addFile('phpdbsync.ini.example');

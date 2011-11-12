@@ -9,6 +9,10 @@ if (version_compare(PHPUnit_Runner_Version::id(), '3.6.0RC4', '<')) {
     exit;
 }
 
+defined('APPLICATION_PATH') || define('APPLICATION_PATH', dirname(dirname(__FILE__)));
+
+defined('REAL_PATH') || define('REAL_PATH', 'vfs:/');
+
 /**
  * Add path
  */
